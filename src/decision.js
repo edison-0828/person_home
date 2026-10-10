@@ -1,4 +1,6 @@
 import { WHIM_FREE, WHIM_JOB } from './actions/catalog.js';
+import { isWeekend, seasonOf } from './calendar.js';
+import { holidayThought } from './holidays.js';
 import { SKILL_META } from './constants.js';
 import { actionIds, getAction } from './actions/define.js';
 import { applyInnerBias } from './emotions.js';
@@ -7,7 +9,7 @@ import { ensureCash } from './market.js';
 import { log, memoryNudge, trace } from './memory.js';
 import { tx } from './money.js';
 import { s } from './state.js';
-import { hour, nightTax, rand, randn } from './util.js';
+import { hour, nightTax, rand, randn, weatherOf } from './util.js';
 
 export function explain(ev) {
   const top = ev.parts.filter(p => p.value > 6).sort((a, b) => b.value - a.value).slice(0, 3);
@@ -144,6 +146,16 @@ export function composeThought(id) {
   const seen = (s.insights || [])[0];
   push(!!seen, '他近来认定：' + (seen ? String(seen.text).slice(0, 36) : ''));
   if (action && action.thoughtsLate) action.thoughtsLate(push, id);
+  const fest = holidayThought();
+  push(!!fest, fest);
+  push(isWeekend() && s.today && s.today.overtime, '周末本来想歇，存款和这件事让他打开了电脑。');
+  push(isWeekend() && s.job && !(s.today && s.today.overtime), '周末，他让自己停一停。');
+  const sea = seasonOf().id;
+  const sky = weatherOf(s.day).short;
+  push(sea === 'summer' && sky === '晴热', '深圳的太阳把院子晒得发烫，空调一直转着。');
+  push(sea === 'autumn', '这个季节出门刚刚好。');
+  push(sea === 'winter', '深圳的冬天不算冷，薄外套就够。');
+  push(sea === 'spring' && sky === '小雨', '回南天，墙上有点潮。');
   push((s.debt || 0) > 0, '欠着的数字比天气更清楚。');
   push(s.money < 180, '存款见底的时候，连呼吸都变短。');
   push(s.money < 140, '钱包比计划更诚实。');

@@ -4,6 +4,7 @@ import { log, memory } from './memory.js';
 import { moneyPressure } from './money.js';
 import { skillRank } from './skills.js';
 import { freshToday, s } from './state.js';
+import { seasonOf } from './calendar.js';
 import { cl, hour, rand, weatherOf } from './util.js';
 
 export function freshFeel() {
@@ -48,6 +49,24 @@ export function decayFeel(mins) {
   Object.keys(base).forEach(function (key) {
     s.feel[key] = cl(s.feel[key] + (base[key] - s.feel[key]) * k);
   });
+}
+
+export function seasonMood() {
+  if (!s.today || s.today.seasonNoted) return;
+  s.today.seasonNoted = 1;
+  const sea = seasonOf().id;
+  const w = weatherOf(s.day).short;
+  if (sea === 'summer' && (w === '晴热' || w === '晴朗')) {
+    feelTo('anxiety', 2);
+    s.m = cl(s.m - 1);
+  } else if (sea === 'autumn') {
+    feelTo('joy', 3);
+    s.m = cl(s.m + 1);
+  } else if (sea === 'winter') {
+    feelTo('nostalgia', 3);
+  } else if (sea === 'spring') {
+    feelTo('hope', 2);
+  }
 }
 
 export function rainMood() {

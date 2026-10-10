@@ -1,4 +1,6 @@
-import { CITY, GRAD_YEAR, ageOf, ageStage, cognitionNow, formatDate } from './calendar.js';
+import { CITY, GRAD_YEAR, ageOf, ageStage, cognitionNow, formatDate, seasonOf, weekdayName } from './calendar.js';
+import { holidayOf } from './holidays.js';
+import { scheduleLabel } from './schedule.js';
 import { FEEL_NAME, KEY, MIND, SKILL_META } from './constants.js';
 import { actionLabel, choose, currentPose, rawScores, startAction } from './decision.js';
 import { finishAndDecide } from './loop.js';
@@ -41,7 +43,11 @@ export function snapshotText() {
       graduated:GRAD_YEAR,
       date:formatDate(s.day),
       cognition:cognitionNow(),
-      ageStage:ageStage()
+      ageStage:ageStage(),
+      season:seasonOf().name,
+      weekday:weekdayName(),
+      holiday:(holidayOf() && holidayOf().name) || '',
+      schedule:scheduleLabel()
     },
     employment:s.job ? 'remote designer' : 'job seeking',
     autonomy:'observer only; no player controls',

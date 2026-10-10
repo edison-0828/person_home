@@ -5,6 +5,7 @@ import { owns } from './money.js';
 import { ART, LAMPS, PROPS, TREES, actorSprite, ensureArt } from './sprites.js';
 import { s } from './state.js';
 import { cellSprite } from './tiles.js';
+import { seasonOf } from './calendar.js';
 import { isNight, weatherOf } from './util.js';
 
 export function poseFrame(pose) {
@@ -88,6 +89,18 @@ export function drawActor(anchor) {
 
 export let lightCv = null;
 
+export function drawSeasonWash() {
+  const tint = {
+    spring:'rgba(170, 206, 96, 0.08)',
+    summer:'rgba(255, 168, 64, 0.10)',
+    autumn:'rgba(186, 96, 36, 0.09)',
+    winter:'rgba(126, 168, 206, 0.12)'
+  }[seasonOf().id];
+  if (!tint) return;
+  g.fillStyle = tint;
+  g.fillRect(0, 0, W, H);
+}
+
 export function drawLighting() {
   if (!isNight()) return;
   if (!lightCv) {
@@ -169,6 +182,7 @@ export function draw() {
   }
   ents.sort(function (a, b) { return a.y - b.y; });
   for (let i = 0; i < ents.length; i++) ents[i].draw();
+  drawSeasonWash();
   drawLighting();
   if (weatherOf(s.day).short === '小雨') drawRain();
 }

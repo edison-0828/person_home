@@ -1,16 +1,17 @@
-import { ageOf, isBirthday } from './calendar.js';
+import { ageOf, isBirthday, seasonOf } from './calendar.js';
 import { TILE } from './constants.js';
 import { choose, morningPlan, resolve, rollWhim, startAction } from './decision.js';
 import { writeDiary } from './diary.js';
-import { decayFeel, feelTo, mistake, rainMood } from './emotions.js';
+import { decayFeel, feelTo, mistake, rainMood, seasonMood } from './emotions.js';
 import { SPOTS, roomAt, tileOf } from './map.js';
 import { driftPrices, markMood, marketValue } from './market.js';
 import { log, memory } from './memory.js';
-import { isNewMonth, noteUsage, settleLiving } from './expenses.js';
+import { isNewMonth, noteUsage, settleFestival, settleLiving } from './expenses.js';
 import { careerDay, moneyMood, owns, shiftTrajectory } from './money.js';
 import { persist } from './persist.js';
 import { chooseFocus } from './skills.js';
 import { flags, freshToday, s } from './state.js';
+import { ensureDayStamp } from './schedule.js';
 import { absMin, cl, hour, rand, weatherOf } from './util.js';
 
 export function spoilCheck() {
@@ -193,11 +194,20 @@ export function tick(dt) {
     chooseFocus();
     s.plan = morningPlan();
     if (!owns('junk') && (((s.complacent || 0) > 0) || (s.money > 4600 && rand() < 0.5))) s.today.itch = 1;
-    log('新的一天开始了。天气是' + weatherOf(s.day).short + '。');
+    ensureDayStamp();
+    settleFestival();
+    s.today.festivalDay = s.day;
+    log('新的一天开始了。' + seasonOf().long + '，天气是' + weatherOf(s.day).short + '。');
+  }
+  ensureDayStamp();
+  if (s.today.festivalDay !== s.day) {
+    settleFestival();
+    s.today.festivalDay = s.day;
   }
   moneyMood();
   decayFeel(mins);
   rainMood();
+  seasonMood();
   const hh = hour();
   if (s.action !== 'sleep' && s.action !== 'wake' && hh >= 23.3) mistake('late', '第' + s.day + '天已经过了十一点还没去睡。');
   if (s.action === 'sleep' && hh >= 9.5 && hh < 11) mistake('oversleep', '第' + s.day + '天睡到将近十点，早晨被睡过去了。');

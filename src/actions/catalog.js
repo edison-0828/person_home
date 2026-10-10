@@ -1,5 +1,7 @@
-import { cognitionNow } from '../calendar.js';
+import { cognitionNow, isWeekend, seasonOf } from '../calendar.js';
 import { payMetro } from '../expenses.js';
+import { holidayMarkup, holidayOf } from '../holidays.js';
+import { wantsOvertime } from '../schedule.js';
 import { SKILL_META } from '../constants.js';
 import { morningPlan } from '../decision.js';
 import { registerAction } from './define.js';
@@ -388,6 +390,7 @@ registerAction({
     if (s.restLock || poorEnergy) return false;
     if (s.job) {
       if (s.day < s.workFromDay || (s.performance || 0) < 48 || (s.hopCooldown || 0) > 0) return false;
+      if (holidayOf()) add('节日那边多半不看邮件', -8);
       add('这份工作还能往上走', 12);
       add('履历够用，可以看看别的团队', Math.max(0, (s.performance || 0) - 40) * 0.22);
       if (s.money < 500) add('现在跳槽太险', -22);
@@ -395,6 +398,7 @@ registerAction({
       if ((s.today.search || 0) >= 1) add('今天问过了', -14);
       add('这个点不适合投简历', -tax);
     } else {
+    if (holidayOf()) add('节日那边多半不看邮件', -8);
     add('还没有工作', 18);
     add('适合看招聘的时间', Math.max(peak(h, 9, 12) * 24, peak(h, 14, 17.6) * 20));
     if (s.money < 250) add('存款快见底了', 44);
@@ -480,6 +484,7 @@ registerAction({
   mins: 100,
   pose: 'type',
   duration() { return s.today.workMin > 120 ? 70 : 100; },
+  labelOf() { return (s.today && s.today.overtime) ? '周末加班' : '远程工作'; },
   score(ctx) {
     const add = ctx.add;
     const h = ctx.h;
@@ -487,6 +492,10 @@ registerAction({
     const poorEnergy = ctx.poorEnergy;
     const id = 'work';
     if (!s.job || s.day < s.workFromDay || s.restLock || poorEnergy) return false;
+    if (isWeekend() || holidayOf()) {
+      if (wantsOvertime()) add('今天他自己决定加班', 12);
+      else add('休息日，先把工作放下', -48);
+    }
     add('今天还有项目要做', 22);
     add('适合工作的时间', Math.max(peak(h, 9, 12.2) * 30, peak(h, 13.5, 18.2) * 28));
     if (s.today.workMin > 150) add('今天已经做了不少', -18);
@@ -501,7 +510,12 @@ registerAction({
   spec(spec) {
     const poor = s.money < 170 && marketValue() < 50;
     const id = 'work';
-    spec.energy = -0.045; spec.mood = owns('computer') ? 0.04 : 0.02; spec.wage = hourlyWage() || (56 + s.e * 0.22 + s.m * 0.1);
+    const ot = !!(s.today && s.today.overtime);
+    let wage = hourlyWage() || (56 + s.e * 0.22 + s.m * 0.1);
+    if (ot) wage = Math.round(wage * 1.5);
+    spec.energy = ot ? -0.07 : -0.045;
+    spec.mood = ot ? -0.015 : (owns('computer') ? 0.04 : 0.02);
+    spec.wage = wage;
 
   },
   resolve(mins, id) {
@@ -514,8 +528,14 @@ registerAction({
           s.today.earned += pay;
           s.today.workMin += mins;
           s.m = cl(s.m + 3);
-          tx('income', rankInfo().title || '远程工作', pay);
-          const text = (rankInfo().title || '远程工作') + '告一段落，进账 ¥' + pay + '，时薪大约 ¥' + Math.round((s.session && s.session.wage) || pay) + '。';
+          tx('income', (s.today && s.today.overtime) ? '周末加班' : (rankInfo().title || '远程工作'), pay);
+          if (s.today && s.today.overtime) {
+            s.e = cl(s.e - 3);
+            s.m = cl(s.m - 2);
+            feelTo('pride', 2);
+            feelTo('anxiety', 2);
+          }
+          const text = ((s.today && s.today.overtime) ? '周末加班' : (rankInfo().title || '远程工作')) + '告一段落，进账 ¥' + pay + '，时薪大约 ¥' + Math.round((s.session && s.session.wage) || pay) + '。';
           log(text);
           memory('work', text, {value:pay});
         }
@@ -534,7 +554,7 @@ registerAction({
   mind() { return '“先把收入的不确定性降下来。”'; },
   journal(spec) {
     const cost = spec.cost ? ('，花了 ¥' + spec.cost) : '';
-    return '开始处理远程工作。';
+    return (s.today && s.today.overtime) ? '开始加班。' : '开始处理远程工作。';
   }
 });
 
@@ -735,6 +755,10 @@ registerAction({
     add('想透气', 10 + Math.max(0, 50 - s.m) * 0.28);
     if (w.walk >= 0) add('天气还行，想到院子里', w.walk * 16);
     else add('下雨，院子里没那么舒服', w.walk * 22);
+    const sea = seasonOf().id;
+    if (sea === 'summer' && h >= 11 && h <= 16) add('中午的太阳把人往屋里推', -8);
+    else if (sea === 'autumn' && h > 8 && h < 18) add('这个季节适合出门', 5);
+    else if (sea === 'winter') add('冬天的风有点凉', -3);
     if (h > 7 && h < 19) add('白天适合出门', 8);
     if (s.today.walk >= 2) add('已经出去过了', -12 * s.today.walk);
     if (s.e < 14) add('太累', -18);
@@ -792,6 +816,8 @@ registerAction({
     if (s.today.relax >= 3) add('已经歇了很久', -12);
     if (h >= 23.8 || h < 5) add('这个点更该睡', -12);
     if (s.restLock) add('身体要求先停下来', 18);
+    if ((isWeekend() || holidayOf()) && !(s.today && s.today.overtime)) add('休息日想多歇一会儿', 8);
+    if (holidayOf()) add('节日更想待在家里', 10);
 
   },
   spec(spec) {
@@ -925,6 +951,7 @@ registerAction({
     else if (!s.job && s.money < 520) add('还没稳定收入', 12);
     else add('手头还过得去', -16);
     if ((s.debt || 0) > 0) add('欠租不能再拖', 16);
+    if (holidayOf()) add(holidayOf().id === 'cny' ? '过年几乎没人叫散工' : '节日散工不好找', holidayOf().id === 'cny' ? -28 : -16);
     if (s.job && s.money > 420 && !(s.debt > 0)) add('正职更值', -20);
     if ((s.today.search || 0) >= 1 && s.money < 320) add('简历解决不了今天的饭', 18);
     if (s.money < 90) add('今天就得有现金', 16);
@@ -940,6 +967,10 @@ registerAction({
     const poor = s.money < 170 && marketValue() < 50;
     const id = 'gig';
     spec.energy = -0.16; spec.hunger = 0.07; spec.mood = -0.01; spec.gig = pickGig();
+    if (holidayOf() && spec.gig) {
+      const cut = holidayOf().id === 'cny' ? 0.55 : 0.75;
+      spec.gig.pay = Math.max(20, Math.round(spec.gig.pay * cut));
+    }
 
   },
   resolve(mins, id) {
@@ -1009,13 +1040,14 @@ registerAction({
     if ((s.today.shop || 0) >= 1) add('今天买过了', -34);
     if (h < 10 || h > 21) add('这会儿不去买', -18);
     if (s.h > 78) add('太饿，没心思逛', -12);
+    if (holidayOf()) add('节日标价更贵', -6);
 
   },
   spec(spec) {
     const poor = s.money < 170 && marketValue() < 50;
     const id = 'shop';
     const item = nextPurchase();
-    if (item) { spec.cost = item.cost; spec.item = item; spec.mood = item.impulse ? 0.03 : 0.08; }
+    if (item) { spec.cost = holidayMarkup(item.cost); spec.item = item; spec.mood = item.impulse ? 0.03 : 0.08; }
 
   },
   resolve(mins, id) {
@@ -1026,15 +1058,16 @@ registerAction({
           if (!s.owned) s.owned = [];
           s.owned.push(item.id);
           s.today.shop = (s.today.shop || 0) + 1;
+          const paid = Math.round((s.session && s.session.cost) || item.cost);
           if (item.impulse) {
             feelTo('joy', 5);
-            mistake('impulsebuy', '一时手痒买了' + item.name + '，花了 ¥' + item.cost + '。');
+            mistake('impulsebuy', '一时手痒买了' + item.name + '，花了 ¥' + paid + '。');
           } else {
             feelTo('joy', 8);
             feelTo('pride', 4);
-            const text = item.name + '到了，放在屋子里。花了 ¥' + item.cost + '。';
+            const text = item.name + '到了，放在屋子里。花了 ¥' + paid + '。';
             log(text);
-            memory('purchase', text, {value:-item.cost});
+            memory('purchase', text, {value:-paid});
           }
         }
 

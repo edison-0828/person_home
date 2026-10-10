@@ -1,4 +1,6 @@
+import { isWeekend } from './calendar.js';
 import { SKILL_META } from './constants.js';
+import { holidayOf } from './holidays.js';
 import { dominantFeel, freshFeel, maybeInsight } from './emotions.js';
 import { memory } from './memory.js';
 import { freshToday, s } from './state.js';
@@ -32,6 +34,12 @@ export function writeDiary(day) {
   const top = (s.lessons || [])[0];
   if (top && top.strength > 14) body += '想记住：' + top.text;
   else if (s.focus && SKILL_META[s.focus]) body += '明天还想碰一碰' + SKILL_META[s.focus].name + '。';
+  const hol = holidayOf(day);
+  if (hol) body += '今天是' + hol.name + '，人想歇一歇，也想念家里。';
+  if (td.overtime) body += '今天还是加了班，钱进来一点，人更累。';
+  else if (isWeekend(day) && s.job) body += '周末没有开工，让自己停下来。';
+  if (td.redPacket) body += '收到家里的红包。';
+  if (td.festivalSpend) body += '置办了点过年的东西。';
   if (td.birthday) body += '今天过生日，人在深圳又大了一岁。';
   if (td.metro) body += '出门坐了地铁。';
   if (td.sickOnset) body += '夜里不舒服，像是' + (td.sickLabel || '感冒') + '，去看了看。';

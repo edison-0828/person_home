@@ -1,3 +1,4 @@
+import { seasonOf } from './calendar.js';
 import { WEATHERS } from './constants.js';
 import { s } from './state.js';
 
@@ -48,10 +49,13 @@ export function isNight() {
 }
 
 export function weatherOf(day) {
-  let x = Math.imul(day | 0, 747796405) + 2891336453;
+  const d = day == null ? s.day : day;
+  let x = Math.imul(d | 0, 747796405) + 2891336453;
   x = Math.imul(x ^ (x >>> 16), 2246822507);
   x = (x ^ (x >>> 13)) >>> 0;
-  return WEATHERS[x % WEATHERS.length];
+  const w = WEATHERS[x % WEATHERS.length];
+  if (seasonOf(d).id === 'winter' && w.short === '晴热') return WEATHERS[0];
+  return w;
 }
 
 export function peak(h, a, b) {
