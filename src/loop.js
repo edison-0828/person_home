@@ -1,7 +1,8 @@
+import { ageOf, isBirthday } from './calendar.js';
 import { TILE } from './constants.js';
 import { choose, morningPlan, resolve, rollWhim, startAction } from './decision.js';
 import { writeDiary } from './diary.js';
-import { decayFeel, mistake, rainMood } from './emotions.js';
+import { decayFeel, feelTo, mistake, rainMood } from './emotions.js';
 import { SPOTS, roomAt, tileOf } from './map.js';
 import { driftPrices, markMood, marketValue } from './market.js';
 import { log, memory } from './memory.js';
@@ -84,6 +85,10 @@ export function move(dt) {
   let guard = 0;
   while (budget > 0 && s.path.length && guard++ < 6) {
     const node = s.path[0];
+    if (!node || !isFinite(node[0]) || !isFinite(node[1])) {
+      s.path.shift();
+      continue;
+    }
     const tx = (node[0] + 0.5) * TILE;
     const ty = (node[1] + 0.5) * TILE;
     const dx = tx - s.x, dy = ty - s.y;
@@ -119,6 +124,15 @@ export function summarize(day) {
   if (!td.workout && s.e > 22) mistake('skip', '第' + day + '天有力气，却把训练跳过去了。');
   if (td.comfort) mistake('spend', '第' + day + '天晚饭多点了一份安慰自己的东西，花得有点心虚。');
   settleLiving(day);
+  if (isBirthday(day)) {
+    s.today.birthday = 1;
+    const age = ageOf(day);
+    log('今天是他的生日，在深圳' + age + '岁了。');
+    memory('birthday', '第' + day + '天，他' + age + '岁了。');
+    feelTo('joy', 8);
+    feelTo('hope', 4);
+    s.m = cl(s.m + 4);
+  }
   careerDay(td);
   shiftTrajectory(day, td);
   writeDiary(day);

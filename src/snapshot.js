@@ -1,3 +1,4 @@
+import { CITY, GRAD_YEAR, ageOf, ageStage, cognitionNow, formatDate } from './calendar.js';
 import { FEEL_NAME, KEY, MIND, SKILL_META } from './constants.js';
 import { actionLabel, choose, currentPose, rawScores, startAction } from './decision.js';
 import { finishAndDecide } from './loop.js';
@@ -33,6 +34,15 @@ export function snapshotText() {
     })(),
     needs:{energy:Math.round(s.e), hunger:Math.round(s.h), mood:Math.round(s.m), money:Math.round(s.money)},
     personality:{cognition:MIND.cognition, interests:MIND.interests.slice(), risk:MIND.risk},
+    resident:{
+      name:'林默',
+      city:CITY,
+      age:ageOf(),
+      graduated:GRAD_YEAR,
+      date:formatDate(s.day),
+      cognition:cognitionNow(),
+      ageStage:ageStage()
+    },
     employment:s.job ? 'remote designer' : 'job seeking',
     autonomy:'observer only; no player controls',
     recent_events:s.logs.slice(0, 3),

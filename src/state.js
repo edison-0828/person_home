@@ -7,7 +7,7 @@ export function freshToday() {
 
 export function blank() {
   return {
-    day:1, t:462, e:72, h:28, m:64, money:1840,
+    day:1, t:462, e:72, h:28, m:64, money:8600,
     job:false, searches:0, workFromDay:9999, studies:0,
     action:'', left:40, acted:0,
     x:(3 + 0.5) * TILE, y:(3 + 0.5) * TILE, face:'up', faceGoal:'up', path:[], moving:false, anim:0, map:'topdown', room:'bedroom',

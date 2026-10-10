@@ -1,4 +1,5 @@
-import { FEEL_NAME, MIND, SKILL_META } from './constants.js';
+import { CITY, GRAD_YEAR, ageOf, cognitionNow, formatDate } from './calendar.js';
+import { FEEL_NAME, SKILL_META } from './constants.js';
 import { actionLabel, morningPlan } from './decision.js';
 import { dominantFeel } from './emotions.js';
 import { renderLog } from './memory.js';
@@ -96,7 +97,7 @@ export function renderLivelihood() {
   }
   const note = $('income-note');
   if (note) {
-    const sched = '房租每月1日，网费8日，电话费16日，水电费28日。衣服、理发和日用品按自己的日子走。';
+    const sched = '深圳合租房租每月1日，宽带8日，电话费16日，水电费28日。出门坐地铁。衣服、理发和日用品按自己的日子走。';
     if ((s.debt || 0) > 0) note.textContent = '房租还欠着 ¥' + Math.round(s.debt) + '。付不起就记成欠款。' + sched;
     else if ((s.sickDays || 0) > 0) note.textContent = '他' + (s.sickName || '生病') + '了，这几天会歇一歇，也可能不去开工。' + sched;
     else if (s.money < 260) note.textContent = '存款不多，房租日过后尤其紧。' + sched;
@@ -116,7 +117,7 @@ export function renderLivelihood() {
   drawTrackChart();
   const ledger = $('ledger');
   if (ledger) {
-    const order = ['房租', '水电费', '网费', '电话费', '衣服', '剪头发', '日用品', '看病', '订阅和会员'];
+    const order = ['房租', '水电费', '网费', '电话费', '地铁', '衣服', '剪头发', '日用品', '看病', '订阅和会员'];
     const pins = [];
     order.forEach(function (name) {
       const hit = (s.billHistory || []).find(function (row) {
@@ -142,29 +143,33 @@ export function renderLivelihood() {
 
 export function ui() {
   const w = weatherOf(s.day || 1);
-  const dayEl = $('day'); if (dayEl) dayEl.textContent = String(s.day).padStart(2, '0');
+  const dayEl = $('day'); if (dayEl) dayEl.textContent = formatDate(s.day);
   const clock = $('clock'); if (clock) clock.textContent = time();
   const action = $('action'); if (action) action.textContent = actionLabel(s.action);
   const thought = $('thought'); if (thought) thought.textContent = s.thought || '';
+  const who = CITY + ' · ' + ageOf() + '岁 · ' + GRAD_YEAR + '届';
   const role = $('role'); if (role) {
     const info = rankInfo();
-    if (!s.job) role.textContent = '自由职业者 · 在找工作';
-    else if (s.day < s.workFromDay) role.textContent = info.title + ' · 明天开工 · 时薪 ¥' + hourlyWage();
-    else role.textContent = info.title + ' · 时薪 ¥' + hourlyWage();
+    if (!s.job) role.textContent = who + ' · 在找工作';
+    else if (s.day < s.workFromDay) role.textContent = who + ' · ' + info.title + ' · 明天开工 · 时薪 ¥' + hourlyWage();
+    else role.textContent = who + ' · ' + info.title + ' · 时薪 ¥' + hourlyWage();
   }
+  const ageLabel = $('age-label'); if (ageLabel) ageLabel.textContent = ageOf() + ' 岁';
+  const dateLabel = $('date-label'); if (dateLabel) dateLabel.textContent = formatDate(s.day);
   const meters = [['energy', s.e], ['hunger', s.h], ['mood', s.m]];
   meters.forEach(([k, v]) => {
     const lab = $(k + '-v'); if (lab) lab.textContent = Math.round(v) + '%';
     const bar = $(k); if (bar) bar.style.width = cl(v) + '%';
   });
   const money = $('money-v'); if (money) money.textContent = '¥ ' + Math.round(s.money);
-  const moneyBar = $('money'); if (moneyBar) moneyBar.style.width = cl(s.money / 40) + '%';
+  const moneyBar = $('money'); if (moneyBar) moneyBar.style.width = cl(s.money / 160) + '%';
   const awake = $('awake'); if (awake) awake.textContent = s.action === 'sleep' ? '睡眠中' : fmtDur(s.awakeMin);
   const plan = $('plan'); if (plan) plan.textContent = s.plan || morningPlan();
-  const weather = $('weather'); if (weather) weather.textContent = w.full;
-  const weatherShort = $('weather-short'); if (weatherShort) weatherShort.textContent = w.short;
+  const weather = $('weather'); if (weather) weather.textContent = CITY + ' · ' + w.full;
+  const weatherShort = $('weather-short'); if (weatherShort) weatherShort.textContent = CITY + ' · ' + w.short;
   const mind = $('mind-line'); if (mind) mind.textContent = s.mind || '';
-  const cog = $('cog'); if (cog) cog.textContent = '高 · ' + MIND.cognition + ' / 100';
+  const cogNow = cognitionNow();
+  const cog = $('cog'); if (cog) cog.textContent = (cogNow >= 90 ? '高' : '在长') + ' · ' + cogNow + ' / 100';
   const risk = $('riskpref'); if (risk) risk.textContent = '研究后决策';
   const likeLong = $('like-long'); if (likeLong) likeLong.textContent = '加密货币';
   const likeMkt = $('like-mkt'); if (likeMkt) likeMkt.textContent = '美股';

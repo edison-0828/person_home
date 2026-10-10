@@ -1,4 +1,4 @@
-import { MIND } from './constants.js';
+import { cognitionNow } from './calendar.js';
 import { log, memory } from './memory.js';
 import { tx } from './money.js';
 import { s } from './state.js';
@@ -27,7 +27,7 @@ export function markMood() {
   if (Math.abs(delta) < 1.5) return 0;
   const basis = Math.max(80, (s.cost.btc || 0) + (s.cost.spy || 0));
   const pct = delta / basis;
-  const calm = 1 - MIND.cognition / 230;
+  const calm = 1 - cognitionNow() / 230;
   s.m = cl(s.m + cl(pct * 80, -9, 9) * calm);
   s.today.pnl += delta;
   return delta;
@@ -56,7 +56,7 @@ export function sell(asset, frac, living) {
   log(text);
   memory(living ? 'sell_living' : 'market_pnl', text, {value:realized});
   const pct = cost > 0 ? realized / cost : 0;
-  const calm = 1 - MIND.cognition / 230;
+  const calm = 1 - cognitionNow() / 230;
   s.m = cl(s.m + cl(pct * 70, -10, 10) * calm);
   if (realized < -20) s.riskOffDays = Math.max(s.riskOffDays || 0, 2);
   return value;
@@ -109,7 +109,7 @@ export function driftPrices(scale) {
   return s.lastMove;
 }
 
-export function researchNeed() { return 26 + (MIND.cognition - 70) * 0.45; }
+export function researchNeed() { return 26 + (cognitionNow() - 70) * 0.45; }
 
 export function tradeGate() {
   const floor = 320;

@@ -1,21 +1,21 @@
-import { MIND } from './constants.js';
+import { ageOf, cognitionNow, monthEnded } from './calendar.js';
 import { feelTo, freshValues, mistake } from './emotions.js';
 import { marketValue } from './market.js';
 import { log, memory } from './memory.js';
-import { skillRank } from './skills.js';
+import { gainSkill, skillRank } from './skills.js';
 import { s } from './state.js';
 import { $, cl, rand, time } from './util.js';
 
 export function hireChance() {
   const n = s.searches || 0;
   const skill = Math.min(Math.max(n, 1), 8) * 0.03;
-  const cog = (MIND.cognition - 72) * 0.0024;
+  const cog = (cognitionNow() - 72) * 0.0024;
   const cond = (s.e >= 42 ? 0.02 : -0.035) + (s.m >= 48 ? 0.015 : -0.02);
   const fatigue = s.today && s.today.search >= 3 ? -0.05 : 0;
   return cl(0.04 + skill + cog + cond + fatigue, 0.015, 0.36);
 }
 
-export const LIVING_LABELS = ['房租', '水电费', '网费', '电话费', '衣服', '剪头发', '日用品', '看病', '订阅和会员'];
+export const LIVING_LABELS = ['房租', '水电费', '网费', '电话费', '地铁', '衣服', '剪头发', '日用品', '看病', '订阅和会员'];
 
 export function isLivingCost(label) {
   const text = String(label || '');
@@ -23,20 +23,22 @@ export function isLivingCost(label) {
 }
 
 export const SHOP = {
-  phone:{id:'phone', name:'新手机', cost:720, need:1100, impulse:false},
-  computer:{id:'computer', name:'新电脑', cost:2600, need:3400, impulse:false},
-  sofa:{id:'sofa', name:'更软的沙发', cost:1500, need:2100, impulse:false},
-  gym:{id:'gym', name:'更好的器械', cost:1280, need:1900, impulse:false},
-  guitar:{id:'guitar', name:'一把新吉他', cost:960, need:1500, impulse:false},
-  junk:{id:'junk', name:'一时看上的小东西', cost:280, need:900, impulse:true}
+  phone:{id:'phone', name:'新手机', cost:3299, need:9800, impulse:false},
+  computer:{id:'computer', name:'新电脑', cost:6499, need:15000, impulse:false},
+  sofa:{id:'sofa', name:'更软的沙发', cost:1899, need:11000, impulse:false},
+  gym:{id:'gym', name:'更好的器械', cost:1680, need:12000, impulse:false},
+  guitar:{id:'guitar', name:'一把新吉他', cost:980, need:9000, impulse:false},
+  junk:{id:'junk', name:'一时看上的小东西', cost:199, need:7000, impulse:true}
 };
 
 export const RANK = {
-  junior:{title:'初级远程设计师', wage:46},
-  designer:{title:'远程设计师', wage:64},
-  senior:{title:'资深远程设计师', wage:86},
-  lead:{title:'设计主管', wage:112}
+  junior:{title:'初级远程设计师', wage:78},
+  designer:{title:'远程设计师', wage:108},
+  senior:{title:'资深远程设计师', wage:156},
+  lead:{title:'设计主管', wage:210}
 };
+
+const PROMOTE_DAYS = {junior:180, designer:400, senior:700};
 
 export function owns(id) { return (s.owned || []).indexOf(id) >= 0; }
 
@@ -50,9 +52,10 @@ export function hourlyWage() {
   const info = rankInfo();
   if (!info.wage) return 0;
   let w = info.wage + (s.raise || 0);
-  if (owns('computer')) w += 10;
+  if (owns('computer')) w += 15;
+  w += Math.max(0, ageOf() - 22) * 4;
   w += Math.round(((s.e || 50) - 50) * 0.12 + ((s.m || 50) - 50) * 0.05);
-  return Math.max(28, w);
+  return Math.max(48, w);
 }
 
 export function netWorth() {
@@ -108,9 +111,9 @@ export function nextPurchase() {
 
 export function pickGig() {
   const energy = s.e || 50;
-  if (energy > 68 && rand() < 0.55) return {id:'boxes', name:'搬箱子', pay:Math.round(54 + rand() * 22), tired:16};
-  if (energy < 40 || rand() < 0.42) return {id:'flyers', name:'发传单', pay:Math.round(32 + rand() * 14), tired:8};
-  return {id:'delivery', name:'送外卖', pay:Math.round(42 + rand() * 18), tired:12};
+  if (energy > 68 && rand() < 0.55) return {id:'boxes', name:'搬箱子', pay:Math.round(86 + rand() * 34), tired:16};
+  if (energy < 40 || rand() < 0.42) return {id:'flyers', name:'发传单', pay:Math.round(48 + rand() * 22), tired:8};
+  return {id:'delivery', name:'送外卖', pay:Math.round(62 + rand() * 36), tired:12};
 }
 
 export function promoteOrRaise(hop) {
@@ -169,11 +172,19 @@ export function careerDay(td) {
     fireHim();
     return;
   }
-  if ((s.performance || 0) >= 74 && (s.daysInRank || 0) >= 4 && rand() < 0.42) promoteOrRaise(false);
-  else if ((s.daysInRank || 0) >= 6 && (s.performance || 0) >= 55 && rand() < 0.28) {
-    s.raise = (s.raise || 0) + 4;
-    log('干得稳，时薪悄悄涨到 ¥' + hourlyWage() + '。');
-    feelTo('pride', 6);
+  if (monthEnded(s.day) && (td.workMin || 0) >= 40) {
+    gainSkill('drawing', 4);
+    if (s.focus) gainSkill(s.focus, 3);
+  }
+  const rankId = (s.career && RANK[s.career]) ? s.career : 'junior';
+  const needDays = PROMOTE_DAYS[rankId] || 180;
+  if (monthEnded(s.day)) {
+    if ((s.performance || 0) >= 64 && (s.daysInRank || 0) >= needDays) promoteOrRaise(false);
+    else if ((s.performance || 0) >= 58 && (s.daysInRank || 0) >= 28) {
+      s.raise = (s.raise || 0) + 4;
+      log('在深圳又干满一个月，时薪大约 ¥' + hourlyWage() + '。');
+      feelTo('pride', 4);
+    }
   }
 }
 
