@@ -491,6 +491,8 @@ registerAction({
     if (s.today.workMin > 280) add('再做下去会透支', -30);
     if (s.e < 22) add('精力不够工作', -28);
     if (s.h > 74) add('太饿，先吃饭', -22);
+    if ((s.sickDays || 0) >= 2) add('病着，今天先歇', -38);
+    else if ((s.sickDays || 0) > 0) add('有点不舒服', -18);
     add('这个点不适合开工', -tax);
 
   },
@@ -927,6 +929,8 @@ registerAction({
     if ((s.today.gigs || 0) >= 2) add('今天跑过了', -16);
     if ((s.today.gigs || 0) >= 3) add('再跑就只剩累', -18);
     if (s.h > 76) add('太饿，跑不动', -16);
+    if ((s.sickDays || 0) >= 2) add('病着，跑不动', -28);
+    else if ((s.sickDays || 0) > 0) add('有点不舒服', -12);
     add('夜里不适合', -tax);
 
   },
@@ -1075,7 +1079,8 @@ registerAction({
     else add('还剩一点困意', tired);
     add('醒得太久', Math.max(0, s.awakeMin / 60 - 14) * 5);
     if (h >= 22.5 || h < 5.5) add('到了夜里', 18);
-    if (h > 8 && h < 21 && s.e > 38) add('大白天还不该睡', -42);
+    if ((s.sickDays || 0) >= 2 && h > 8 && h < 21) add('病着，想躺一会儿', 22);
+    else if (h > 8 && h < 21 && s.e > 38) add('大白天还不该睡', -42);
     if (s.h > 74 && h > 6 && h < 23 && canPay(8)) add('太饿，不先睡', -34);
 
   },

@@ -2,7 +2,7 @@ import { FEEL_NAME, MIND, SKILL_META } from './constants.js';
 import { actionLabel, morningPlan } from './decision.js';
 import { dominantFeel } from './emotions.js';
 import { renderLog } from './memory.js';
-import { SHOP, drawTrackChart, hourlyWage, netWorth, rankInfo, stageOf } from './money.js';
+import { SHOP, drawTrackChart, hourlyWage, isLivingCost, netWorth, rankInfo, stageOf } from './money.js';
 import { skillLevelOf } from './skills.js';
 import { s } from './state.js';
 import { $, cl, esc, fmtDur, time, weatherOf } from './util.js';
@@ -67,6 +67,16 @@ export function renderLivelihood() {
   const info = rankInfo();
   const wage = hourlyWage();
   if (facts) {
+    const labels = [];
+    (s.billHistory || []).forEach(function (row) {
+      const name = String(row.label || '').replace(/^只付了一部分/, '');
+      if (name && labels.indexOf(name) < 0) labels.push(name);
+    });
+    const supply = (s.supplies || 0) <= 1.2 ? '见底了' : ((s.supplies || 0) <= 3 ? '快用完' : '还够用');
+    const body = (s.sickDays || 0) > 0 ? ((s.sickName || '不舒服') + ' · 还要养') : '还好';
+    const debtText = (s.debt || 0) > 0
+      ? ('¥ ' + Math.round(s.debt) + ((s.rentBehind || 0) > 0 ? (' · 房租拖了 ' + s.rentBehind + ' 次') : ''))
+      : '没有';
     const cells = [
       ['职位', info.title],
       ['时薪', wage ? ('¥ ' + wage) : '还没有'],
@@ -74,19 +84,24 @@ export function renderLivelihood() {
       ['本月收入', '¥ ' + Math.round(s.monthIn || 0)],
       ['本月支出', '¥ ' + Math.round(s.monthOut || 0)],
       ['净资产', '¥ ' + netWorth()],
-      ['欠款', (s.debt || 0) > 0 ? ('¥ ' + Math.round(s.debt)) : '没有'],
-      ['屋子里的新东西', (s.owned && s.owned.length) ? s.owned.map(function (id) { return (SHOP[id] && SHOP[id].name) || id; }).join('、') : '还没有']
+      ['欠款', debtText],
+      ['日用品', supply],
+      ['身体', body],
+      ['屋子里的新东西', (s.owned && s.owned.length) ? s.owned.map(function (id) { return (SHOP[id] && SHOP[id].name) || id; }).join('、') : '还没有'],
+      ['生活账单', labels.length ? labels.join('、') : '还没有', true]
     ];
     facts.innerHTML = cells.map(function (pair) {
-      return '<div class="fact"><small>' + pair[0] + '</small><strong>' + esc(pair[1]) + '</strong></div>';
+      return '<div class="fact' + (pair[2] ? ' wide' : '') + '"><small>' + pair[0] + '</small><strong>' + esc(pair[1]) + '</strong></div>';
     }).join('');
   }
   const note = $('income-note');
   if (note) {
-    if ((s.debt || 0) > 0) note.textContent = '房租还欠着 ¥' + Math.round(s.debt) + '。存款紧的时候，他会从院子的门出去打散工。';
-    else if (s.money < 260) note.textContent = '存款不多，焦虑会先冒出来，觉也睡得浅。';
-    else if (wage) note.textContent = info.title + '，时薪大约 ¥' + wage + '。吃住和订阅从这里走。';
-    else note.textContent = '还没有固定时薪。散工按趟结，回来人是累的。';
+    const sched = '房租每月1日，网费8日，电话费16日，水电费28日。衣服、理发和日用品按自己的日子走。';
+    if ((s.debt || 0) > 0) note.textContent = '房租还欠着 ¥' + Math.round(s.debt) + '。付不起就记成欠款。' + sched;
+    else if ((s.sickDays || 0) > 0) note.textContent = '他' + (s.sickName || '生病') + '了，这几天会歇一歇，也可能不去开工。' + sched;
+    else if (s.money < 260) note.textContent = '存款不多，房租日过后尤其紧。' + sched;
+    else if (wage) note.textContent = info.title + '，时薪大约 ¥' + wage + '。' + sched;
+    else note.textContent = '还没有固定时薪。散工按趟结，回来人是累的。' + sched;
   }
   const stage = $('stage-name');
   if (stage) stage.textContent = stageOf(s.trajectory || 0) + ' · ' + Math.round(s.trajectory || 0);
@@ -101,11 +116,19 @@ export function renderLivelihood() {
   drawTrackChart();
   const ledger = $('ledger');
   if (ledger) {
-    if (!s.ledger || !s.ledger.length) ledger.innerHTML = '<div class="empty-note">还没有进出账。</div>';
-    else ledger.innerHTML = s.ledger.slice(0, 7).map(function (row) {
+    const pins = (s.billHistory || []).slice(0, 8);
+    const recent = (s.ledger || []).filter(function (row) {
+      return !pins.some(function (p) {
+        return p.day === row.day && p.label === row.label && p.amount === row.amount && p.time === row.time;
+      });
+    }).slice(0, 4);
+    const rows = pins.concat(recent);
+    if (!rows.length) ledger.innerHTML = '<div class="empty-note">还没有进出账。</div>';
+    else ledger.innerHTML = rows.map(function (row) {
       const sign = row.amount > 0 ? ('+' + row.amount) : String(row.amount);
       const tag = row.amount > 0 ? 'b' : 'i';
-      return '<div class="tx"><span>第' + row.day + '天 ' + esc(row.label) + '</span><' + tag + '>' + sign + '</' + tag + '></div>';
+      const bill = isLivingCost(row.label) ? ' bill' : '';
+      return '<div class="tx' + bill + '"><span>第' + row.day + '天 ' + esc(row.label) + '</span><' + tag + '>' + sign + '</' + tag + '></div>';
     }).join('');
   }
 }

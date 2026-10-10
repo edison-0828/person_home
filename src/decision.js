@@ -147,6 +147,16 @@ export function composeThought(id) {
   push((s.debt || 0) > 0, '欠着的数字比天气更清楚。');
   push(s.money < 180, '存款见底的时候，连呼吸都变短。');
   push(s.money < 140, '钱包比计划更诚实。');
+  const note = s.lifeNote || {};
+  const yesterdayNote = note.day && s.day === note.day + 1;
+  push((s.sickDays || 0) > 0, '嗓子不舒服，今天的事先放轻一点。');
+  push(!!(yesterdayNote && note.sick) && !(s.sickDays > 0), '身子还记得前几天不舒服。');
+  push(!!(yesterdayNote && note.haircut), '昨天把头发剪短了，镜子里清爽一点。');
+  push(!!(yesterdayNote && note.rentTight), '房租刚走，口袋空了一块。');
+  push(!!note.regret, '那件衣服买的时候高兴，现在看着有点多余。');
+  push(!!(yesterdayNote && note.utilities), '水电单比预想的厚，是在家待久了。');
+  push(!!(yesterdayNote && note.supplies), '牙膏和洗衣液又买上了。');
+  push(!!(note.billWorry && (s.debt || 0) > 0), '有一笔账没付齐，数字还挂着。');
   const line = pickOne(lines) || '……';
   return '“' + line + '”';
 }
