@@ -84,19 +84,76 @@
 
 ## 运行方式
 
-最简单的方式是直接用浏览器打开 `index.html`。
+页面由多个 ES 模块组成，要用本地静态服务器打开，浏览器才会加载它们。
 
-也可以在项目目录启动本地静态服务器：
-
-```powershell
-python -m http.server 8000
+```bash
+npm start
 ```
 
-然后访问：
+或：
 
-```text
-http://127.0.0.1:8000/index.html
+```bash
+node server.mjs
 ```
+
+然后访问 `http://127.0.0.1:8000/`。`python -m http.server 8000` 和 `npx serve .` 也可以。
+
+要得到一份可部署的目录，运行 `npm run build`（或 `node scripts/build.mjs`）。它把 `index.html` 和 `src/` 复制到 `dist/`，放到任何静态网站上即可。
+
+## 代码怎么分开
+
+| 文件 | 管什么 |
+| --- | --- |
+| `src/main.js` | 启动、主循环，以及 `render_game_to_text` / `advanceTime` |
+| `src/map.js` | 地砖、落点、寻路 |
+| `src/sprites.js`、`src/tiles.js`、`src/render.js` | 人物、家具、地砖和整幅画面 |
+| `src/actions/catalog.js` | 每一个行动的登记 |
+| `src/decision.js` | 打分、抽取、开始和结束一件事 |
+| `src/loop.js` | 时间推进、走动、一天的结算 |
+| `src/emotions.js`、`src/skills.js` | 情绪、教训、手艺 |
+| `src/money.js`、`src/market.js` | 收支、职业、虚拟行情 |
+| `src/memory.js`、`src/diary.js` | 记忆和日记 |
+| `src/persist.js`、`src/ui.js` | 存档和面板 |
+
+## 怎么加一个新行动
+
+只在 `src/actions/catalog.js` 里登记一次。登记的先后就是每回合打分的先后。
+
+```js
+registerAction({
+  id: 'read',
+  label: '看书',
+  place: 'sofa',     // src/map.js 里 SPOTS 的格子名
+  room: 'living',
+  mins: 30,          // 大约要花的分钟
+  pose: 'sit',       // 停下后的姿势。走路时画面仍是 walk
+  score(ctx) {
+    const add = ctx.add;
+    add('想安静一会儿', 8);
+    if (ctx.h < 8) return false; // 返回 false：这会儿做不了
+  },
+  spec(spec) {
+    spec.mood = 0.04;
+    spec.energy = 0.02;
+  },
+  onStart() { /* 刚决定做的时候 */ },
+  resolve(mins, id) { /* 做完之后 */ },
+  thoughts(push, id) { push(true, '看几页就好。'); },
+  journal(spec) { return '坐下来看书。'; }
+});
+```
+
+常用字段：
+
+- `score(ctx)`：`ctx` 里有 `add(说明, 分数)`、`h`（钟点）、`tax`（夜里的扣分）、`poorEnergy`。不写就是 0 分，再叠上记忆和情绪。
+- `spec(spec)`：这一段的饥饿、精力、心情变化，以及 `spec.cost`（花费）。
+- `destination()`：落点要看当天状态时才写，比如练不同手艺去不同房间。平时用 `place`。
+- `duration()`：时长不固定时才写，否则用 `mins`。
+- `pose` 可以是字符串，也可以是函数。现成姿势有 `walk`、`sit`、`cook`、`eat`、`type`、`lift`、`sleep`、`idle`。
+- `thoughts(push, id)` 写在共同的后悔句之前；`thoughtsLate(push, id)` 写在那几句之后。
+- `labelOf()`、`mind()`、`mindEarly()` 用来改状态栏和思维画像。
+
+如果希望它偶尔变成「今天有点想做的事」，把 id 加进同一文件底部的 `WHIM_JOB`（已经有工作）或 `WHIM_FREE`（还在找工作）。新的落点格子加在 `src/map.js` 的 `SPOTS`。
 
 ## 画面
 
@@ -113,7 +170,7 @@ http://127.0.0.1:8000/index.html
 
 ## 技术说明
 
-- 单文件 HTML
+- 原生 ES 模块，没有打包框架。`index.html` 负责页面，`src/` 按地图、画面、行动、决策、情绪、手艺、钱、日记、存档和主循环分开
 - Canvas 像素画面，16×16 地砖，画面坐标是世界坐标的 2 倍
 - 自动昼夜循环（灯光跟着钟点走，他的行动不跟着时刻表走）
 - `window.render_game_to_text()`：观察用快照，包含所在格子、朝向、姿势、决策理由、分数、记忆、清醒时间、虚拟持仓，以及情绪、手艺、教训、醒悟和最近的日记。另外带上 `finances`（现金、欠款、净资产、职位、时薪、本月收支、今日散工、拖欠房租、已购物品、最近账目）和 `trajectory`（分数、阶段、转折、最近几天的历史）
