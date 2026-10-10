@@ -49,11 +49,19 @@ aside{display:flex;flex-direction:column;gap:12px}
 .log-item:before{content:"";position:absolute;left:0;top:4px;width:6px;height:6px;background:#c46a42}
 .log-item time{color:#b18462;margin-right:6px}
 .footer-note{margin-top:16px;text-align:center;color:#cbb59a;font-size:11px}
-@media(max-width:820px){.shell{padding:16px 12px 24px}header{align-items:flex-start;flex-direction:column}.signal{align-self:flex-start}.layout{grid-template-columns:1fr}}
+.inner{display:grid;grid-template-columns:1.05fr .95fr 1.25fr 1fr;gap:12px;margin-top:16px}
+.emo{display:flex;flex-wrap:wrap;gap:6px}
+.emo b{font-weight:bold;font-size:11px;padding:4px 7px;border:2px solid #e2c49a;background:#fff1d6;color:#5a3824}
+.skill-row{margin:8px 0}
+.skill-row span{display:flex;justify-content:space-between;font-size:11px;margin-bottom:4px}
+.diary-item,.lesson-item{font-size:11px;color:#5c4638;line-height:1.5;padding:0 0 8px}
+.diary-item time,.lesson-item time{display:block;color:#b18462;font-size:10px;margin-bottom:2px}
+.empty-note{font-size:11px;color:#a07858}
+@media(max-width:820px){.shell{padding:16px 12px 24px}header{align-items:flex-start;flex-direction:column}.signal{align-self:flex-start}.layout,.inner{grid-template-columns:1fr}}
 </style>
 </head>
 <body><main class="shell">
-<header><div><div class="eyebrow">PIXEL AUTONOMOUS LIFE / OBSERVER MODE</div><h1>小屋里的他</h1><div class="subtitle">俯视像素小屋 · 16×16 地砖 · 你只能观察，不能下命令</div></div><div class="signal"><i></i> AUTONOMOUS / NO INPUT</div></header>
+<header><div><div class="eyebrow">PIXEL AUTONOMOUS LIFE / OBSERVER MODE</div><h1>小屋里的他</h1><div class="subtitle">俯视像素小屋 · 他会后悔，也会学会 · 你只能观察</div></div><div class="signal"><i></i> AUTONOMOUS / NO INPUT</div></header>
 <div class="layout"><section class="card scene-card"><canvas id="world" width="704" height="576" aria-label="top-down pixel house"></canvas><div class="scene-caption"><span>DAY <b id="day">01</b> · <b id="clock">07:42</b></span><span id="weather">晴朗 · 微风</span></div></section>
 <aside>
 <section class="card panel"><div class="panel-title"><span>观察对象</span><small>RESIDENT 01</small></div><div class="agent-row"><div class="avatar">他</div><div><div class="agent-name">林默</div><div class="agent-meta" id="role">自由职业者 · 在找工作</div></div></div><div class="now"><div class="now-label">NOW DOING</div><div class="now-action" id="action">醒来，坐在床边</div><div class="thought" id="thought">“今天先看看邮箱，再决定要不要出门。”</div></div></section>
@@ -61,7 +69,14 @@ aside{display:flex;flex-direction:column;gap:12px}
 <section class="card panel"><div class="panel-title"><span>他的生活</span><small>NO INTERVENTION</small></div><div class="facts"><div class="fact"><small>关系</small><strong>一个人住</strong></div><div class="fact"><small>连续清醒</small><strong id="awake">00:08</strong></div><div class="fact"><small>今日计划</small><strong id="plan">找工作</strong></div><div class="fact"><small>世界天气</small><strong id="weather-short">晴朗</strong></div></div></section>
 <section class="card panel"><div class="panel-title"><span>思维画像</span><small>PERSONALITY</small></div><div class="facts"><div class="fact"><small>认知水平</small><strong id="cog">高 · 92 / 100</strong></div><div class="fact"><small>风险偏好</small><strong id="riskpref">研究后决策</strong></div><div class="fact"><small>长期兴趣</small><strong id="like-long">加密货币</strong></div><div class="fact"><small>市场兴趣</small><strong id="like-mkt">美股</strong></div></div><div class="thought" id="mind-line" style="margin-top:11px;color:#594945">“先理解，再行动；不被短期波动牵着走。”</div></section>
 <section class="card panel"><div class="panel-title"><span>生活痕迹</span><small>RECENT MOMENTS</small></div><div class="log" id="log"></div></section>
-</aside></div><div class="footer-note">林默不会看到你的注视，也不会等待你的允许。</div></main>
+</aside></div>
+<section class="inner">
+<section class="card panel"><div class="panel-title"><span>此刻的情绪</span><small>FEELING</small></div><div class="emo" id="emo"></div><div class="thought" id="feel-note"></div></section>
+<section class="card panel"><div class="panel-title"><span>正在学</span><small id="focus-label">SKILL</small></div><div id="skills"></div></section>
+<section class="card panel"><div class="panel-title"><span>夜里的日记</span><small>JOURNAL</small></div><div id="diary"></div></section>
+<section class="card panel"><div class="panel-title"><span>教训和领悟</span><small>LESSONS</small></div><div id="lessons"></div></section>
+</section>
+<div class="footer-note">林默不会看到你的注视，也不会等待你的允许。</div></main>
 <script>
 (() => {
   const c = document.querySelector('canvas');
@@ -98,6 +113,7 @@ aside{display:flex;flex-direction:column;gap:12px}
     workout: {label:'进行力量训练', place:'gym', room:'living', mins:36},
     walk: {label:'在院子里走走', place:'yard', room:'yard', mins:20},
     relax: {label:'窝在沙发上发呆', place:'sofa', room:'living', mins:24},
+    practice: {label:'练一门手艺', place:'sofa', room:'living', mins:30},
     sleep: {label:'睡着了', place:'bed', room:'bedroom', mins:80}
   };
   const IDS = Object.keys(ACT);
@@ -280,7 +296,7 @@ aside{display:flex;flex-direction:column;gap:12px}
   let deciding = false;
 
   function freshToday() {
-    return {meals:0, workout:0, market:0, workMin:0, search:0, rejects:0, pnl:0, spent:0, earned:0, walk:0, relax:0, trades:0};
+    return {meals:0, workout:0, market:0, workMin:0, search:0, rejects:0, pnl:0, spent:0, earned:0, walk:0, relax:0, trades:0, practice:0, mistakeIds:[], comfort:0, rainNoted:0, breakthrough:0};
   }
   function blank() {
     return {
@@ -300,6 +316,10 @@ aside{display:flex;flex-direction:column;gap:12px}
       prepped:false, preppedAt:0,
       chain:1, whim:'market', block:null,
       plan:'找工作', thought:'', mind:'',
+      feel:{joy:46, anxiety:28, loneliness:52, pride:24, regret:8, hope:44, nostalgia:12},
+      skills:{cooking:{xp:8, level:0, plateau:0}, guitar:{xp:4, level:0, plateau:0}, drawing:{xp:3, level:0, plateau:0}, trading:{xp:6, level:0, plateau:0}},
+      values:{health:1, craft:1, calm:1, money:1},
+      focus:'guitar', lessons:[], diary:[], insights:[], mistakes:[], arc:[],
       decision:{action:'wake', reason:'', scores:{}},
       session:{hunger:0, energy:0, mood:0, cost:0, wage:0},
       hungerAtStart:28,
@@ -442,7 +462,7 @@ aside{display:flex;flex-direction:column;gap:12px}
     if (realized < -20) s.riskOffDays = Math.max(s.riskOffDays || 0, 2);
     return value;
   }
-  function buy(asset, amount) {
+  function buy(asset, amount, note) {
     amount = Math.round(amount);
     const price = s.prices[asset] || 0;
     if (amount < 20 || s.money < amount || !(price > 0)) return false;
@@ -453,7 +473,7 @@ aside{display:flex;flex-direction:column;gap:12px}
     s.lastPnl = 0;
     s.today.trades += 1;
     const name = asset === 'btc' ? 'BTC' : '标普';
-    const text = '研究之后买入少量' + name + '，金额 ¥' + amount + '。';
+    const text = note || ('研究之后买入少量' + name + '，金额 ¥' + amount + '。');
     log(text);
     memory('market_trade', text, {value:-amount});
     return true;
@@ -522,6 +542,342 @@ aside{display:flex;flex-direction:column;gap:12px}
     }
     if (id === 'market' && lostToday()) return {v:-8, label:'今天已经亏过，先消化一下'};
     return null;
+  }
+
+  const SKILL_META = {
+    cooking:{name:'做饭', place:'stove'},
+    guitar:{name:'吉他', place:'sofa'},
+    drawing:{name:'画画', place:'desk'},
+    trading:{name:'交易纪律', place:'desk'}
+  };
+  const FEEL_NAME = {joy:'喜悦', anxiety:'焦虑', loneliness:'孤独', pride:'自豪', regret:'后悔', hope:'希望', nostalgia:'怀念'};
+  const LESSON_TEXT = {
+    patient:'手痒的时候先复盘，不要用仓位出气。',
+    sleep:'熬夜换来的清醒，第二天会连本带利还回去。',
+    train:'没练的那一天，身体会在第二天提醒他。',
+    spend:'心情不好时多花的钱，事后并不安慰人。',
+    oversleep:'睡过头不是休息，是把早晨弄丢了。'
+  };
+  function freshFeel() {
+    return {joy:46, anxiety:28, loneliness:52, pride:24, regret:8, hope:44, nostalgia:12};
+  }
+  function freshSkills() {
+    return {
+      cooking:{xp:8, level:0, plateau:0},
+      guitar:{xp:4, level:0, plateau:0},
+      drawing:{xp:3, level:0, plateau:0},
+      trading:{xp:6, level:0, plateau:0}
+    };
+  }
+  function freshValues() { return {health:1, craft:1, calm:1, money:1}; }
+  function skillLevelOf(xp) {
+    return Math.max(0, Math.min(8, Math.floor(Math.sqrt(Math.max(0, xp) / 18))));
+  }
+  function skillRank(id) {
+    const sk = s.skills && s.skills[id];
+    return sk ? skillLevelOf(sk.xp) : 0;
+  }
+  function lessonOf(id) {
+    return (s.lessons || []).find(function (l) { return l && l.id === id; }) || null;
+  }
+  function lessonStrength(id) {
+    const l = lessonOf(id);
+    return l ? cl(l.strength || 0) : 0;
+  }
+  function feelTo(key, delta) {
+    if (!s.feel) s.feel = freshFeel();
+    if (s.feel[key] === undefined || !isFinite(delta)) return;
+    s.feel[key] = cl(s.feel[key] + delta);
+    const moodMap = {joy:0.08, hope:0.05, pride:0.05, anxiety:-0.06, regret:-0.06, loneliness:-0.04, nostalgia:0.02};
+    if (moodMap[key]) s.m = cl(s.m + delta * moodMap[key]);
+  }
+  function feelBaseline() {
+    return {
+      joy:42 + (s.m - 50) * 0.12,
+      anxiety:24 + (s.money < 400 ? 16 : 0) + (s.job ? 0 : 5),
+      loneliness:48,
+      pride:22 + Math.min(10, s.streak && s.streak.workout || 0),
+      regret:12,
+      hope:s.job ? 56 : 40,
+      nostalgia:weatherOf(s.day).short === '小雨' ? 34 : 16
+    };
+  }
+  function decayFeel(mins) {
+    if (!s.feel) s.feel = freshFeel();
+    const base = feelBaseline();
+    const k = 1 - Math.exp(-Math.max(0, mins) / 220);
+    Object.keys(base).forEach(function (key) {
+      s.feel[key] = cl(s.feel[key] + (base[key] - s.feel[key]) * k);
+    });
+  }
+  function rainMood() {
+    if (!s.today) return;
+    if (weatherOf(s.day).short !== '小雨' || s.today.rainNoted) return;
+    s.today.rainNoted = 1;
+    feelTo('nostalgia', 20);
+    feelTo('loneliness', 6);
+    memory('rain', '下雨了，他想起以前一个人听雨的晚上。');
+  }
+  function gainSkill(id, raw) {
+    if (!s.skills || !s.skills[id] || !(raw > 0)) return;
+    const sk = s.skills[id];
+    const lvl = skillLevelOf(sk.xp);
+    let gain = raw / (1 + lvl * 0.45);
+    const into = sk.xp % 36;
+    const plateau = lvl >= 1 && into > 22 && into < 33;
+    if (plateau) {
+      sk.plateau = (sk.plateau || 0) + 1;
+      gain *= 0.38;
+      if (sk.plateau >= 2 && rand() < 0.28) {
+        gain += 14;
+        sk.plateau = 0;
+        feelTo('pride', 14);
+        feelTo('joy', 8);
+        const text = SKILL_META[id].name + '卡了一阵，忽然顺了。';
+        log(text);
+        memory('breakthrough', text);
+        if (s.today) s.today.breakthrough = (s.today.breakthrough || 0) + 1;
+      }
+    } else sk.plateau = 0;
+    const before = lvl;
+    sk.xp = Math.round((sk.xp + gain) * 10) / 10;
+    sk.level = skillLevelOf(sk.xp);
+    if (sk.level > before) {
+      feelTo('pride', 12);
+      feelTo('joy', 6);
+      const text = SKILL_META[id].name + '到了 ' + sk.level + ' 级。';
+      log(text);
+      memory('skill', text);
+    }
+  }
+  function maybeInsight(fromLesson) {
+    if (s.today && s.today.insight && fromLesson) return;
+    const recent = (s.insights || []).some(function (i) { return i && s.day - i.day < 2; });
+    if (recent && !fromLesson) return;
+    if (!fromLesson && rand() > 0.22) return;
+    let text = '';
+    let origin = fromLesson || 'life';
+    const shift = {health:0, craft:0, calm:0, money:0};
+    const had = function (src) {
+      return (s.insights || []).some(function (i) { return i && i.from === src; });
+    };
+    if (fromLesson === 'patient') {
+      text = '钱会回来，手痒的那一下不会。存款还剩 ¥' + Math.round(s.money) + '，不够拿来出气。';
+      shift.money = -0.16; shift.calm = 0.18;
+    } else if (fromLesson === 'train' || fromLesson === 'oversleep') {
+      text = '把自己照顾好不是奖励，是第二天还能想事情的前提。';
+      shift.health = 0.22; shift.calm = 0.08;
+    } else if (fromLesson === 'spend' || fromLesson === 'sleep') {
+      text = '孤独填不满账单，熬夜也补不回判断。';
+      shift.craft = 0.12; shift.calm = 0.12; shift.money = -0.08;
+    } else if (s.feel && s.feel.regret > 36 && s.mistakes && s.mistakes[0] && !had('regret')) {
+      text = '后悔如果只停在晚上，第二天还会重来。存款还剩 ¥' + Math.round(s.money) + '。';
+      shift.calm = 0.14;
+      origin = 'regret';
+    } else if ((s.money || 0) < 520 && !s.job && !had('money')) {
+      text = '第' + s.day + '天存款只剩 ¥' + Math.round(s.money) + '，先把日子稳住，再谈翻盘。';
+      shift.money = 0.12; shift.calm = 0.08;
+      origin = 'money';
+    } else if ((s.streak && s.streak.workout || 0) >= 4 && !had('streak')) {
+      text = '连续练了 ' + s.streak.workout + ' 天，身体比计划更诚实。';
+      shift.health = 0.14;
+      origin = 'streak';
+    } else if (s.focus && skillRank(s.focus) >= 2 && !had('craft')) {
+      text = (SKILL_META[s.focus] || SKILL_META.guitar).name + '慢慢变成了自己的事，而不是打发时间。';
+      shift.craft = 0.16;
+      origin = 'craft';
+    } else if (s.feel && s.feel.nostalgia > 50 && !had('nostalgia')) {
+      text = '想念不会把一个人变好，但承认它，晚上会轻一点。第' + s.day + '天他这么觉得。';
+      shift.calm = 0.1; shift.craft = 0.08;
+      origin = 'nostalgia';
+    } else if (s.feel && s.feel.loneliness > 64 && !had('alone')) {
+      text = '一个人住没关系，但日子不能只剩行情和招聘。';
+      shift.craft = 0.18;
+      origin = 'alone';
+    } else return;
+    if (!s.values) s.values = freshValues();
+    s.values.health = cl(s.values.health + shift.health, 0.65, 1.75);
+    s.values.craft = cl(s.values.craft + shift.craft, 0.65, 1.75);
+    s.values.calm = cl(s.values.calm + shift.calm, 0.65, 1.75);
+    s.values.money = cl(s.values.money + shift.money, 0.65, 1.75);
+    if (!s.insights) s.insights = [];
+    s.insights.unshift({day:s.day, text:text, from:origin});
+    if (s.insights.length > 6) s.insights.length = 6;
+    if (s.today) s.today.insight = 1;
+    feelTo('hope', 6);
+    log('他停了一下：' + text);
+    memory('insight', text);
+  }
+  function reinforceLesson(id, amount, why) {
+    if (!s.lessons) s.lessons = [];
+    let l = lessonOf(id);
+    const born = !l;
+    if (!l) {
+      l = {id:id, text:LESSON_TEXT[id] || id, strength:0, day:s.day, formed:s.day, followed:0, ignored:0, why:why || ''};
+      s.lessons.unshift(l);
+      if (s.lessons.length > 8) s.lessons.length = 8;
+    } else l.ignored = (l.ignored || 0) + 1;
+    const before = l.strength || 0;
+    l.strength = cl(before + amount);
+    l.day = s.day;
+    l.why = why || l.why;
+    if (before < 52 && l.strength >= 52) maybeInsight(id);
+    else if (born && l.strength >= 52) maybeInsight(id);
+    return l;
+  }
+  function markFollowed(id) {
+    const l = lessonOf(id);
+    if (!l || (l.strength || 0) < 12) return;
+    if (l.followDay === s.day) return;
+    l.followDay = s.day;
+    l.followed = (l.followed || 0) + 1;
+    l.strength = cl(l.strength + 4);
+    if (!s.arc) s.arc = [];
+    s.arc.push({lesson:id, day:s.day, regret:Math.round(s.feel && s.feel.regret || 0), text:l.text});
+    if (s.arc.length > 16) s.arc.splice(0, s.arc.length - 16);
+  }
+  function mistake(id, detail) {
+    if (!s.today) s.today = freshToday();
+    if (!s.today.mistakeIds) s.today.mistakeIds = [];
+    if (s.today.mistakeIds.indexOf(id) >= 0) return;
+    s.today.mistakeIds.push(id);
+    log(detail);
+    memory('mistake', detail);
+    feelTo('regret', 16);
+    feelTo('joy', -6);
+    if (id === 'impulse') { feelTo('anxiety', 8); reinforceLesson('patient', 34, detail); }
+    else if (id === 'late') { feelTo('anxiety', 5); reinforceLesson('sleep', 26, detail); }
+    else if (id === 'skip') reinforceLesson('train', 24, detail);
+    else if (id === 'spend') { feelTo('anxiety', 6); reinforceLesson('spend', 26, detail); }
+    else if (id === 'oversleep') reinforceLesson('oversleep', 22, detail);
+    if (!s.mistakes) s.mistakes = [];
+    s.mistakes.unshift({day:s.day, id:id, text:detail});
+    if (s.mistakes.length > 12) s.mistakes.length = 12;
+  }
+  function dominantFeel() {
+    const base = feelBaseline();
+    let best = 'loneliness', lift = -1e9, absBest = 'loneliness', abs = -1;
+    Object.keys(FEEL_NAME).forEach(function (k) {
+      const v = s.feel && s.feel[k] || 0;
+      const d = v - (base[k] || 0);
+      if (d > lift) { lift = d; best = k; }
+      if (v > abs) { abs = v; absBest = k; }
+    });
+    const key = lift >= 4 ? best : absBest;
+    return {key:key, name:FEEL_NAME[key], value:s.feel && s.feel[key] || 0};
+  }
+  function writeDiary(day) {
+    if (!s.feel) s.feel = freshFeel();
+    if (rand() < 0.34) maybeInsight(null);
+    const td = s.today || freshToday();
+    const dom = dominantFeel();
+    const meals = td.meals || 0;
+    const parts = ['第' + day + '天，' + weatherOf(day).short + '。', '吃了' + meals + '顿', td.workout ? '练过' : '没练'];
+    if (s.job) parts.push('工作' + Math.round(td.workMin || 0) + '分钟');
+    else parts.push('投了' + (td.search || 0) + '份简历');
+    const pnl = Math.round(td.pnl || 0);
+    if (pnl <= -5) parts.push('市场亏了约 ¥' + Math.abs(pnl));
+    else if (pnl >= 5) parts.push('市场盈了约 ¥' + pnl);
+    parts.push('存款 ¥' + Math.round(s.money));
+    if (td.practice) parts.push('练过' + ((SKILL_META[s.focus] || {}).name || '手艺'));
+    let body = parts[0] + parts.slice(1).join('，') + '。';
+    body += '心里最沉的是' + dom.name + '。';
+    const mine = (s.mistakes || []).filter(function (m) { return m.day === day; });
+    if (mine.length) {
+      let bit = mine[0].text || '';
+      if (!/[。！？]$/.test(bit)) bit += '。';
+      body += '今天后悔：' + bit;
+    }
+    const top = (s.lessons || [])[0];
+    if (top && top.strength > 14) body += '想记住：' + top.text;
+    else if (s.focus && SKILL_META[s.focus]) body += '明天还想碰一碰' + SKILL_META[s.focus].name + '。';
+    if (dom.key === 'nostalgia') body += '安静的时候，旧晚上会自己走进来。';
+    if (td.breakthrough) body += '有一门手艺今天忽然顺了一点。';
+    const insight = (s.insights || []).find(function (i) { return i.day === day; });
+    if (insight) body += '另外他好像明白了：' + insight.text;
+    if (!s.diary) s.diary = [];
+    const entry = {day:day, time:time(), text:body, feel:dom.key};
+    const idx = s.diary.findIndex(function (d) { return d.day === day; });
+    if (idx >= 0) s.diary[idx] = entry;
+    else {
+      s.diary.unshift(entry);
+      memory('diary', body.slice(0, 90));
+    }
+    if (s.diary.length > 16) s.diary.length = 16;
+  }
+  function chooseFocus() {
+    const f = s.feel || freshFeel();
+    const weights = {
+      cooking:1 + (lessonStrength('spend') > 16 ? 0.85 : 0) + Math.max(0, (s.values.craft || 1) - 1),
+      guitar:1.2 + Math.max(0, f.loneliness - 42) / 48 + (f.nostalgia > 40 ? 0.4 : 0),
+      drawing:0.8 + (f.nostalgia > 34 ? 0.35 : 0) + Math.max(0, (s.values.craft || 1) - 1) * 0.8,
+      trading:1 + Math.max(0, f.anxiety - 38) / 42 + Math.max(0, (s.values.money || 1) - 1) + (lessonStrength('patient') > 12 ? 0.55 : 0)
+    };
+    const keys = Object.keys(weights);
+    let sum = 0;
+    keys.forEach(function (k) { weights[k] = Math.max(0.2, weights[k]); sum += weights[k]; });
+    let r = rand() * sum;
+    let pick = keys[0];
+    for (let i = 0; i < keys.length; i++) {
+      r -= weights[keys[i]];
+      if (r <= 0) { pick = keys[i]; break; }
+    }
+    s.focus = pick;
+  }
+  function impulseChance() {
+    const skill = skillRank('trading');
+    const anx = s.feel ? s.feel.anxiety : 30;
+    const lesson = lessonStrength('patient');
+    let p = 0.3;
+    p += Math.max(0, anx - 36) * 0.004;
+    p -= skill * 0.04;
+    p -= lesson * 0.0052;
+    p -= ((s.values && s.values.calm) || 1) > 1 ? ((s.values.calm - 1) * 0.12) : 0;
+    if (s.riskOffDays > 0) p *= 0.5;
+    return cl(p, 0.04, 0.68);
+  }
+  function applyInnerBias(id, add) {
+    const f = s.feel || freshFeel();
+    const v = s.values || freshValues();
+    if (id === 'workout') {
+      add('身体这件事变重了', (v.health - 1) * 14);
+      add('没练过的教训还在', lessonStrength('train') * 0.28);
+      if (f.pride > 58) add('想保住练出来的感觉', 5);
+    }
+    if (id === 'sleep') {
+      add('想把作息拉回来', lessonStrength('sleep') * 0.22 + lessonStrength('oversleep') * 0.18);
+      add('想让心里静一点', (v.calm - 1) * 10);
+      if (f.anxiety > 64 && (hour() >= 22 || hour() < 6)) add('焦虑的时候更该睡', 6);
+    }
+    if (id === 'market') {
+      add('还惦记着钱', (v.money - 1) * 8);
+      if (f.anxiety > 64 && lessonStrength('patient') < 12) add('焦虑时会想看盘', 6);
+      if (lessonStrength('patient') > 16 && s.research < researchNeed()) add('上次手痒亏过，这回先别扑上去', -lessonStrength('patient') * 0.16);
+    }
+    if (id === 'practice') {
+      add('想把手艺留住', (v.craft - 1) * 14);
+      if (s.focus === 'trading') add('教训是先复盘再动手', lessonStrength('patient') * 0.32);
+    }
+    if (id === 'cook') {
+      add('想把饭做好一点', skillRank('cooking') * 1.4 + (s.focus === 'cooking' ? 7 : 0));
+      add('少靠外卖撑着', lessonStrength('spend') * 0.22);
+    }
+    if (id === 'dinner' && !s.prepped) add('外卖会让他心虚', -lessonStrength('spend') * 0.14);
+    if (id === 'walk' && f.nostalgia > 48 && weatherOf(s.day).short === '小雨') add('雨声让他想在屋檐下站一会儿', 6);
+    if (id === 'relax' && f.nostalgia > 55) add('想一个人坐着', 6);
+    if ((id === 'practice' || id === 'walk') && f.loneliness > 62) add('一个人久了，想做点有回声的事', 6);
+    if (id === 'search' && f.hope < 28) add('盼头不多，投简历也发虚', -6);
+    if (id === 'search' && f.hope > 62) add('还觉得会有回音', 4);
+  }
+  function actionLabel(id) {
+    if (id === 'practice') return '练习' + ((SKILL_META[s.focus] || SKILL_META.guitar).name);
+    return (ACT[id] && ACT[id].label) || id || '';
+  }
+  function practicePlace() {
+    return (SKILL_META[s.focus] || SKILL_META.guitar).place;
+  }
+  function esc(t) {
+    return String(t || '').replace(/[&<>]/g, function (ch) { return {'&':'&amp;','<':'&lt;','>':'&gt;'}[ch]; });
   }
 
   function evaluate(id) {
@@ -657,12 +1013,24 @@ aside{display:flex;flex-direction:column;gap:12px}
       if (s.today.relax >= 3) add('已经歇了很久', -12);
       if (h >= 23.8 || h < 5) add('这个点更该睡', -12);
       if (s.restLock) add('身体要求先停下来', 18);
+    } else if (id === 'practice') {
+      const meta = SKILL_META[s.focus] || SKILL_META.guitar;
+      if (s.restLock && s.e < 16) return bad;
+      if (s.focus === 'cooking' && !canPay(6)) return bad;
+      add('想把' + meta.name + '练扎实', 12);
+      add('这个点适合慢练', Math.max(peak(h, 10, 12) * 8, peak(h, 19, 22.5) * 16));
+      if (s.focus === 'guitar' || s.focus === 'drawing') add('一个人的时候想做点能留下的事', Math.max(0, ((s.feel && s.feel.loneliness) || 0) - 40) * 0.35);
+      if (s.focus === 'trading') add('与其下单，不如复盘', 8);
+      if ((s.today.practice || 0) >= 2) add('今天练过了', -16);
+      if (s.h > 78) add('太饿，静不下来', -14);
+      add('夜里不适合', -tax * 0.6);
     } else return bad;
 
     if (repeat) add('刚做过，先换一件', repeat);
     const nudge = memoryNudge(id);
     if (nudge) add(nudge.label, nudge.v);
     if (id === s.whim && id !== 'sleep') add('今天有点想做这件事', 8);
+    applyInnerBias(id, add);
     const score = parts.reduce((sum, p) => sum + p.value, 0);
     return {ok:true, score:score, parts:parts};
   }
@@ -705,7 +1073,7 @@ aside{display:flex;flex-direction:column;gap:12px}
     return scores;
   }
   function rollWhim() {
-    const pool = s.job ? ['market', 'workout', 'walk', 'cook', 'relax', 'work'] : ['market', 'workout', 'walk', 'cook', 'relax', 'search'];
+    const pool = s.job ? ['market', 'workout', 'walk', 'cook', 'relax', 'work', 'practice'] : ['market', 'workout', 'walk', 'cook', 'relax', 'search', 'practice'];
     return pool[Math.floor(rand() * pool.length)];
   }
   function morningPlan() {
@@ -715,6 +1083,7 @@ aside{display:flex;flex-direction:column;gap:12px}
     if (s.day < s.workFromDay) return '准备开工';
     if ((s.today.workMin || 0) < 180) return '完成项目';
     if (s.yesterday && !s.yesterday.workout) return '补上训练';
+    if ((s.today.practice || 0) < 1 && s.focus && SKILL_META[s.focus] && (s.day % 3 === 0)) return '练' + SKILL_META[s.focus].name;
     return '研究市场';
   }
   function pickOne(arr) {
@@ -784,11 +1153,29 @@ aside{display:flex;flex-direction:column;gap:12px}
       push(s.e < 35, '不是懒，是电量不够了。');
       push(y && !y.workout, '沙发上会想起昨天没练，但不必马上惩罚自己。');
     }
+    if (id === 'practice') {
+      const meta = SKILL_META[s.focus] || SKILL_META.guitar;
+      push(true, '把' + meta.name + '练一会儿，不求今天就变厉害。');
+      push(skillRank(s.focus) < 2, meta.name + '还生，生就慢慢来。');
+      push(s.focus === 'trading', '今天只复盘，不拿仓位出气。');
+    }
+    const missed = (s.mistakes || [])[0];
+    push(!!missed, '还记得：' + (missed ? String(missed.text).slice(0, 42) : ''));
+    const held = (s.lessons || [])[0];
+    push(!!held && held.strength > 20, '他提醒自己：' + (held ? held.text : ''));
+    push(!!(s.feel && s.feel.regret > 40), '后悔还没散，所以这回想慢一点。');
+    push(!!(s.feel && s.feel.nostalgia > 45), '旧晚上又来了，他没有赶走它。');
+    const seen = (s.insights || [])[0];
+    push(!!seen, '他近来认定：' + (seen ? String(seen.text).slice(0, 36) : ''));
     push(s.money < 140, '钱包比计划更诚实。');
     const line = pickOne(lines) || '……';
     return '“' + line + '”';
   }
   function composeMind(id) {
+    if (id === 'practice') {
+      const meta = SKILL_META[s.focus] || SKILL_META.guitar;
+      return '“' + meta.name + ' · 大约 ' + skillRank(s.focus) + ' 级，慢慢来。”';
+    }
     if (id === 'market') return '“研究深度 ' + Math.round(s.research) + ' · 先看懂 BTC / 美股，再谈仓位。”';
     if (id === 'workout') return '“力量训练 · 把今天的组数留下。”';
     if (id === 'search' || id === 'work') return '“先把收入的不确定性降下来。”';
@@ -806,19 +1193,43 @@ aside{display:flex;flex-direction:column;gap:12px}
     if (id === 'work') return s.today.workMin > 120 ? 70 : 100;
     return ACT[id].mins;
   }
+  function mealCost(full, poorCost, spec) {
+    const poor = s.money < 170 && marketValue() < 50;
+    const lvl = skillRank('cooking');
+    const disc = poor ? 0 : Math.min(lvl, 4);
+    spec.cost = Math.max(poor ? 4 : 6, (poor ? poorCost : full) - disc);
+    spec.mood = (spec.mood || 0) + lvl * 0.015;
+  }
   function makeSpec(id) {
     const poor = s.money < 170 && marketValue() < 50;
     const spec = {hunger:0, energy:0, mood:0, cost:0, wage:0};
     if (id === 'breakfast') {
-      spec.cost = poor ? 8 : 15; spec.hunger = poor ? -1.05 : -1.4; spec.mood = 0.12; spec.energy = 0.03;
+      spec.hunger = poor ? -1.05 : -1.4; spec.mood = 0.12; spec.energy = 0.03;
+      mealCost(15, 8, spec);
     } else if (id === 'eat') {
-      spec.cost = poor ? 6 : 12; spec.hunger = poor ? -0.95 : -1.25; spec.mood = 0.08;
+      spec.hunger = poor ? -0.95 : -1.25; spec.mood = 0.08;
+      mealCost(12, 6, spec);
     } else if (id === 'lunch') {
-      spec.cost = poor ? 10 : 20; spec.hunger = poor ? -1.05 : -1.35; spec.mood = 0.1; spec.energy = 0.02;
+      spec.hunger = poor ? -1.05 : -1.35; spec.mood = 0.1; spec.energy = 0.02;
+      mealCost(20, 10, spec);
     } else if (id === 'cook') {
-      spec.cost = poor ? 10 : 16; spec.hunger = -0.1; spec.mood = 0.1;
+      spec.hunger = -0.1; spec.mood = 0.1;
+      mealCost(16, 10, spec);
     } else if (id === 'dinner') {
-      spec.cost = s.prepped ? 0 : (poor ? 16 : 28); spec.hunger = -1.32; spec.mood = s.prepped ? 0.16 : 0.05; spec.energy = 0.03;
+      spec.hunger = -1.32; spec.energy = 0.03;
+      if (s.prepped) {
+        spec.cost = 0; spec.mood = 0.16 + skillRank('cooking') * 0.015;
+      } else {
+        spec.mood = 0.05;
+        mealCost(28, 16, spec);
+        if ((s.feel && s.feel.loneliness > 62) && lessonStrength('spend') < 18 && skillRank('cooking') < 2) {
+          spec.cost += 12;
+          spec.comfort = true;
+        }
+      }
+    } else if (id === 'practice') {
+      if (s.focus === 'cooking') spec.cost = 6;
+      spec.energy = -0.02; spec.mood = 0.06;
     } else if (id === 'workout') {
       spec.energy = -0.2; spec.mood = 0.16; spec.hunger = 0.06;
     } else if (id === 'walk') {
@@ -849,6 +1260,7 @@ aside{display:flex;flex-direction:column;gap:12px}
       workout:'开始力量训练。',
       walk:'到院子里走走。',
       relax:'窝进沙发，什么也不做。',
+      practice:'开始练习' + ((SKILL_META[s.focus] || SKILL_META.guitar).name) + '。',
       sleep:'去睡觉了。'
     };
     return map[id] || ACT[id].label;
@@ -874,10 +1286,18 @@ aside{display:flex;flex-direction:column;gap:12px}
     s.session = spec;
     s.acted = 0;
     s.left = durationMin(id) * 4;
-    goToPlace(ACT[id].place);
+    goToPlace(id === 'practice' ? practicePlace() : ACT[id].place);
     if (spec.cost > 0) {
       s.money = Math.max(0, s.money - spec.cost);
       s.today.spent += spec.cost;
+    }
+    if (spec.comfort) s.today.comfort = 1;
+    if (id === 'wake' && hour() < 8.6) markFollowed('oversleep');
+    if (id === 'sleep' && hour() < 23.2) markFollowed('sleep');
+    if (id === 'sleep') {
+      const td = s.today || {};
+      const lived = (td.meals || 0) + (td.workout || 0) + (td.search || 0) + (td.practice || 0) + ((td.mistakeIds || []).length) + ((td.workMin || 0) > 0 ? 1 : 0);
+      if (lived > 0 && (hour() >= 18 || hour() < 4)) writeDiary(s.day);
     }
     if (id === 'breakfast') s.meals.breakfast = true;
     if (id === 'lunch') s.meals.lunch = true;
@@ -903,11 +1323,17 @@ aside{display:flex;flex-direction:column;gap:12px}
       s.sinceEatMin = 0;
       if (id === 'dinner') s.prepped = false;
       s.m = cl(s.m + (s.hungerAtStart > 55 ? 4 : 2));
+      feelTo('joy', (s.session && s.session.comfort) ? 2 : 5);
+      if (skillRank('cooking') >= 2) feelTo('pride', 3);
+      if (id === 'breakfast' || id === 'dinner') gainSkill('cooking', id === 'breakfast' ? 3 : 4);
       if (s.hungerAtStart > 64) memory('meal', '这顿是真的饿了才吃的。');
     }
     if (id === 'cook') {
       s.prepped = true;
       s.preppedAt = absMin();
+      gainSkill('cooking', 6);
+      feelTo('pride', 3);
+      if (lessonStrength('spend') >= 12) markFollowed('spend');
       memory('cook', '晚饭做好了，等一会儿吃。');
     }
     if (id === 'search' && mins > 16) {
@@ -918,6 +1344,7 @@ aside{display:flex;flex-direction:column;gap:12px}
         s.job = true;
         s.workFromDay = s.day + 1;
         s.m = cl(s.m + 15);
+        feelTo('hope', 18); feelTo('joy', 12); feelTo('pride', 8);
         const text = '收到录用邮件。他没有立刻开工，打算明天再开始。';
         log(text);
         memory('job_offer', text);
@@ -926,6 +1353,7 @@ aside{display:flex;flex-direction:column;gap:12px}
         const hit = 3 + Math.round(rand() * 4);
         const calm = MIND.cognition > 85 ? 0.72 : 1;
         s.m = cl(s.m - hit * calm);
+        feelTo('anxiety', 10); feelTo('hope', -8);
         s.today.rejects += 1;
         const text = '这封简历没有回音。他把要求记下来，准备改一版。';
         log(text);
@@ -951,31 +1379,55 @@ aside{display:flex;flex-direction:column;gap:12px}
       s.today.market += 1;
       driftPrices(1);
       const delta = markMood();
-      const gate = tradeGate();
-      let line = '';
-      if (!gate.canBuy) {
-        if ((s.studies || 0) < 2) line = '这是第 ' + s.studies + ' 次认真看，只记笔记，不动仓。';
-        else if (s.research < gate.need) line = '研究深度 ' + Math.round(s.research) + '，还不到出手的时候。';
-        else if (s.riskOffDays > 0) line = '最近亏过，这回只研究，不买。';
-        else line = '现金要留作吃饭，先不建仓。';
-        memory('market_research', line);
-      } else if (rand() < 0.42) {
-        line = '资料看完了，他选择继续观望。';
-        memory('market_research', line);
-      } else {
-        const riskFrac = 0.042 + (100 - MIND.cognition) * 0.0004;
-        const amount = Math.round(Math.min(s.money - gate.floor, s.money * riskFrac, 36 + s.research * 0.9));
+      let impulsive = false;
+      if (s.money > 100 && rand() < impulseChance()) {
         const asset = pickAsset();
-        if (!(amount >= 30 && buy(asset, amount))) line = '算了算仓位，还是先不动。';
+        const amount = Math.round(Math.min(s.money - 80, 48 + rand() * 36));
+        const name = asset === 'btc' ? 'BTC' : '标普';
+        if (amount >= 30 && buy(asset, amount, '没看完就买了' + name + '，金额 ¥' + amount + '。')) {
+          impulsive = true;
+          const drop = 0.14 + rand() * 0.16;
+          s.prices[asset] = Math.max(5, (s.prices[asset] || 100) * (1 - drop));
+          const hit = markMood();
+          let loss = Math.abs(Math.round(hit || 0));
+          if (loss < 1) {
+            loss = Math.max(1, Math.round(amount * drop));
+            s.today.pnl -= loss;
+            s.lastPnl = -loss;
+          }
+          mistake('impulse', '没研究完就买了' + name + '，浮亏大约 ¥' + loss);
+          gainSkill('trading', 2);
+        }
       }
-      if (line) log(line);
+      if (!impulsive) {
+        const gate = tradeGate();
+        let line = '';
+        if (!gate.canBuy) {
+          if ((s.studies || 0) < 2) line = '这是第 ' + s.studies + ' 次认真看，只记笔记，不动仓。';
+          else if (s.research < gate.need) line = '研究深度 ' + Math.round(s.research) + '，还不到出手的时候。';
+          else if (s.riskOffDays > 0) line = '最近亏过，这回只研究，不买。';
+          else line = '现金要留作吃饭，先不建仓。';
+          memory('market_research', line);
+        } else if (rand() < 0.42) {
+          line = '资料看完了，他选择继续观望。';
+          memory('market_research', line);
+        } else {
+          const riskFrac = 0.042 + (100 - MIND.cognition) * 0.0004;
+          const amount = Math.round(Math.min(s.money - gate.floor, s.money * riskFrac, 36 + s.research * 0.9));
+          const asset = pickAsset();
+          if (!(amount >= 30 && buy(asset, amount))) line = '算了算仓位，还是先不动。';
+        }
+        if (line) log(line);
+        gainSkill('trading', 5);
+        if (lessonStrength('patient') >= 12) markFollowed('patient');
+      }
       const holding = marketValue();
       const bought = s.memory[0] && s.memory[0].kind === 'market_trade';
-      if (!bought && holding > 240 && s.research > 62 && s.riskOffDays <= 0 && rand() < 0.18) {
+      if (!impulsive && !bought && holding > 240 && s.research > 62 && s.riskOffDays <= 0 && rand() < 0.18) {
         const a = positionValue('btc') >= positionValue('spy') ? 'btc' : 'spy';
         sell(a, 0.3, false);
       }
-      if (Math.abs(delta) >= 12) {
+      if (!impulsive && Math.abs(delta) >= 12) {
         const t = delta > 0
           ? '持仓浮盈大约 ¥' + Math.round(delta) + '。他没因此加大仓位。'
           : '持仓回撤大约 ¥' + Math.abs(Math.round(delta)) + '。这是事先接受的波动。';
@@ -990,11 +1442,30 @@ aside{display:flex;flex-direction:column;gap:12px}
       s.h = cl(s.h + 4);
       s.e = cl(s.e - 4);
       log('力量训练做完了。');
+      feelTo('pride', 8);
+      feelTo('loneliness', -4);
+      if (lessonStrength('train') >= 12) markFollowed('train');
       memory('workout', '完成一次力量训练，连续 ' + s.streak.workout + ' 天。');
+    }
+    if (id === 'practice' && mins > 8) {
+      s.today.practice = (s.today.practice || 0) + 1;
+      const focus = s.focus && SKILL_META[s.focus] ? s.focus : 'guitar';
+      gainSkill(focus, 7 + rand() * 3);
+      if (focus === 'trading') {
+        s.research = cl(s.research + 6, 0, 100);
+        if (lessonStrength('patient') >= 12) markFollowed('patient');
+      }
+      if (focus === 'guitar') feelTo('loneliness', -8);
+      if (focus === 'drawing') feelTo('nostalgia', 4);
+      feelTo('pride', 4);
+      feelTo('joy', 3);
+      memory('practice', '练了一会儿' + SKILL_META[focus].name + '，现在大约 ' + skillRank(focus) + ' 级。');
     }
     if (id === 'walk') {
       s.today.walk += 1;
       s.m = cl(s.m + 2);
+      feelTo('loneliness', -6);
+      if (weatherOf(s.day).short === '小雨') feelTo('nostalgia', 6);
     }
     if (id === 'relax') s.today.relax += 1;
     if (id === 'sleep') s.awakeMin = 0;
@@ -1080,6 +1551,16 @@ aside{display:flex;flex-direction:column;gap:12px}
   }
   function summarize(day) {
     const td = s.today || freshToday();
+    if (!td.workout && s.e > 22) mistake('skip', '第' + day + '天有力气，却把训练跳过去了。');
+    if (td.comfort) mistake('spend', '第' + day + '天晚饭多点了一份安慰自己的东西，花得有点心虚。');
+    writeDiary(day);
+    if (s.lessons && s.lessons.length) {
+      s.lessons = s.lessons.filter(function (l) {
+        if (!l) return false;
+        l.strength = (l.strength || 0) - (l.followDay === day ? 3 : 6);
+        return l.strength >= 8;
+      });
+    }
     const pnl = Math.round(td.pnl || 0);
     const pnlText = Math.abs(pnl) < 1 ? '市场几乎没动' : (pnl > 0 ? '市场约盈 ¥' + pnl : '市场约亏 ¥' + Math.abs(pnl));
     const jobText = s.job ? (td.workMin > 0 ? '工作 ' + Math.round(td.workMin) + ' 分钟' : '没开工') : ('投了 ' + (td.search || 0) + ' 份简历');
@@ -1120,9 +1601,15 @@ aside{display:flex;flex-direction:column;gap:12px}
       summarize(s.day);
       s.day += 1;
       s.whim = rollWhim();
+      chooseFocus();
       s.plan = morningPlan();
       log('新的一天开始了。天气是' + weatherOf(s.day).short + '。');
     }
+    decayFeel(mins);
+    rainMood();
+    const hh = hour();
+    if (s.action !== 'sleep' && s.action !== 'wake' && hh >= 23.3) mistake('late', '第' + s.day + '天已经过了十一点还没去睡。');
+    if (s.action === 'sleep' && hh >= 9.5 && hh < 11) mistake('oversleep', '第' + s.day + '天睡到将近十点，早晨被睡过去了。');
     if (s.action === 'sleep') s.awakeMin = 0;
     else s.awakeMin += mins;
     s.sinceEatMin += mins;
@@ -1168,6 +1655,22 @@ aside{display:flex;flex-direction:column;gap:12px}
     s.logs = Array.isArray(incoming && incoming.logs) ? incoming.logs : [];
     s.memory = Array.isArray(incoming && incoming.memory) ? incoming.memory : [];
     s.trace = Array.isArray(incoming && incoming.trace) ? incoming.trace : [];
+    s.feel = Object.assign(freshFeel(), incoming && incoming.feel || {});
+    s.skills = freshSkills();
+    const incomingSkills = (incoming && incoming.skills) || {};
+    Object.keys(s.skills).forEach(function (id) {
+      if (incomingSkills[id]) Object.assign(s.skills[id], incomingSkills[id]);
+      s.skills[id].xp = Math.max(0, Number(s.skills[id].xp) || 0);
+      s.skills[id].level = skillLevelOf(s.skills[id].xp);
+      s.skills[id].plateau = s.skills[id].plateau || 0;
+    });
+    s.values = Object.assign(freshValues(), incoming && incoming.values || {});
+    s.lessons = Array.isArray(incoming && incoming.lessons) ? incoming.lessons : [];
+    s.diary = Array.isArray(incoming && incoming.diary) ? incoming.diary : [];
+    s.insights = Array.isArray(incoming && incoming.insights) ? incoming.insights : [];
+    s.mistakes = Array.isArray(incoming && incoming.mistakes) ? incoming.mistakes : [];
+    s.arc = Array.isArray(incoming && incoming.arc) ? incoming.arc : [];
+    if (!SKILL_META[s.focus]) s.focus = 'guitar';
     s.decision = incoming && incoming.decision ? incoming.decision : {action:s.action || 'wake', reason:'', scores:{}};
     if (!isFinite(s.money)) s.money = 0;
     if (!isFinite(s.e)) s.e = 50;
@@ -1195,7 +1698,8 @@ aside{display:flex;flex-direction:column;gap:12px}
       s.moving = false;
     }
     s.map = 'topdown';
-    if (ACT[s.action] && ACT[s.action].place) goToPlace(ACT[s.action].place);
+    if (s.action === 'practice') goToPlace(practicePlace());
+    else if (ACT[s.action] && ACT[s.action].place) goToPlace(ACT[s.action].place);
     else {
       const rm = roomAt(s.x, s.y);
       if (rm) s.room = rm;
@@ -1230,12 +1734,64 @@ aside{display:flex;flex-direction:column;gap:12px}
     }
   }
 
+  function renderInner() {
+    const emo = $('emo');
+    if (emo && s.feel) {
+      emo.innerHTML = Object.keys(FEEL_NAME).map(function (k) {
+        return '<b>' + FEEL_NAME[k] + ' ' + Math.round(s.feel[k] || 0) + '</b>';
+      }).join('');
+    }
+    const note = $('feel-note');
+    if (note) {
+      const dom = dominantFeel();
+      let cause = '它会慢慢回到日常的水位。';
+      if (dom.key === 'nostalgia' && weatherOf(s.day).short === '小雨') cause = '雨声把旧晚上带回来了。';
+      else if (dom.key === 'regret' && s.mistakes && s.mistakes[0]) cause = '因为' + String(s.mistakes[0].text).slice(0, 28);
+      else if (dom.key === 'pride' && s.focus) cause = '手艺或训练留下了一点痕迹。';
+      else if (dom.key === 'anxiety' && s.money < 500) cause = '存款偏紧的时候，它会先冒出来。';
+      note.textContent = '现在最明显的是' + dom.name + '。' + cause;
+    }
+    const skills = $('skills');
+    if (skills && s.skills) {
+      skills.innerHTML = Object.keys(SKILL_META).map(function (id) {
+        const sk = s.skills[id] || {xp:0, plateau:0};
+        const lvl = skillLevelOf(sk.xp);
+        const prev = lvl * lvl * 18;
+        const next = (lvl + 1) * (lvl + 1) * 18;
+        const pct = lvl >= 8 ? 100 : cl((sk.xp - prev) / Math.max(1, next - prev) * 100);
+        const tag = s.focus === id ? ' · 今天' : '';
+        const plat = (sk.plateau || 0) >= 2 ? ' · 平台' : '';
+        return '<div class="skill-row"><span><b>' + SKILL_META[id].name + tag + plat + '</b><b>Lv.' + lvl + '</b></span><div class="track"><div class="fill mood" style="width:' + pct + '%"></div></div></div>';
+      }).join('');
+    }
+    const fl = $('focus-label');
+    if (fl) fl.textContent = '今天 · ' + ((SKILL_META[s.focus] || SKILL_META.guitar).name);
+    const diary = $('diary');
+    if (diary) {
+      if (!s.diary || !s.diary.length) diary.innerHTML = '<div class="empty-note">他还没写下今天。</div>';
+      else diary.innerHTML = s.diary.slice(0, 4).map(function (d) {
+        return '<div class="diary-item"><time>第' + d.day + '天 · ' + esc(d.time || '') + '</time>' + esc(d.text) + '</div>';
+      }).join('');
+    }
+    const lessons = $('lessons');
+    if (lessons) {
+      const bits = [];
+      (s.insights || []).forEach(function (i) {
+        bits.push('<div class="lesson-item"><time>醒悟 · 第' + i.day + '天</time>' + esc(i.text) + '</div>');
+      });
+      (s.lessons || []).forEach(function (l) {
+        const meta = '教训 · 强度 ' + Math.round(l.strength || 0) + (l.followed ? ' · 照做过 ' + l.followed + ' 次' : '');
+        const why = l.why ? '<div>起因：' + esc(l.why) + '</div>' : '';
+        bits.push('<div class="lesson-item"><time>' + meta + '</time>' + esc(l.text) + why + '</div>');
+      });
+      lessons.innerHTML = bits.length ? bits.join('') : '<div class="empty-note">还没有留下教训。</div>';
+    }
+  }
   function ui() {
-    const a = ACT[s.action] || ACT.relax;
     const w = weatherOf(s.day || 1);
     const dayEl = $('day'); if (dayEl) dayEl.textContent = String(s.day).padStart(2, '0');
     const clock = $('clock'); if (clock) clock.textContent = time();
-    const action = $('action'); if (action) action.textContent = a.label;
+    const action = $('action'); if (action) action.textContent = actionLabel(s.action);
     const thought = $('thought'); if (thought) thought.textContent = s.thought || '';
     const role = $('role'); if (role) role.textContent = !s.job ? '自由职业者 · 在找工作' : (s.day < s.workFromDay ? '远程设计师 · 明天开工' : '远程设计师 · 在工作');
     const meters = [['energy', s.e], ['hunger', s.h], ['mood', s.m]];
@@ -1255,6 +1811,7 @@ aside{display:flex;flex-direction:column;gap:12px}
     const likeLong = $('like-long'); if (likeLong) likeLong.textContent = '加密货币';
     const likeMkt = $('like-mkt'); if (likeMkt) likeMkt.textContent = '美股';
     renderLog();
+    renderInner();
   }
 
   function currentPose() {
@@ -1265,6 +1822,11 @@ aside{display:flex;flex-direction:column;gap:12px}
     if (s.action === 'eat' || s.action === 'lunch' || s.action === 'dinner') return 'eat';
     if (s.action === 'search' || s.action === 'work' || s.action === 'market') return 'type';
     if (s.action === 'workout') return 'lift';
+    if (s.action === 'practice') {
+      if (s.focus === 'cooking') return 'cook';
+      if (s.focus === 'guitar') return 'sit';
+      return 'type';
+    }
     return 'idle';
   }
   function poseFrame(pose) {
@@ -2330,7 +2892,7 @@ aside{display:flex;flex-direction:column;gap:12px}
           facing:s.face || 'down',
           pose:currentPose(),
           room:s.room,
-          action:(ACT[s.action] && ACT[s.action].label) || s.action,
+          action:actionLabel(s.action),
           thought:s.thought || ''
         };
       })(),
@@ -2348,6 +2910,26 @@ aside{display:flex;flex-direction:column;gap:12px}
         recent:s.memory.slice(0, 6).map(m => m.text),
         yesterday:s.yesterday ? s.yesterday.text : null
       },
+      emotions:(function () {
+        const out = {};
+        Object.keys(FEEL_NAME).forEach(function (k) { out[k] = Math.round((s.feel && s.feel[k]) || 0); });
+        return out;
+      })(),
+      skills:(function () {
+        const out = {};
+        Object.keys(SKILL_META).forEach(function (id) {
+          const sk = (s.skills && s.skills[id]) || {xp:0};
+          out[id] = {level:skillLevelOf(sk.xp), xp:Math.round((sk.xp || 0) * 10) / 10};
+        });
+        return out;
+      })(),
+      focus:s.focus || 'guitar',
+      lessons:(s.lessons || []).map(function (l) {
+        return {id:l.id, text:l.text, strength:Math.round(l.strength || 0), followed:l.followed || 0};
+      }),
+      insights:(s.insights || []).map(function (i) { return i.text; }),
+      diary:(s.diary || []).slice(0, 3).map(function (d) { return d.text; }),
+      arc:(s.arc || []).slice(-4),
       awake:s.action === 'sleep' ? '睡眠中' : fmtDur(s.awakeMin),
       plan:s.plan,
       weather:weatherOf(s.day).full,
@@ -2386,6 +2968,7 @@ aside{display:flex;flex-direction:column;gap:12px}
     hireChance:hireChance,
     rollHire() { return rand() < hireChance(); },
     tradeGate:tradeGate,
+    impulseChance:impulseChance,
     buy:buy,
     sell:sell,
     weatherOf:weatherOf,
