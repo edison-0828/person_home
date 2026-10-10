@@ -111,12 +111,14 @@ function settleHealth(day) {
     return;
   }
   const w = weatherOf(day).short;
-  let p = 0.014;
-  if ((s.e || 50) < 36) p += 0.032;
-  if ((s.m || 50) < 42) p += 0.02;
-  if (w === '阴天' || w === '小雨') p += 0.03;
-  if ((s.e || 50) < 22) p += 0.02;
-  if (p > 0.12) p = 0.12;
+  const tired = Math.min(s.e || 50, (s.today && s.today.lowE != null) ? s.today.lowE : (s.e || 50));
+  const mood = Math.min(s.m || 50, (s.today && s.today.lowM != null) ? s.today.lowM : (s.m || 50));
+  let p = 0.02;
+  if (tired < 40) p += 0.04;
+  if (mood < 45) p += 0.025;
+  if (w === '阴天' || w === '小雨') p += 0.034;
+  if (tired < 24) p += 0.028;
+  if (p > 0.16) p = 0.16;
   if (rand() >= p) return;
   const roll = rand();
   const name = roll < 0.62 ? '感冒' : (roll < 0.84 ? '发烧' : '肠胃不舒服');

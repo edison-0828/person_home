@@ -192,6 +192,10 @@ export function tick(dt) {
   s.sinceEatMin += mins;
   s.acted += mins;
   baseDrift(mins);
+  if (s.today) {
+    if (s.today.lowE == null || s.e < s.today.lowE) s.today.lowE = s.e;
+    if (s.today.lowM == null || s.m < s.today.lowM) s.today.lowM = s.m;
+  }
   move(dt);
   if (s.e > 30) s.restLock = false;
   if (s.e <= 8 && (s.action === 'workout' || s.action === 'work' || s.action === 'search' || s.action === 'gig')) {

@@ -116,7 +116,14 @@ export function renderLivelihood() {
   drawTrackChart();
   const ledger = $('ledger');
   if (ledger) {
-    const pins = (s.billHistory || []).slice(0, 8);
+    const order = ['房租', '水电费', '网费', '电话费', '衣服', '剪头发', '日用品', '看病', '订阅和会员'];
+    const pins = [];
+    order.forEach(function (name) {
+      const hit = (s.billHistory || []).find(function (row) {
+        return String(row.label || '').indexOf(name) >= 0;
+      });
+      if (hit) pins.push(hit);
+    });
     const recent = (s.ledger || []).filter(function (row) {
       return !pins.some(function (p) {
         return p.day === row.day && p.label === row.label && p.amount === row.amount && p.time === row.time;
