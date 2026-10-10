@@ -48,6 +48,9 @@ aside{display:flex;flex-direction:column;gap:12px}
 .life-board{display:grid;grid-template-columns:.9fr 1.15fr .9fr;gap:12px;margin-top:12px}
 #track{display:block;width:100%;height:auto;background:#fff1d6;border:2px solid #e2c49a}
 .tx{display:flex;justify-content:space-between;gap:8px;font-size:11px;color:#5c4638;padding:0 0 7px;line-height:1.4}
+.tx.bill span{color:#3f2a22}
+.fact.wide{grid-column:1 / -1}
+.fact.wide strong{line-height:1.45}
 .tx b{color:#2f6d4f}
 .tx i{color:#a85a32;font-style:normal}
 .stage{font-size:18px;font-weight:bold;color:#5a3824;margin-bottom:6px}

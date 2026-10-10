@@ -15,7 +15,12 @@ export function hireChance() {
   return cl(0.04 + skill + cog + cond + fatigue, 0.015, 0.36);
 }
 
-export const RENT = 22;
+export const LIVING_LABELS = ['房租', '水电费', '网费', '电话费', '衣服', '剪头发', '日用品', '看病', '订阅和会员'];
+
+export function isLivingCost(label) {
+  const text = String(label || '');
+  return LIVING_LABELS.some(function (name) { return text.indexOf(name) >= 0; });
+}
 
 export const SHOP = {
   phone:{id:'phone', name:'新手机', cost:720, need:1100, impulse:false},
@@ -82,6 +87,11 @@ export function tx(kind, label, amount) {
   if (s.ledger.length > 20) s.ledger.length = 20;
   if (amount > 0) s.monthIn = (s.monthIn || 0) + amount;
   else s.monthOut = (s.monthOut || 0) + (-amount);
+  if (amount < 0 && isLivingCost(label)) {
+    if (!s.billHistory) s.billHistory = [];
+    s.billHistory.unshift({day:s.day, time:time(), kind:kind, label:label, amount:amount});
+    if (s.billHistory.length > 24) s.billHistory.length = 24;
+  }
 }
 
 export function nextPurchase() {
@@ -101,14 +111,6 @@ export function pickGig() {
   if (energy > 68 && rand() < 0.55) return {id:'boxes', name:'搬箱子', pay:Math.round(54 + rand() * 22), tired:16};
   if (energy < 40 || rand() < 0.42) return {id:'flyers', name:'发传单', pay:Math.round(32 + rand() * 14), tired:8};
   return {id:'delivery', name:'送外卖', pay:Math.round(42 + rand() * 18), tired:12};
-}
-
-export function dailyDue() {
-  let subs = 0;
-  if (owns('phone')) subs += 4;
-  if (owns('computer')) subs += 6;
-  if (owns('gym')) subs += 3;
-  return {rent:RENT, subs:subs, total:RENT + subs};
 }
 
 export function promoteOrRaise(hop) {
@@ -151,49 +153,11 @@ export function fireHim() {
   memory('fired', text);
 }
 
-export function settleBills(day) {
-  const due = dailyDue();
-  if (s.money >= due.total) {
-    s.money -= due.rent;
-    tx('expense', '房租', -due.rent);
-    if (due.subs > 0) {
-      s.money -= due.subs;
-      tx('expense', '订阅和会员', -due.subs);
-    }
-    if ((s.debt || 0) > 0) {
-      const pay = Math.min(s.debt, Math.max(0, Math.floor(s.money - 80)));
-      if (pay > 0) {
-        s.money -= pay;
-        s.debt -= pay;
-        tx('expense', '还欠款', -pay);
-        if (s.debt <= 0) {
-          s.debt = 0;
-          s.rentBehind = 0;
-          log('欠款还清了，肩膀轻了一点。');
-        }
-      }
-    }
-  } else {
-    const paid = Math.max(0, Math.round(s.money - 12));
-    if (paid > 0) {
-      s.money -= paid;
-      tx('expense', '只付了一部分房租', -paid);
-    }
-    const short = due.total - paid;
-    s.debt = (s.debt || 0) + short;
-    s.rentBehind = (s.rentBehind || 0) + 1;
-    feelTo('anxiety', 12);
-    feelTo('hope', -6);
-    s.m = cl(s.m - 5);
-    mistake('rent', '第' + day + '天房租没付齐，又欠下 ¥' + short + '。');
-  }
-  s.money = Math.max(0, s.money);
-}
-
 export function careerDay(td) {
   if ((s.hopCooldown || 0) > 0) s.hopCooldown -= 1;
   if (!s.job || s.day < (s.workFromDay || 0)) return;
   s.daysInRank = (s.daysInRank || 0) + 1;
+  if ((td && td.sick && !td.sickOnset) || ((s.sickDays || 0) > 0 && !(td && td.sickOnset))) return;
   if ((td.workMin || 0) >= 40) {
     s.performance = cl((s.performance || 40) + 7, 0, 100);
     s.absent = 0;
@@ -219,7 +183,7 @@ export function shiftTrajectory(day, td) {
   if ((td.meals || 0) >= 2 && !td.junkMeals) d += 1.2;
   if (td.junkMeals) d -= 2.2;
   if ((td.workMin || 0) >= 40) d += 2;
-  if (s.job && s.day >= (s.workFromDay || 0) && (td.workMin || 0) < 15) d -= 2.6;
+  if (s.job && s.day >= (s.workFromDay || 0) && (td.workMin || 0) < 15 && !(td.sick > 0 && !td.sickOnset)) d -= 2.6;
   if ((td.gigs || 0) > 0) d += 1.2;
   if (td.practice) d += 1.1;
   let skillSum = 0;

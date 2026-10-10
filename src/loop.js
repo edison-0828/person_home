@@ -5,7 +5,8 @@ import { decayFeel, mistake, rainMood } from './emotions.js';
 import { SPOTS, roomAt, tileOf } from './map.js';
 import { driftPrices, markMood, marketValue } from './market.js';
 import { log, memory } from './memory.js';
-import { careerDay, moneyMood, owns, settleBills, shiftTrajectory } from './money.js';
+import { isNewMonth, noteUsage, settleLiving } from './expenses.js';
+import { careerDay, moneyMood, owns, shiftTrajectory } from './money.js';
 import { persist } from './persist.js';
 import { chooseFocus } from './skills.js';
 import { flags, freshToday, s } from './state.js';
@@ -44,6 +45,7 @@ export function baseDrift(mins) {
       recover *= 0.62;
       mood -= 0.014;
     }
+    if ((s.sickDays || 0) > 0) recover *= 0.72;
     s.e = cl(s.e + mins * recover);
     s.h = cl(s.h + mins * (0.02 + (sess.hunger || 0)));
     s.m = cl(s.m + mins * mood);
@@ -55,6 +57,7 @@ export function baseDrift(mins) {
   if (s.h > 82) m -= 0.055;
   if (s.e < 14) m -= 0.04;
   if (s.money < 70 && marketValue() < 40) m -= 0.015;
+  if ((s.sickDays || 0) > 0) { e -= 0.016; m -= 0.008; }
   s.e = cl(s.e + mins * e);
   s.h = cl(s.h + mins * h);
   s.m = cl(s.m + mins * m);
@@ -115,7 +118,7 @@ export function summarize(day) {
   const td = s.today || freshToday();
   if (!td.workout && s.e > 22) mistake('skip', '第' + day + '天有力气，却把训练跳过去了。');
   if (td.comfort) mistake('spend', '第' + day + '天晚饭多点了一份安慰自己的东西，花得有点心虚。');
-  settleBills(day);
+  settleLiving(day);
   careerDay(td);
   shiftTrajectory(day, td);
   writeDiary(day);
@@ -161,11 +164,17 @@ export function tick(dt) {
   dt = Math.min(dt, 2);
   const mins = dt / 4;
   s.t += mins;
+  noteUsage(mins);
   let guard = 0;
   while (s.t >= 1440 && guard++ < 4) {
     s.t -= 1440;
     summarize(s.day);
     s.day += 1;
+    if (isNewMonth(s.day)) {
+      s.monthIn = 0;
+      s.monthOut = 0;
+      s.monthDay = s.day;
+    }
     s.whim = rollWhim();
     chooseFocus();
     s.plan = morningPlan();
@@ -183,6 +192,10 @@ export function tick(dt) {
   s.sinceEatMin += mins;
   s.acted += mins;
   baseDrift(mins);
+  if (s.today) {
+    if (s.today.lowE == null || s.e < s.today.lowE) s.today.lowE = s.e;
+    if (s.today.lowM == null || s.m < s.today.lowM) s.today.lowM = s.m;
+  }
   move(dt);
   if (s.e > 30) s.restLock = false;
   if (s.e <= 8 && (s.action === 'workout' || s.action === 'work' || s.action === 'search' || s.action === 'gig')) {

@@ -76,7 +76,11 @@ export function snapshotText() {
       gigToday:Math.round((s.today && s.today.gigPay) || 0),
       rentBehind:s.rentBehind || 0,
       owned:(s.owned || []).slice(),
-      transactions:(s.ledger || []).slice(0, 6)
+      transactions:(s.ledger || []).slice(0, 6),
+      bills:(s.billHistory || []).slice(0, 8),
+      supplies:Math.round((s.supplies || 0) * 10) / 10,
+      sickDays:s.sickDays || 0,
+      sickName:s.sickName || ''
     },
     trajectory:{
       score:s.trajectory || 0,
