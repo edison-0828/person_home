@@ -1,44 +1,2438 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>小屋里的他 · Pixel Life</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>小屋里的他 · Pixel Life</title>
 <style>
-:root{--ink:#262331;--cream:#f6e8c9;--paper:#fff5d7;--line:#5b4550;--orange:#d6784c;--blue:#6e9eb1;--green:#77a36d;--muted:#88715f}*{box-sizing:border-box}body{margin:0;background:#161b2a;color:var(--ink);font-family:"Courier New","Microsoft YaHei",monospace;image-rendering:pixelated}.shell{width:min(1280px,100%);margin:auto;padding:24px 22px 32px}header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:18px;color:var(--cream)}.eyebrow{font-size:11px;letter-spacing:.14em;color:#e5a06d;font-weight:bold}h1{font-size:clamp(25px,4vw,42px);margin:7px 0 4px;letter-spacing:-.08em}.subtitle{font-size:13px;color:#b9b5b1}.signal{border:3px solid #435064;background:#20283a;padding:10px 12px;color:#a9d697;font-size:12px;white-space:nowrap;box-shadow:4px 4px #0c101b}.signal i{display:inline-block;width:9px;height:9px;margin-right:7px;background:#8fd37b;box-shadow:0 0 0 2px #33543b}.layout{display:grid;grid-template-columns:minmax(0,1.58fr) minmax(310px,.82fr);gap:18px}.card{border:3px solid var(--line);background:var(--paper);box-shadow:6px 6px #0b0e17}.scene-card{padding:10px;background:#c2b38b}.scene-card canvas{display:block;width:100%;aspect-ratio:1.48;background:#1d2940;image-rendering:pixelated;image-rendering:crisp-edges}.scene-caption{display:flex;justify-content:space-between;padding:9px 3px 0;color:#3b3140;font-size:12px;font-weight:bold}.scene-caption span:last-child{text-align:right}aside{display:flex;flex-direction:column;gap:13px}.panel{padding:15px 16px}.panel-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;font-size:14px;font-weight:bold}.panel-title small{color:#a26e4a;font-size:10px}.agent-row{display:flex;gap:11px;align-items:center}.avatar{display:grid;place-items:center;width:49px;height:49px;background:#d97951;color:#fff4cb;border:3px solid var(--line);font-size:20px;font-weight:bold;box-shadow:3px 3px #a75a45}.agent-name{font-size:17px;font-weight:bold}.agent-meta{color:var(--muted);font-size:11px;margin-top:4px}.now{margin-top:15px;padding:12px;border:3px solid #9c674b;background:#ffe7b7;box-shadow:3px 3px #d1a172}.now-label{color:#a05b3d;font-size:10px;font-weight:bold}.now-action{margin-top:5px;font-size:14px;font-weight:bold}.thought{color:#69584f;font-size:11px;line-height:1.45;margin-top:4px}.meter{margin:10px 0}.meter-top{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px}.meter-top b{font-size:10px;color:#806754}.track{height:10px;background:#d2c3a0;border:2px solid #8a705d}.fill{height:100%;transition:width .25s steps(4)}.energy{background:#e4ad43}.hunger{background:#d97851}.mood{background:#70a363}.money{background:#6095a8}.facts{display:grid;grid-template-columns:1fr 1fr;gap:7px}.fact{padding:9px;background:#f5e4bb;border:2px solid #c2a77c}.fact small{display:block;color:#97755a;font-size:9px;margin-bottom:3px}.fact strong{font-size:12px}.log{max-height:170px;overflow:hidden}.log-item{font-size:11px;color:#594945;line-height:1.45;padding:0 0 9px 14px;position:relative}.log-item:before{content:"";position:absolute;left:0;top:4px;width:6px;height:6px;background:#cb704c}.log-item time{color:#ae815e;margin-right:6px}.footer-note{margin-top:17px;text-align:center;color:#78839b;font-size:11px}@media(max-width:820px){.shell{padding:17px 12px 25px}header{align-items:flex-start;flex-direction:column}.signal{align-self:flex-start}.layout{grid-template-columns:1fr}}
+:root{--ink:#3c2a22;--cream:#f4e2c4;--paper:#fff6e6;--line:#6d4630;--wood:#8d5a38;--moss:#6d8f4e;--muted:#8d684e;--bg:#241910}
+*{box-sizing:border-box}
+body{margin:0;background:radial-gradient(circle at 20% 0,#3d2c22 0,#241910 46%,#16110e 100%);color:var(--ink);font-family:"Microsoft YaHei","PingFang SC","Courier New",monospace}
+.shell{width:min(1240px,100%);margin:auto;padding:22px 18px 28px}
+header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:16px;color:var(--cream)}
+.eyebrow{font-size:11px;letter-spacing:.16em;color:#e7a15a;font-weight:bold}
+h1{font-size:clamp(26px,4vw,42px);margin:6px 0 4px;letter-spacing:-.04em;color:#f6e3c2;text-shadow:2px 2px 0 #3a2418}
+.subtitle{font-size:13px;color:#d2b896}
+.signal{border:3px solid #8d6244;background:#3a2a22;padding:10px 12px;color:#d7ecb0;font-size:12px;white-space:nowrap;box-shadow:4px 4px #140e0a}
+.signal i{display:inline-block;width:9px;height:9px;margin-right:7px;background:#9dce6e;box-shadow:0 0 0 2px #3d5a32}
+.layout{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(300px,.8fr);gap:16px}
+.card{border:3px solid var(--line);background:var(--paper);box-shadow:5px 5px 0 #140e0a}
+.scene-card{padding:8px;background:#c49662}
+.scene-card canvas{display:block;width:100%;height:auto;aspect-ratio:704/576;background:#87b85a;image-rendering:pixelated;image-rendering:crisp-edges}
+.scene-caption{display:flex;justify-content:space-between;padding:8px 4px 2px;color:#4a301f;font-size:12px;font-weight:bold}
+.scene-caption span:last-child{text-align:right}
+aside{display:flex;flex-direction:column;gap:12px}
+.panel{padding:14px 14px 12px}
+.panel-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;font-size:14px;font-weight:bold;color:#5a3824}
+.panel-title small{color:#c47a45;font-size:10px;letter-spacing:.06em}
+.agent-row{display:flex;gap:11px;align-items:center}
+.avatar{display:grid;place-items:center;width:49px;height:49px;background:#e08955;color:#fff6e4;border:3px solid var(--line);font-size:20px;font-weight:bold;box-shadow:3px 3px #c46a3c}
+.agent-name{font-size:17px;font-weight:bold}
+.agent-meta{color:var(--muted);font-size:11px;margin-top:4px}
+.now{margin-top:14px;padding:12px;border:3px solid #b56b3e;background:#ffe6c2;box-shadow:3px 3px #e2b07a}
+.now-label{color:#a85a32;font-size:10px;font-weight:bold;letter-spacing:.08em}
+.now-action{margin-top:5px;font-size:14px;font-weight:bold}
+.thought{color:#6d5344;font-size:11px;line-height:1.5;margin-top:4px}
+.meter{margin:10px 0}
+.meter-top{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px}
+.meter-top b{font-size:10px;color:#8d6248}
+.track{height:10px;background:#ead7b6;border:2px solid #a78462}
+.fill{height:100%}
+.energy{background:#e2a23a}
+.hunger{background:#d46a45}
+.mood{background:#7ea85a}
+.money{background:#5e93a8}
+.facts{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.fact{padding:9px;background:#fff1d6;border:2px solid #e2c49a}
+.fact small{display:block;color:#a07858;font-size:9px;margin-bottom:3px}
+.fact strong{font-size:12px}
+.log{max-height:170px;overflow:hidden}
+.log-item{font-size:11px;color:#5c4638;line-height:1.45;padding:0 0 9px 14px;position:relative}
+.log-item:before{content:"";position:absolute;left:0;top:4px;width:6px;height:6px;background:#c46a42}
+.log-item time{color:#b18462;margin-right:6px}
+.footer-note{margin-top:16px;text-align:center;color:#cbb59a;font-size:11px}
+@media(max-width:820px){.shell{padding:16px 12px 24px}header{align-items:flex-start;flex-direction:column}.signal{align-self:flex-start}.layout{grid-template-columns:1fr}}
 </style>
 </head>
 <body><main class="shell">
-<header><div><div class="eyebrow">PIXEL AUTONOMOUS LIFE / OBSERVER MODE</div><h1>小屋里的他</h1><div class="subtitle">2D 像素小屋 · 立体剖面地图 · 你只能观察，不能下命令</div></div><div class="signal"><i></i> AUTONOMOUS / NO INPUT</div></header>
-<div class="layout"><section class="card scene-card"><canvas id="world" width="960" height="650" aria-label="pixel art autonomous house"></canvas><div class="scene-caption"><span>DAY <b id="day">01</b> · <b id="clock">07:42</b></span><span id="weather">晴朗 · 微风</span></div></section>
+<header><div><div class="eyebrow">PIXEL AUTONOMOUS LIFE / OBSERVER MODE</div><h1>小屋里的他</h1><div class="subtitle">俯视像素小屋 · 16×16 地砖 · 你只能观察，不能下命令</div></div><div class="signal"><i></i> AUTONOMOUS / NO INPUT</div></header>
+<div class="layout"><section class="card scene-card"><canvas id="world" width="704" height="576" aria-label="top-down pixel house"></canvas><div class="scene-caption"><span>DAY <b id="day">01</b> · <b id="clock">07:42</b></span><span id="weather">晴朗 · 微风</span></div></section>
 <aside>
 <section class="card panel"><div class="panel-title"><span>观察对象</span><small>RESIDENT 01</small></div><div class="agent-row"><div class="avatar">他</div><div><div class="agent-name">林默</div><div class="agent-meta" id="role">自由职业者 · 在找工作</div></div></div><div class="now"><div class="now-label">NOW DOING</div><div class="now-action" id="action">醒来，坐在床边</div><div class="thought" id="thought">“今天先看看邮箱，再决定要不要出门。”</div></div></section>
 <section class="card panel"><div class="panel-title"><span>生活状态</span><small>SELF REPORTED</small></div><div class="meter"><div class="meter-top"><span>精力</span><b id="energy-v">72%</b></div><div class="track"><div class="fill energy" id="energy" style="width:72%"></div></div></div><div class="meter"><div class="meter-top"><span>饥饿</span><b id="hunger-v">28%</b></div><div class="track"><div class="fill hunger" id="hunger" style="width:28%"></div></div></div><div class="meter"><div class="meter-top"><span>心情</span><b id="mood-v">64%</b></div><div class="track"><div class="fill mood" id="mood" style="width:64%"></div></div></div><div class="meter"><div class="meter-top"><span>存款</span><b id="money-v">¥ 1840</b></div><div class="track"><div class="fill money" id="money" style="width:46%"></div></div></div></section>
-<section class="card panel"><div class="panel-title"><span>他的生活</span><small>NO INTERVENTION</small></div><div class="facts"><div class="fact"><small>关系</small><strong>一个人住</strong></div><div class="fact"><small>连续清醒</small><strong id="awake">01:18</strong></div><div class="fact"><small>今日计划</small><strong id="plan">找工作</strong></div><div class="fact"><small>世界天气</small><strong>晴朗</strong></div></div></section>
-<section class="card panel"><div class="panel-title"><span>思维画像</span><small>PERSONALITY</small></div><div class="facts"><div class="fact"><small>认知水平</small><strong>高 · 92 / 100</strong></div><div class="fact"><small>风险偏好</small><strong>研究后决策</strong></div><div class="fact"><small>长期兴趣</small><strong>加密货币</strong></div><div class="fact"><small>市场兴趣</small><strong>美股</strong></div></div><div class="thought" id="mind-line" style="margin-top:11px;color:#594945">“先理解，再行动；不被短期波动牵着走。”</div></section>
+<section class="card panel"><div class="panel-title"><span>他的生活</span><small>NO INTERVENTION</small></div><div class="facts"><div class="fact"><small>关系</small><strong>一个人住</strong></div><div class="fact"><small>连续清醒</small><strong id="awake">00:08</strong></div><div class="fact"><small>今日计划</small><strong id="plan">找工作</strong></div><div class="fact"><small>世界天气</small><strong id="weather-short">晴朗</strong></div></div></section>
+<section class="card panel"><div class="panel-title"><span>思维画像</span><small>PERSONALITY</small></div><div class="facts"><div class="fact"><small>认知水平</small><strong id="cog">高 · 92 / 100</strong></div><div class="fact"><small>风险偏好</small><strong id="riskpref">研究后决策</strong></div><div class="fact"><small>长期兴趣</small><strong id="like-long">加密货币</strong></div><div class="fact"><small>市场兴趣</small><strong id="like-mkt">美股</strong></div></div><div class="thought" id="mind-line" style="margin-top:11px;color:#594945">“先理解，再行动；不被短期波动牵着走。”</div></section>
 <section class="card panel"><div class="panel-title"><span>生活痕迹</span><small>RECENT MOMENTS</small></div><div class="log" id="log"></div></section>
 </aside></div><div class="footer-note">林默不会看到你的注视，也不会等待你的允许。</div></main>
 <script>
-(()=>{const c=document.querySelector('canvas'),g=c.getContext('2d'),W=c.width,H=c.height;g.imageSmoothingEnabled=false;const P={bed:[304,230],fridge:[450,270],stove:[610,315],sofa:[370,430],table:[505,420],desk:[700,275],yard:[700,535],gym:[430,455]};const A={wake:['醒来，坐在床边','“今天先看看邮箱，再决定要不要出门。”','bed',26],breakfast:['给自己做一份早餐','“冰箱里还有鸡蛋，够今天的。”','fridge',46],eat:['慢慢吃早餐','“吃热的东西，心情会好一点。”','table',43],search:['浏览招聘信息','“这个岗位，好像可以试试。”','desk',82],work:['在线处理客户的工作','“先把这一页做完，再看盘。”','desk',116],market:['研究加密货币和美股','“高认知的优势，是知道自己不知道什么。”','desk',76],workout:['进行力量训练','“身体是认知的底盘，今天不能偷懒。”','gym',68],walk:['在院子里走走','“风不大，出去透口气。”','yard',62],lunch:['把剩下的面包吃掉','“今天先省一点钱。”','table',36],relax:['窝在沙发上发呆','“什么也不做，也算休息。”','sofa',76],cook:['准备晚饭','“今天想吃点热乎的。”','stove',58],dinner:['一个人吃晚饭','“明天会比今天好一点吗？”','table',52],sleep:['睡着了','“晚安，明天再想。”','bed',250]};const s={day:1,t:462,e:72,h:28,m:64,money:1840,job:false,searches:0,action:'wake',left:20,x:304,y:230,tx:304,ty:230,room:'bedroom',logs:[]};const $=i=>document.getElementById(i),cl=(n,a=0,b=100)=>Math.max(a,Math.min(b,n));function time(){let q=Math.floor(s.t)%1440;return String(Math.floor(q/60)).padStart(2,'0')+':'+String(q%60).padStart(2,'0')}function log(v){s.logs.unshift({t:time(),v});s.logs=s.logs.slice(0,5);$('log').innerHTML=s.logs.map(z=>`<div class="log-item"><time>${z.t}</time>${z.v}</div>`).join('')}function set(k,msg){s.action=k;s.left=A[k][3];s.tx=P[A[k][2]][0];s.ty=P[A[k][2]][1];s.room=k==='walk'?'yard':k==='market'||k==='search'||k==='work'?'study':k==='workout'||k==='relax'?'living':k==='sleep'?'bedroom':k==='breakfast'||k==='eat'||k==='lunch'||k==='cook'||k==='dinner'?'kitchen':'bedroom';log(msg||A[k][0])}function next(){let q=s.t%1440;let k=q<390?'sleep':q<435?'workout':q<510?'breakfast':q<555?'eat':q<690?'market':q<825?(s.job?'work':'search'):q<900?'lunch':q<1020?'workout':q<1140?'market':q<1210?'cook':q<1280?'dinner':q<1358?'relax':'sleep';if(k==='search'&&!s.job&&++s.searches%3===0){s.job=true;s.money+=620;log('收到一封录用邮件：他决定下周开始远程工作。')}set(k)}function update(dt){s.t+=dt/4;if(s.t>=1440){s.t-=1440;s.day++;s.searches=0;log('新的一天开始了。')}s.left-=dt;let dx=s.tx-s.x,dy=s.ty-s.y,d=Math.hypot(dx,dy);if(d>3){s.x+=dx/d*dt*1.05;s.y+=dy/d*dt*1.05}if(s.action==='sleep'){s.e=cl(s.e+dt*.12);s.h=cl(s.h+dt*.014)}else{s.e=cl(s.e-dt*.009);s.h=cl(s.h+dt*.012);s.m=cl(s.m+(s.job?.002:-.001))}if(['breakfast','eat','lunch','dinner'].includes(s.action))s.h=cl(s.h-dt*.07);if(s.action==='workout'){s.e=cl(s.e-dt*.025);s.m=cl(s.m+dt*.035)}if(s.action==='walk')s.m=cl(s.m+dt*.015);if(s.left<=0)next();ui();draw()}function ui(){let a=A[s.action];$('day').textContent=String(s.day).padStart(2,'0');$('clock').textContent=time();$('action').textContent=a[0];$('thought').textContent=a[1];$('role').textContent=s.job?'远程设计师 · 在工作':'自由职业者 · 在找工作';[['energy',s.e],['hunger',s.h],['mood',s.m]].forEach(([k,v])=>{$(k+'-v').textContent=Math.round(v)+'%';$(k).style.width=v+'%'});$('money-v').textContent='¥ '+Math.round(s.money);$('money').style.width=cl(s.money/40)+'%';$('awake').textContent=s.action==='sleep'?'睡眠中':'01:18';$('plan').textContent=s.job?'完成项目':'找工作';let focus=s.action==='market'?'研究 BTC / 美股财报':s.action==='workout'?'力量训练 · 核心与腿':'先理解，再行动';$('mind-line').textContent='“'+focus+'”'}
-function rect(x,y,w,h,col){g.fillStyle=col;g.fillRect(Math.round(x),Math.round(y),w,h)}function poly(points,col){g.fillStyle=col;g.beginPath();g.moveTo(points[0][0],points[0][1]);points.slice(1).forEach(p=>g.lineTo(p[0],p[1]));g.closePath();g.fill()}function line(points,col,w=4){g.strokeStyle=col;g.lineWidth=w;g.beginPath();g.moveTo(points[0][0],points[0][1]);points.slice(1).forEach(p=>g.lineTo(p[0],p[1]));g.stroke()}function draw(){let night=s.t<390||s.t>1140;rect(0,0,W,H,night?'#1e2b40':'#8fc4cc');rect(0,430,W,220,night?'#334b4b':'#78a66c');for(let yy=450;yy<650;yy+=24)for(let xx=(yy%48);xx<W;xx+=48)rect(xx,yy,3,3,night?'#41605b':'#91ba79');rect(0,0,W,16,night?'#111a2b':'#dce3b5');for(let i=0;i<12;i++){let sx=(i*97+31)%W,sy=24+(i*31)%110;rect(sx,sy,4,4,night?'#f4e8bd':'#eef3ca')}house();if(night)rect(0,0,W,H,'#13203955');pixelAgent();}
-function house(){// 立体等距视角：地板、三面墙、屋顶外沿
-poly([[160,385],[482,220],[815,365],[493,548]],'#c89162');poly([[160,385],[493,548],[493,585],[160,422]],'#8e5c50');poly([[493,548],[815,365],[815,404],[493,585]],'#704b50');
-// 房间地板
-poly([[178,376],[334,296],[493,367],[337,452]],'#dfbb86');poly([[334,296],[501,211],[660,283],[493,367]],'#efd28f');poly([[501,211],[794,348],[660,426],[493,367]],'#b8d0b1');poly([[337,452],[493,367],[660,426],[493,519]],'#c2b48b');
-// 墙体高度
-poly([[178,376],[334,296],[334,168],[178,250]],'#d99566');poly([[334,296],[501,211],[501,83],[334,168]],'#f0c880');poly([[501,211],[794,348],[794,218],[501,83]],'#83a8aa');
-// 门窗、房间边界
-rect(204,288,38,74,'#734d4c');rect(205,296,30,60,'#9c6752');poly([[560,133],[640,170],[640,222],[560,185]],'#9ed0cf');line([[334,296],[501,367],[660,426]],'#684c4d',4);line([[501,211],[493,367],[493,548]],'#684c4d',4);
-// 屋顶外沿与烟囱
-poly([[150,244],[501,65],[824,205],[794,230],[501,104],[181,273]],'#b75f49');poly([[181,273],[501,104],[794,230],[660,302],[493,232],[334,314]],'#dc7850');poly([[194,248],[501,92],[783,214],[794,230],[501,104],[181,273]],'#f0a05f');poly([[704,170],[742,186],[742,239],[704,222]],'#76505a');
-furniture();drawYard();}
-function furniture(){// 像素家具
-rect(230,326,92,25,'#ae6a56');rect(239,337,70,37,'#dba07b');rect(248,329,25,11,'#f3d5aa'); // bed
-rect(377,246,62,19,'#ad7452');rect(385,264,8,45,'#81564a');rect(426,264,8,45,'#81564a');rect(391,226,49,27,'#40516b');rect(396,230,39,20,'#8fb2b7'); // desk
-rect(548,330,110,15,'#89604c');rect(561,345,10,45,'#704b47');rect(638,345,10,45,'#704b47');rect(566,316,82,18,'#a97955');rect(581,303,57,14,'#d59a64'); // table
-rect(269,418,104,42,'#588d8b');rect(257,431,128,27,'#6ba19a');rect(280,409,79,16,'#9ec1aa'); // sofa
-rect(552,223,58,15,'#bd7a4f');rect(565,238,12,45,'#9a644c');rect(592,238,12,45,'#9a644c');rect(565,203,34,20,'#a8c3bc'); // kitchen counter
-rect(432,279,38,57,'#b7c9bf');rect(438,285,26,42,'#e3e4c2');rect(478,274,17,25,'#a4574c'); // fridge / stove
-rect(756,384,23,33,'#8b5d4a');rect(748,375,39,10,'#b7794f'); // tree planter
-}
-function drawYard(){let night=s.t<390||s.t>1140;rect(86,492,7,42,'#66484a');rect(67,465,45,36,night?'#3d695f':'#4f946b');rect(794,454,7,45,'#66484a');rect(773,430,49,40,night?'#3d695f':'#4f946b');rect(690,501,74,14,'#b08a63');rect(726,515,14,72,'#b08a63');rect(744,578,32,9,'#b08a63');}
-function pixelAgent(){let px=Math.round(s.x),py=Math.round(s.y);rect(px-10,py-18,20,26,'#3b4e6a');rect(px-7,py-31,14,13,'#d77c59');rect(px-8,py-35,16,7,'#3b303b');rect(px-4,py-25,2,2,'#fff0ca');rect(px+3,py-25,2,2,'#fff0ca');rect(px-13,py+6,9,4,'#273247');rect(px+4,py+6,9,4,'#273247');let label=A[s.action][0].length>14?A[s.action][0].slice(0,14)+'…':A[s.action][0];rect(px-61,py-64,122,22,'#fff2c9');line([[px-61,py-64],[px+61,py-64],[px+61,py-42],[px-61,py-42],[px-61,py-64]],'#583f48',2);g.fillStyle='#463541';g.font='bold 11px monospace';g.textAlign='center';g.fillText(label,px,py-49);g.textAlign='left'}window.render_game_to_text=()=>JSON.stringify({coordinate_system:'origin top-left; x right, y down',day:s.day,time:time(),agent:{x:Math.round(s.x),y:Math.round(s.y),room:s.room,action:A[s.action][0],thought:A[s.action][1]},needs:{energy:Math.round(s.e),hunger:Math.round(s.h),mood:Math.round(s.m),money:Math.round(s.money)},personality:{cognition:92,interests:['crypto','US stocks','fitness']},employment:s.job?'remote designer':'job seeking',autonomy:'observer only; no player controls',recent_events:s.logs.slice(0,3)});window.advanceTime=ms=>{let n=Math.max(1,Math.round(ms/50));for(let i=0;i<n;i++)update(.8)};set('wake','林默醒了，但还没有立刻起床。');ui();draw();let last=performance.now();function loop(now){let dt=Math.min(40,now-last)/50;last=now;update(dt);requestAnimationFrame(loop)}requestAnimationFrame(loop)})()
-</script></body></html>
+(() => {
+  const c = document.querySelector('canvas');
+  const TILE = 16, SCALE = 2, COLS = 22, ROWS = 18;
+  c.width = COLS * TILE * SCALE;
+  c.height = ROWS * TILE * SCALE;
+  const g = c.getContext('2d');
+  g.imageSmoothingEnabled = false;
+  const W = c.width, H = c.height;
+
+  const KEY = 'linmo-pixel-life-v1';
+  const SIM_MIN_PER_SEC = 5;
+  const MIND = {cognition: 92, interests: ['crypto', 'US stocks', 'fitness'], risk: 'research-before-acting'};
+  const SPOTS = {
+    bed: {c:3, r:3, face:'up'},
+    fridge: {c:13, r:2, face:'left'},
+    stove: {c:14, r:2, face:'up'},
+    table: {c:17, r:4, face:'left'},
+    desk: {c:15, r:9, face:'up'},
+    sofa: {c:2, r:9, face:'up'},
+    gym: {c:7, r:10, face:'up'},
+    yard: {c:15, r:15, face:'down'}
+  };
+  const ACT = {
+    wake: {label:'醒来，坐在床边', place:'bed', room:'bedroom', mins:10},
+    breakfast: {label:'给自己做早餐', place:'fridge', room:'kitchen', mins:20},
+    eat: {label:'吃点东西垫一下', place:'table', room:'kitchen', mins:16},
+    lunch: {label:'吃午饭', place:'table', room:'kitchen', mins:22},
+    cook: {label:'准备晚饭', place:'stove', room:'kitchen', mins:26},
+    dinner: {label:'一个人吃晚饭', place:'table', room:'kitchen', mins:24},
+    search: {label:'浏览招聘信息', place:'desk', room:'study', mins:48},
+    work: {label:'在线处理客户的工作', place:'desk', room:'study', mins:100},
+    market: {label:'研究加密货币和美股', place:'desk', room:'study', mins:40},
+    workout: {label:'进行力量训练', place:'gym', room:'living', mins:36},
+    walk: {label:'在院子里走走', place:'yard', room:'yard', mins:20},
+    relax: {label:'窝在沙发上发呆', place:'sofa', room:'living', mins:24},
+    sleep: {label:'睡着了', place:'bed', room:'bedroom', mins:80}
+  };
+  const IDS = Object.keys(ACT);
+  const WEATHERS = [
+    {full:'晴朗 · 微风', short:'晴朗', walk:1},
+    {full:'大太阳', short:'晴热', walk:0.72},
+    {full:'多云', short:'多云', walk:0.5},
+    {full:'阴天 · 凉', short:'阴天', walk:0.28},
+    {full:'小雨', short:'小雨', walk:-0.62}
+  ];
+
+  // A bedroom, B kitchen, C living, S study, G grass, P path, + door, # wall, F fence.
+  const grid = [];
+  for (let r = 0; r < ROWS; r++) {
+    const row = [];
+    for (let col = 0; col < COLS; col++) row.push('#');
+    grid.push(row);
+  }
+  function fill(c0, r0, c1, r1, ch) {
+    for (let r = r0; r <= r1; r++) for (let col = c0; col <= c1; col++) grid[r][col] = ch;
+  }
+  fill(1, 1, 9, 5, 'A');
+  fill(11, 1, 20, 5, 'B');
+  grid[3][10] = '+';
+  fill(1, 7, 9, 11, 'C');
+  fill(11, 7, 20, 11, 'S');
+  grid[6][4] = '+';
+  grid[6][16] = '+';
+  grid[9][10] = '+';
+  grid[12][5] = '+';
+  fill(1, 13, 20, 16, 'G');
+  for (let r = 13; r <= 16; r++) { grid[r][0] = 'F'; grid[r][21] = 'F'; }
+  for (let col = 0; col < COLS; col++) grid[17][col] = 'F';
+  for (let r = 13; r <= 16; r++) grid[r][5] = 'P';
+  for (let col = 5; col <= 16; col++) grid[15][col] = 'P';
+
+  const solids = new Set();
+  function occupy(col, row, w, h) {
+    for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) solids.add((col + x) + ',' + (row + y));
+  }
+  occupy(1, 1, 3, 2);
+  occupy(8, 1, 2, 2);
+  occupy(5, 1, 1, 1);
+  occupy(11, 1, 2, 2);
+  occupy(14, 1, 2, 1);
+  occupy(17, 1, 4, 1);
+  occupy(20, 2, 1, 1);
+  occupy(15, 3, 2, 2);
+  occupy(1, 8, 4, 1);
+  occupy(1, 7, 2, 1);
+  occupy(7, 8, 2, 1);
+  occupy(14, 8, 3, 1);
+  occupy(11, 7, 2, 2);
+  occupy(19, 10, 1, 1);
+  occupy(19, 4, 1, 1);
+  occupy(7, 13, 1, 1);
+  occupy(12, 14, 2, 1);
+  occupy(8, 13, 3, 2);
+  [[2, 14], [3, 13], [18, 13], [19, 14]].forEach(function (t) { occupy(t[0], t[1], 1, 1); });
+
+  function cell(col, row) {
+    if (col < 0 || row < 0 || col >= COLS || row >= ROWS) return '#';
+    return grid[row][col];
+  }
+  function walkable(col, row) {
+    const ch = cell(col, row);
+    if ('ABCSGP*+'.indexOf(ch) < 0) return false;
+    return !solids.has(col + ',' + row);
+  }
+  function tileOf(x, y) {
+    let col = Math.floor(x / TILE);
+    let row = Math.floor(y / TILE);
+    if (col < 0) col = 0; else if (col >= COLS) col = COLS - 1;
+    if (row < 0) row = 0; else if (row >= ROWS) row = ROWS - 1;
+    return {c: col, r: row};
+  }
+  function walkableAt(x, y) {
+    if (!isFinite(x) || !isFinite(y)) return false;
+    const t = tileOf(x, y);
+    return walkable(t.c, t.r) && x >= 0 && y >= 0 && x < COLS * TILE && y < ROWS * TILE;
+  }
+  function roomAt(x, y) {
+    const t = tileOf(x, y);
+    const ch = cell(t.c, t.r);
+    if (ch === 'A') return 'bedroom';
+    if (ch === 'B') return 'kitchen';
+    if (ch === 'C') return 'living';
+    if (ch === 'S') return 'study';
+    if (ch === 'G' || ch === 'P' || ch === '*') return 'yard';
+    return '';
+  }
+  function findPath(c0, r0, c1, r1) {
+    if (!walkable(c1, r1)) return null;
+    if (c0 === c1 && r0 === r1) return [];
+    const prev = new Map();
+    const q = [[c0, r0]];
+    prev.set(c0 + ',' + r0, null);
+    const dirs = [[1, 0], [-1, 0], [0, 1], [0, -1]];
+    for (let qi = 0; qi < q.length; qi++) {
+      const c = q[qi][0], r = q[qi][1];
+      for (let i = 0; i < dirs.length; i++) {
+        const nc = c + dirs[i][0], nr = r + dirs[i][1];
+        const k = nc + ',' + nr;
+        if (prev.has(k) || !walkable(nc, nr)) continue;
+        prev.set(k, [c, r]);
+        if (nc === c1 && nr === r1) {
+          const path = [[nc, nr]];
+          let p = [c, r];
+          while (p && !(p[0] === c0 && p[1] === r0)) {
+            path.push(p);
+            p = prev.get(p[0] + ',' + p[1]);
+          }
+          path.reverse();
+          return path;
+        }
+        q.push([nc, nr]);
+      }
+    }
+    return null;
+  }
+  function goToPlace(place) {
+    const spot = SPOTS[place] || SPOTS.bed;
+    s.faceGoal = spot.face;
+    if (!Array.isArray(s.path)) s.path = [];
+    let here = tileOf(s.x, s.y);
+    if (!walkable(here.c, here.r)) {
+      s.x = (spot.c + 0.5) * TILE;
+      s.y = (spot.r + 0.5) * TILE;
+      here = {c: spot.c, r: spot.r};
+    }
+    if (here.c === spot.c && here.r === spot.r) {
+      s.x = (spot.c + 0.5) * TILE;
+      s.y = (spot.r + 0.5) * TILE;
+      s.path = [];
+      s.face = spot.face;
+      s.moving = false;
+    } else {
+      const path = findPath(here.c, here.r, spot.c, spot.r);
+      if (!path) {
+        s.x = (spot.c + 0.5) * TILE;
+        s.y = (spot.r + 0.5) * TILE;
+        s.path = [];
+        s.face = spot.face;
+        s.moving = false;
+      } else {
+        s.path = path;
+        s.moving = path.length > 0;
+      }
+    }
+    const rm = roomAt(s.x, s.y);
+    if (rm) s.room = rm;
+  }
+  function auditMap() {
+    const problems = [];
+    Object.keys(SPOTS).forEach(function (name) {
+      const sp = SPOTS[name];
+      if (!walkable(sp.c, sp.r)) problems.push(name + ' blocked');
+      const path = findPath(SPOTS.bed.c, SPOTS.bed.r, sp.c, sp.r);
+      if (!path) problems.push(name + ' unreachable');
+      else {
+        let pc = SPOTS.bed.c, pr = SPOTS.bed.r;
+        for (let i = 0; i < path.length; i++) {
+          const step = path[i];
+          if (Math.abs(step[0] - pc) + Math.abs(step[1] - pr) !== 1) problems.push(name + ' diagonal');
+          if (!walkable(step[0], step[1])) problems.push(name + ' bad step');
+          pc = step[0];
+          pr = step[1];
+        }
+      }
+    });
+    [[10, 3], [4, 6], [16, 6], [10, 9], [5, 12]].forEach(function (d) {
+      if (cell(d[0], d[1]) !== '+') problems.push('door missing ' + d[0] + ',' + d[1]);
+      if (!walkable(d[0], d[1])) problems.push('door blocked ' + d[0] + ',' + d[1]);
+    });
+    if (problems.length) console.error('map audit: ' + problems.join('; '));
+    return problems;
+  }
+
+  let quiet = false;
+  let deciding = false;
+
+  function freshToday() {
+    return {meals:0, workout:0, market:0, workMin:0, search:0, rejects:0, pnl:0, spent:0, earned:0, walk:0, relax:0, trades:0};
+  }
+  function blank() {
+    return {
+      day:1, t:462, e:72, h:28, m:64, money:1840,
+      job:false, searches:0, workFromDay:9999, studies:0,
+      action:'', left:40, acted:0,
+      x:(3 + 0.5) * TILE, y:(3 + 0.5) * TILE, face:'up', faceGoal:'up', path:[], moving:false, anim:0, map:'topdown', room:'bedroom',
+      logs:[], memory:[], trace:[],
+      awakeMin:8, sinceEatMin:240,
+      meals:{breakfast:false, lunch:false, dinner:false},
+      today:freshToday(), yesterday:null,
+      streak:{workout:0},
+      research:0, riskOffDays:0, restLock:false,
+      shares:{btc:0, spy:0}, cost:{btc:0, spy:0},
+      prices:{btc:100, spy:100}, lastMove:{btc:0, spy:0},
+      lastUnreal:0, lastPnl:0,
+      prepped:false, preppedAt:0,
+      chain:1, whim:'market', block:null,
+      plan:'找工作', thought:'', mind:'',
+      decision:{action:'wake', reason:'', scores:{}},
+      session:{hunger:0, energy:0, mood:0, cost:0, wage:0},
+      hungerAtStart:28,
+      seed: (Date.now() ^ 0x9e3779b9) >>> 0,
+      savedAt:0
+    };
+  }
+  const s = blank();
+
+  function cl(n, a, b) {
+    if (a === undefined) a = 0;
+    if (b === undefined) b = 100;
+    if (!isFinite(n)) n = a;
+    return Math.max(a, Math.min(b, n));
+  }
+  function $(id) { return document.getElementById(id); }
+  function rand() {
+    s.seed = (s.seed + 0x6D2B79F5) | 0;
+    let t = Math.imul(s.seed ^ (s.seed >>> 15), 1 | s.seed);
+    t = (t + Math.imul(t ^ (t >>> 7), 61 | t)) ^ t;
+    return ((t ^ (t >>> 14)) >>> 0) / 4294967296;
+  }
+  function randn() {
+    const u = Math.max(1e-9, rand());
+    const v = rand();
+    return Math.sqrt(-2 * Math.log(u)) * Math.cos(2 * Math.PI * v);
+  }
+  function clockMin() {
+    let q = Math.floor(s.t % 1440);
+    if (q < 0) q += 1440;
+    return q;
+  }
+  function hour() { return clockMin() / 60; }
+  function fmtDur(mins) {
+    mins = Math.max(0, Math.floor(mins));
+    const h = Math.floor(mins / 60);
+    const m = mins % 60;
+    return String(h).padStart(2, '0') + ':' + String(m).padStart(2, '0');
+  }
+  function time() { return fmtDur(clockMin()); }
+  function absMin() { return (s.day - 1) * 1440 + clockMin(); }
+  function isNight() {
+    const q = clockMin();
+    return q < 390 || q > 1140;
+  }
+  function weatherOf(day) {
+    let x = Math.imul(day | 0, 747796405) + 2891336453;
+    x = Math.imul(x ^ (x >>> 16), 2246822507);
+    x = (x ^ (x >>> 13)) >>> 0;
+    return WEATHERS[x % WEATHERS.length];
+  }
+  function peak(h, a, b) {
+    if (h < a || h > b) return 0;
+    const mid = (a + b) / 2;
+    const half = (b - a) / 2 || 1;
+    return 1 - Math.abs(h - mid) / half;
+  }
+  function circadian(h) {
+    if (h >= 23) return 0.72 + (h - 23) * 0.2;
+    if (h < 5) return 0.9 - h * 0.05;
+    if (h < 7) return 0.62 - (h - 5) * 0.18;
+    if (h < 12) return 0.1;
+    if (h < 14.5) return 0.2;
+    if (h < 21) return 0.1;
+    return 0.26 + (h - 21) * 0.2;
+  }
+  function nightTax(h) {
+    if (h >= 23 || h < 5.5) return 34;
+    if (h < 6.5) return 12;
+    return 0;
+  }
+  function log(v) {
+    s.logs.unshift({t:time(), v:v});
+    if (s.logs.length > 6) s.logs.length = 6;
+    if (!quiet) renderLog();
+  }
+  function renderLog() {
+    const el = $('log');
+    if (!el) return;
+    el.innerHTML = s.logs.map(z => '<div class="log-item"><time>' + z.t + '</time>' + z.v + '</div>').join('');
+  }
+  function memory(kind, text, extra) {
+    const item = {day:s.day, time:time(), kind:kind, text:text};
+    if (extra && typeof extra.value === 'number' && isFinite(extra.value)) item.value = Math.round(extra.value * 100) / 100;
+    s.memory.unshift(item);
+    if (s.memory.length > 24) s.memory.length = 24;
+  }
+  function trace(id) {
+    s.trace.push({day:s.day, t:time(), id:id});
+    if (s.trace.length > 160) s.trace.splice(0, s.trace.length - 160);
+  }
+  function positionValue(asset) {
+    return (s.shares[asset] || 0) * (s.prices[asset] || 0);
+  }
+  function marketValue() { return positionValue('btc') + positionValue('spy'); }
+  function unrealized() {
+    return (positionValue('btc') - (s.cost.btc || 0)) + (positionValue('spy') - (s.cost.spy || 0));
+  }
+  function canPay(cost) {
+    if (cost <= 0) return true;
+    if (s.money >= cost) return true;
+    return s.money + marketValue() >= cost + 1;
+  }
+  function markMood() {
+    const u = unrealized();
+    const delta = u - (s.lastUnreal || 0);
+    s.lastUnreal = u;
+    if (Math.abs(delta) < 1.5) return 0;
+    const basis = Math.max(80, (s.cost.btc || 0) + (s.cost.spy || 0));
+    const pct = delta / basis;
+    const calm = 1 - MIND.cognition / 230;
+    s.m = cl(s.m + cl(pct * 80, -9, 9) * calm);
+    s.today.pnl += delta;
+    return delta;
+  }
+  function sell(asset, frac, living) {
+    frac = Math.max(0, Math.min(1, frac));
+    const have = s.shares[asset] || 0;
+    const price = s.prices[asset] || 0;
+    const sh = have * frac;
+    const value = sh * price;
+    if (value < 1 || !(price > 0)) return 0;
+    const cost = (s.cost[asset] || 0) * (have ? sh / have : 0);
+    const realized = value - cost;
+    s.shares[asset] = have - sh;
+    s.cost[asset] = Math.max(0, (s.cost[asset] || 0) - cost);
+    if (s.shares[asset] < 1e-6) { s.shares[asset] = 0; s.cost[asset] = 0; }
+    s.money += value;
+    s.lastPnl = Math.round(realized);
+    s.today.pnl += realized;
+    s.lastUnreal = unrealized();
+    const name = asset === 'btc' ? 'BTC' : '标普';
+    const verb = realized >= 0 ? '盈利' : '亏损';
+    const text = (living ? '为了生活费卖掉一部分' : '减掉一部分') + name + '，' + verb + ' ¥' + Math.abs(Math.round(realized)) + '。';
+    log(text);
+    memory(living ? 'sell_living' : 'market_pnl', text, {value:realized});
+    const pct = cost > 0 ? realized / cost : 0;
+    const calm = 1 - MIND.cognition / 230;
+    s.m = cl(s.m + cl(pct * 70, -10, 10) * calm);
+    if (realized < -20) s.riskOffDays = Math.max(s.riskOffDays || 0, 2);
+    return value;
+  }
+  function buy(asset, amount) {
+    amount = Math.round(amount);
+    const price = s.prices[asset] || 0;
+    if (amount < 20 || s.money < amount || !(price > 0)) return false;
+    s.money -= amount;
+    s.shares[asset] = (s.shares[asset] || 0) + amount / price;
+    s.cost[asset] = (s.cost[asset] || 0) + amount;
+    s.lastUnreal = unrealized();
+    s.lastPnl = 0;
+    s.today.trades += 1;
+    const name = asset === 'btc' ? 'BTC' : '标普';
+    const text = '研究之后买入少量' + name + '，金额 ¥' + amount + '。';
+    log(text);
+    memory('market_trade', text, {value:-amount});
+    return true;
+  }
+  function ensureCash(need) {
+    if (s.money >= need) return true;
+    let guard = 0;
+    while (s.money + 0.5 < need && guard++ < 4) {
+      let best = null, bestV = 0;
+      for (const a of ['btc', 'spy']) {
+        const v = positionValue(a);
+        if (v > bestV) { bestV = v; best = a; }
+      }
+      if (!best || bestV < 1) return false;
+      sell(best, Math.min(1, (need - s.money + 2) / bestV), true);
+    }
+    return s.money >= need;
+  }
+  function moveOf(vol) {
+    const z = Math.max(-2.4, Math.min(2.4, randn()));
+    return z * vol;
+  }
+  function driftPrices(scale) {
+    const btc = moveOf(0.032 * scale);
+    const spy = moveOf(0.011 * scale);
+    s.prices.btc = Math.max(5, (s.prices.btc || 100) * (1 + btc));
+    s.prices.spy = Math.max(5, (s.prices.spy || 100) * (1 + spy));
+    s.lastMove = {btc:btc, spy:spy};
+    return s.lastMove;
+  }
+  function researchNeed() { return 26 + (MIND.cognition - 70) * 0.45; }
+  function tradeGate() {
+    const floor = 320;
+    const need = researchNeed();
+    const researched = (s.studies || 0) >= 2 && s.research >= need;
+    return {need:need, floor:floor, researched:researched, canBuy: researched && !(s.riskOffDays > 0) && s.money > floor + 80};
+  }
+  function pickAsset() {
+    const mv = s.lastMove || {btc:0, spy:0};
+    const btcDip = -(mv.btc || 0);
+    const spyDip = -(mv.spy || 0) + 0.012;
+    if (spyDip > btcDip && rand() < 0.72) return 'spy';
+    if (btcDip > spyDip && rand() < 0.58) return 'btc';
+    return rand() < 0.48 ? 'btc' : 'spy';
+  }
+  function hireChance() {
+    const n = s.searches || 0;
+    const skill = Math.min(Math.max(n, 1), 8) * 0.03;
+    const cog = (MIND.cognition - 72) * 0.0024;
+    const cond = (s.e >= 42 ? 0.02 : -0.035) + (s.m >= 48 ? 0.015 : -0.02);
+    const fatigue = s.today && s.today.search >= 3 ? -0.05 : 0;
+    return cl(0.04 + skill + cog + cond + fatigue, 0.015, 0.36);
+  }
+  function lostToday() {
+    return (s.memory || []).some(m => m && m.day === s.day && m.kind === 'market_pnl' && m.value < 0);
+  }
+  function memoryNudge(id) {
+    const y = s.yesterday;
+    if (y) {
+      if (id === 'workout' && !y.workout) return {v:14, label:'昨天没练，今天想补上'};
+      if (id === 'workout' && y.workout) return {v:5, label:'训练正在变成习惯'};
+      if ((id === 'breakfast' || id === 'lunch' || id === 'eat') && y.skippedMeal) return {v:12, label:'昨天没吃好，今天先吃饭'};
+      if (id === 'search' && y.rejections >= 2) return {v:-8, label:'昨天连着被拒，有点泄气'};
+      if (id === 'market' && y.pnl < -25) return {v:-6, label:'昨天亏了，今天更谨慎'};
+      if (id === 'work' && y.worked) return {v:4, label:'沿用昨天的工作节奏'};
+    }
+    if (id === 'market' && lostToday()) return {v:-8, label:'今天已经亏过，先消化一下'};
+    return null;
+  }
+
+  function evaluate(id) {
+    const parts = [];
+    const add = (label, value) => {
+      if (!isFinite(value) || Math.abs(value) < 0.05) return;
+      parts.push({label:label, value:value});
+    };
+    const bad = {ok:false, score:-1e9, parts:[]};
+    if (s.block === id || !ACT[id]) return bad;
+    const h = hour();
+    const tax = nightTax(h);
+    const poorEnergy = s.e < 16;
+    const repeat = (id === s.action && id !== 'sleep') ? -(8 + (s.chain || 1) * 5) : 0;
+
+    if (id === 'sleep') {
+      add('这个钟点容易困', circadian(h) * 46);
+      const tired = Math.max(0, 100 - s.e) * 0.42;
+      if (s.e < 42) add('精力不够了', tired);
+      else if (s.e < 75) add('精神还没回满', tired);
+      else add('还剩一点困意', tired);
+      add('醒得太久', Math.max(0, s.awakeMin / 60 - 14) * 5);
+      if (h >= 22.5 || h < 5.5) add('到了夜里', 18);
+      if (h > 8 && h < 21 && s.e > 38) add('大白天还不该睡', -42);
+      if (s.h > 74 && h > 6 && h < 23 && canPay(8)) add('太饿，不先睡', -34);
+    } else if (id === 'wake') {
+      if (s.action !== 'sleep' || h < 5.5 || h > 10.5) return bad;
+      add('早上了，可以起床', peak(h, 6, 9.2) * 26);
+      add('精力恢复了一些', Math.max(0, s.e - 48) * 0.28);
+      add('身体还想继续睡', -circadian(h) * 24);
+    } else if (id === 'breakfast') {
+      if (s.meals.breakfast || !canPay(8)) return bad;
+      add('肚子空了', s.h * 0.82);
+      add('快到早饭时间', peak(h, 6.5, 10.5) * 40);
+      if (h >= 7 && h <= 9.5) add('早上习惯吃一点', 14);
+      if (h < 5.5 || h > 11.5) add('不是吃早饭的时候', -32);
+      if (s.sinceEatMin < 50) add('刚吃过', -22);
+      if (s.h > 80) add('饿得发慌', 22);
+      if (poorEnergy) add('累得做不动饭', -16);
+      add('夜里不适合折腾', -tax);
+    } else if (id === 'eat') {
+      if (s.h < 36 || s.sinceEatMin < 75 || !canPay(6)) return bad;
+      add('饿了就先吃', s.h * 0.95);
+      if (s.h > 70) add('已经很饿了', 18);
+      add('正餐时间更想正经吃', -(peak(h, 6.5, 10) * 12 + peak(h, 11.3, 14) * 12 + peak(h, 18, 21) * 12));
+      if (s.restLock) add('先补充一点', 8);
+    } else if (id === 'lunch') {
+      if (s.meals.lunch || !canPay(10)) return bad;
+      add('有点饿', s.h * 0.85);
+      add('接近午饭时间', peak(h, 11.2, 14.3) * 18);
+      if (h < 10.5 || h > 15.5) add('不是午饭时间', -28);
+      if (s.sinceEatMin < 50) add('刚吃过', -18);
+      if (s.h > 80) add('饿得发慌', 20);
+      add('夜里不适合', -tax);
+    } else if (id === 'cook') {
+      if (s.meals.dinner || s.prepped || !canPay(10)) return bad;
+      add('想吃热乎的', 16 + Math.max(0, 58 - s.m) * 0.12);
+      add('晚饭前的时间', peak(h, 16.5, 20.5) * 34);
+      add('肚子有一点空', s.h * 0.26);
+      if (h < 15 || h > 21.5) add('现在做饭不合适', -26);
+      if (s.h > 78) add('太饿了，来不及慢慢做', -12);
+      add('夜里不适合', -tax);
+    } else if (id === 'dinner') {
+      const cost = s.prepped ? 0 : 16;
+      if (s.meals.dinner || (cost > 0 && !canPay(cost))) return bad;
+      add('该吃晚饭了', peak(h, 17.5, 21.6) * 34);
+      add('饿了', s.h * 0.74);
+      if (s.prepped) add('饭已经做好了', 26);
+      else add('还没做，只能买着吃', -10);
+      if (h < 16.5 || h > 22.6) add('不是晚饭时间', -24);
+      if (s.sinceEatMin < 45) add('刚吃过', -16);
+      if (s.h > 80) add('饿得发慌', 18);
+    } else if (id === 'search') {
+      if (s.job || s.restLock || poorEnergy) return bad;
+      add('还没有工作', 18);
+      add('适合看招聘的时间', Math.max(peak(h, 9, 12) * 24, peak(h, 14, 17.6) * 20));
+      if (s.money < 250) add('存款快见底了', 44);
+      else if (s.money < 700) add('存款在变少', 26);
+      else if (s.money < 1600) add('得多一份收入', 14);
+      else add('工作可以慢慢找', 6);
+      add('写得清简历', (MIND.cognition - 70) * 0.18);
+      if (s.e < 24) add('太累，投不动', -26);
+      if (s.h > 72) add('饿得没法集中', -20);
+      if (s.today.search >= 2) add('今天已经投过几封', -14);
+      if (s.today.search >= 4) add('再投也只是重复', -18);
+      add('这个点不适合投简历', -tax);
+    } else if (id === 'work') {
+      if (!s.job || s.day < s.workFromDay || s.restLock || poorEnergy) return bad;
+      add('今天还有项目要做', 22);
+      add('适合工作的时间', Math.max(peak(h, 9, 12.2) * 30, peak(h, 13.5, 18.2) * 28));
+      if (s.today.workMin > 150) add('今天已经做了不少', -18);
+      if (s.today.workMin > 280) add('再做下去会透支', -30);
+      if (s.e < 22) add('精力不够工作', -28);
+      if (s.h > 74) add('太饿，先吃饭', -22);
+      add('这个点不适合开工', -tax);
+    } else if (id === 'market') {
+      if (s.restLock && s.e < 20) return bad;
+      add('想把加密和美股看懂', 18 + (MIND.cognition - 70) * 0.22);
+      add('适合看资料的时间', Math.max(peak(h, 8, 11.6) * 16, peak(h, 20, 23) * 14));
+      if (s.research < researchNeed()) add('还没研究到敢动手的程度', 8);
+      if ((s.today.market || 0) >= 2) add('今天已经看过一阵子盘', -16);
+      if ((s.today.market || 0) >= 4) add('同一批数字再看下去意义不大', -18);
+      if (s.e < 18) add('太累，看不进去', -24);
+      if (s.h > 76) add('饿得看不进去', -18);
+      if (s.money < 180 && !s.job) add('该先解决收入', -14);
+      if (h >= 23.5 || h < 5.5) add('深更半夜不看盘', -30);
+      else if (tax) add('有点晚了', -6);
+    } else if (id === 'workout') {
+      if (s.e < 18 || s.restLock) return bad;
+      add('想训练，健身是长期兴趣', 18);
+      add('早晨或傍晚适合练', Math.max(peak(h, 6.3, 9.3) * 22, peak(h, 17, 20.6) * 20));
+      if (s.e < 34) add('力气不太够', -16);
+      if (s.h > 70) add('空肚子练不动', -16);
+      if (s.today.workout >= 1) add('今天练过了', -30);
+      if (s.today.workout >= 2) add('再练就过量了', -18);
+      if (s.e > 55) add('精力够用', 6);
+      add('这个点不适合练', -tax);
+    } else if (id === 'walk') {
+      const w = weatherOf(s.day);
+      add('想透气', 10 + Math.max(0, 50 - s.m) * 0.28);
+      if (w.walk >= 0) add('天气还行，想到院子里', w.walk * 16);
+      else add('下雨，院子里没那么舒服', w.walk * 22);
+      if (h > 7 && h < 19) add('白天适合出门', 8);
+      if (s.today.walk >= 2) add('已经出去过了', -12 * s.today.walk);
+      if (s.e < 14) add('太累', -18);
+      if (h >= 22 || h < 6) add('外面黑了', -16);
+    } else if (id === 'relax') {
+      add('需要缓一缓', 9);
+      if (s.m < 42) add('心情不高', 16);
+      if (s.e < 40 && h >= 11) add('有点没劲', 14);
+      if (h >= 20.5 && h < 23.6) add('晚上适合发呆', 12);
+      if (s.e > 78 && s.h < 35 && h > 9 && h < 17) add('精神很好，不必干坐着', -12);
+      if (s.today.relax >= 3) add('已经歇了很久', -12);
+      if (h >= 23.8 || h < 5) add('这个点更该睡', -12);
+      if (s.restLock) add('身体要求先停下来', 18);
+    } else return bad;
+
+    if (repeat) add('刚做过，先换一件', repeat);
+    const nudge = memoryNudge(id);
+    if (nudge) add(nudge.label, nudge.v);
+    if (id === s.whim && id !== 'sleep') add('今天有点想做这件事', 8);
+    const score = parts.reduce((sum, p) => sum + p.value, 0);
+    return {ok:true, score:score, parts:parts};
+  }
+
+  function explain(ev) {
+    const top = ev.parts.filter(p => p.value > 6).sort((a, b) => b.value - a.value).slice(0, 3);
+    if (!top.length) return '没什么特别急的事，他按自己的感觉选了这个。';
+    return top.map(p => p.label).join('，') + '。';
+  }
+  function choose() {
+    const opts = [];
+    for (const id of IDS) {
+      const ev = evaluate(id);
+      if (!ev.ok) continue;
+      const noise = Math.max(-12, Math.min(12, randn() * 6.2));
+      opts.push({id:id, score:ev.score, parts:ev.parts, noisy:ev.score + noise});
+    }
+    if (!opts.length) return {id:'relax', reason:'没什么可做的，先歇一下。', scores:{}};
+    const max = Math.max.apply(null, opts.map(o => o.noisy));
+    const T = 7.4;
+    const weights = opts.map(o => Math.exp((o.noisy - max) / T));
+    let total = 0;
+    for (const w of weights) total += w;
+    let r = rand() * total;
+    let chosen = opts[opts.length - 1];
+    for (let i = 0; i < opts.length; i++) {
+      r -= weights[i];
+      if (r <= 0) { chosen = opts[i]; break; }
+    }
+    const scores = {};
+    opts.forEach(o => { scores[o.id] = Math.round(o.score * 10) / 10; });
+    return {id:chosen.id, reason:explain(chosen), scores:scores};
+  }
+  function rawScores() {
+    const scores = {};
+    for (const id of IDS) {
+      const ev = evaluate(id);
+      if (ev.ok) scores[id] = Math.round(ev.score * 10) / 10;
+    }
+    return scores;
+  }
+  function rollWhim() {
+    const pool = s.job ? ['market', 'workout', 'walk', 'cook', 'relax', 'work'] : ['market', 'workout', 'walk', 'cook', 'relax', 'search'];
+    return pool[Math.floor(rand() * pool.length)];
+  }
+  function morningPlan() {
+    if (s.h >= 70) return '先吃饭';
+    if (s.e < 20) return '补觉';
+    if (!s.job) return s.money < 400 ? '尽快找到收入' : '找工作';
+    if (s.day < s.workFromDay) return '准备开工';
+    if ((s.today.workMin || 0) < 180) return '完成项目';
+    if (s.yesterday && !s.yesterday.workout) return '补上训练';
+    return '研究市场';
+  }
+  function pickOne(arr) {
+    if (!arr.length) return '';
+    return arr[Math.floor(rand() * arr.length)];
+  }
+  function composeThought(id) {
+    const y = s.yesterday;
+    const w = weatherOf(s.day);
+    const lines = [];
+    const push = (cond, t) => { if (cond) lines.push(t); };
+    if (id === 'wake') {
+      push(true, '眼睛睁开的时候，屋子还是静的。');
+      push(true, '先坐一会儿，不急着把自己交给今天。');
+      push(s.e < 40, '觉没睡透，但再躺下去也只是发呆。');
+    }
+    if (id === 'sleep') {
+      push(true, '今天的账，明天再算。');
+      push(true, '灯可以暗下去了。');
+      push(s.e < 30, '身体先于想法投降了。');
+      push(y && y.pnl < 0, '睡着之前还想了一下回撤，想完就算了。');
+    }
+    if (id === 'breakfast' || id === 'lunch' || id === 'dinner' || id === 'eat' || id === 'cook') {
+      push(true, '先吃东西，别的都往后放。');
+      push(s.h > 60, '胃已经在抗议了。');
+      push(s.money < 220, '这顿简单一点，钱要留着。');
+      push(id === 'cook' || (id === 'dinner' && s.prepped), '热的比外卖更像把自己照顾好。');
+      push(id === 'breakfast', '冰箱里还有鸡蛋，够今天早上的。');
+      push(y && y.skippedMeal, '昨天没吃好，今天不想再硬撑。');
+    }
+    if (id === 'search') {
+      push(true, '先看要求，再决定这封要不要认真写。');
+      push(true, '这个岗位，看起来可以试一版。');
+      push(s.searches > 0, '上一封没回音，这封把项目经历写清楚些。');
+      push(s.money < 500, '存款不多了，找工作不再是可选项。');
+      push(y && y.rejections >= 1, '拒信还在，简历可以再改，但不跟它生气。');
+    }
+    if (id === 'work') {
+      push(true, '先把这一页做完，再看盘。');
+      push(true, '远程没有人站在背后，所以得自己收住。');
+      push(s.e < 40, '有点累，这块做完就停。');
+      push(s.lastPnl < 0, '工作是确定性的收入，行情不是。');
+    }
+    if (id === 'market') {
+      push(true, '先理解，再行动。看不懂的仓位，不加。');
+      push(true, '知道自己不知道什么，比多看一个指标有用。');
+      push(s.research < researchNeed(), '研究大概到 ' + Math.round(s.research) + ' 分，还早。');
+      push(s.studies < 2, '资料还没看够第二遍，今天只记笔记。');
+      push(s.riskOffDays > 0, '最近亏过，今天只允许看，不允许手痒。');
+      push(s.lastPnl > 8, '上次是赚的，但这不构成今天要买的理由。');
+      push(s.lastPnl < -8, '上次的亏损还在，先核对是判断错了还是波动。');
+    }
+    if (id === 'workout') {
+      push(true, '身体是认知的底盘，今天不想偷懒。');
+      push(s.streak.workout >= 2, '连续练了 ' + s.streak.workout + ' 天，别把节奏断了。');
+      push(y && !y.workout, '昨天没练，肌肉记得。');
+      push(s.e < 48, '力气一般，就减重点，把动作做完。');
+    }
+    if (id === 'walk') {
+      push(true, w.walk > 0.5 ? '风不大，出去透口气。' : '就算天气一般，也想到院子里站一会儿。');
+      push(w.short === '小雨', '雨不大，沿着屋檐走两圈就回来。');
+      push(s.m < 45, '心情闷的时候，走路比刷屏有用。');
+    }
+    if (id === 'relax') {
+      push(true, '什么也不做，也算休息。');
+      push(s.m < 40, '坐着，等心情自己浮上来。');
+      push(s.e < 35, '不是懒，是电量不够了。');
+      push(y && !y.workout, '沙发上会想起昨天没练，但不必马上惩罚自己。');
+    }
+    push(s.money < 140, '钱包比计划更诚实。');
+    const line = pickOne(lines) || '……';
+    return '“' + line + '”';
+  }
+  function composeMind(id) {
+    if (id === 'market') return '“研究深度 ' + Math.round(s.research) + ' · 先看懂 BTC / 美股，再谈仓位。”';
+    if (id === 'workout') return '“力量训练 · 把今天的组数留下。”';
+    if (id === 'search' || id === 'work') return '“先把收入的不确定性降下来。”';
+    if (s.riskOffDays > 0) return '“亏过的那笔还在起作用：允许研究，暂停加仓。”';
+    if (s.yesterday && s.yesterday.pnl < -15) return '“昨天的回撤是波动，不是要翻本的指令。”';
+    const pool = [
+      '“先理解，再行动；不被短期波动牵着走。”',
+      '“兴趣是加密和美股，方法是把仓位留小。”',
+      '“认知高一点，用处是少做蠢事，不是预测明天。”'
+    ];
+    return pool[Math.floor(rand() * pool.length)];
+  }
+  function durationMin(id) {
+    if (id === 'sleep') return s.e < 32 ? 100 : 78;
+    if (id === 'work') return s.today.workMin > 120 ? 70 : 100;
+    return ACT[id].mins;
+  }
+  function makeSpec(id) {
+    const poor = s.money < 170 && marketValue() < 50;
+    const spec = {hunger:0, energy:0, mood:0, cost:0, wage:0};
+    if (id === 'breakfast') {
+      spec.cost = poor ? 8 : 15; spec.hunger = poor ? -1.05 : -1.4; spec.mood = 0.12; spec.energy = 0.03;
+    } else if (id === 'eat') {
+      spec.cost = poor ? 6 : 12; spec.hunger = poor ? -0.95 : -1.25; spec.mood = 0.08;
+    } else if (id === 'lunch') {
+      spec.cost = poor ? 10 : 20; spec.hunger = poor ? -1.05 : -1.35; spec.mood = 0.1; spec.energy = 0.02;
+    } else if (id === 'cook') {
+      spec.cost = poor ? 10 : 16; spec.hunger = -0.1; spec.mood = 0.1;
+    } else if (id === 'dinner') {
+      spec.cost = s.prepped ? 0 : (poor ? 16 : 28); spec.hunger = -1.32; spec.mood = s.prepped ? 0.16 : 0.05; spec.energy = 0.03;
+    } else if (id === 'workout') {
+      spec.energy = -0.2; spec.mood = 0.16; spec.hunger = 0.06;
+    } else if (id === 'walk') {
+      spec.energy = -0.03; spec.mood = 0.1 + Math.max(0, weatherOf(s.day).walk) * 0.05;
+    } else if (id === 'relax') {
+      spec.energy = 0.08; spec.mood = 0.07;
+    } else if (id === 'work') {
+      spec.energy = -0.045; spec.mood = 0.02; spec.wage = 56 + s.e * 0.22 + s.m * 0.1;
+    } else if (id === 'search') {
+      spec.energy = -0.03; spec.mood = -0.012;
+    } else if (id === 'market') {
+      spec.energy = -0.02; spec.mood = 0.035;
+    }
+    return spec;
+  }
+  function startLog(id, spec) {
+    const cost = spec.cost ? '，花了 ¥' + spec.cost : '';
+    const map = {
+      wake:'林默醒了，在床边坐了一会儿。',
+      breakfast:'给自己做早餐' + cost + '。',
+      eat:'先吃点东西垫一下' + cost + '。',
+      lunch:'开始吃午饭' + cost + '。',
+      cook:'准备晚饭' + cost + '。',
+      dinner:(s.prepped ? '把做好的晚饭吃掉' : '晚饭简单解决') + cost + '。',
+      search:'坐到桌前看招聘。',
+      work:'开始处理远程工作。',
+      market:'打开行情和财报，先看再决定动不动。',
+      workout:'开始力量训练。',
+      walk:'到院子里走走。',
+      relax:'窝进沙发，什么也不做。',
+      sleep:'去睡觉了。'
+    };
+    return map[id] || ACT[id].label;
+  }
+  function startAction(id, depth) {
+    depth = depth || 0;
+    if (!ACT[id] || depth > 4) id = 'relax';
+    let spec = makeSpec(id);
+    if (spec.cost > 0) {
+      ensureCash(spec.cost);
+      if (s.money < spec.cost) {
+        s.block = id;
+        const alt = choose();
+        s.block = null;
+        s.decision = {action:alt.id, reason:alt.reason, scores:alt.scores};
+        return startAction(alt.id === id ? 'relax' : alt.id, depth + 1);
+      }
+    }
+    if (id === s.action) s.chain = (s.chain || 1) + 1;
+    else s.chain = 1;
+    s.action = id;
+    s.hungerAtStart = s.h;
+    s.session = spec;
+    s.acted = 0;
+    s.left = durationMin(id) * 4;
+    goToPlace(ACT[id].place);
+    if (spec.cost > 0) {
+      s.money = Math.max(0, s.money - spec.cost);
+      s.today.spent += spec.cost;
+    }
+    if (id === 'breakfast') s.meals.breakfast = true;
+    if (id === 'lunch') s.meals.lunch = true;
+    if (id === 'dinner') s.meals.dinner = true;
+    s.thought = composeThought(id);
+    s.mind = composeMind(id);
+    s.plan = morningPlan();
+    log(startLog(id, spec));
+    trace(id);
+  }
+  function spoilCheck() {
+    if (!s.prepped) return;
+    if (absMin() - s.preppedAt < 180) return;
+    s.prepped = false;
+    s.m = cl(s.m - 4);
+    log('做好的晚饭放凉了。');
+    memory('waste', '晚饭放凉了，有点可惜。');
+  }
+  function resolve(id) {
+    const mins = s.acted || 0;
+    if (id === 'breakfast' || id === 'lunch' || id === 'dinner' || id === 'eat') {
+      s.today.meals += 1;
+      s.sinceEatMin = 0;
+      if (id === 'dinner') s.prepped = false;
+      s.m = cl(s.m + (s.hungerAtStart > 55 ? 4 : 2));
+      if (s.hungerAtStart > 64) memory('meal', '这顿是真的饿了才吃的。');
+    }
+    if (id === 'cook') {
+      s.prepped = true;
+      s.preppedAt = absMin();
+      memory('cook', '晚饭做好了，等一会儿吃。');
+    }
+    if (id === 'search' && mins > 16) {
+      s.searches += 1;
+      s.today.search += 1;
+      const p = hireChance();
+      if (rand() < p) {
+        s.job = true;
+        s.workFromDay = s.day + 1;
+        s.m = cl(s.m + 15);
+        const text = '收到录用邮件。他没有立刻开工，打算明天再开始。';
+        log(text);
+        memory('job_offer', text);
+        s.plan = morningPlan();
+      } else {
+        const hit = 3 + Math.round(rand() * 4);
+        const calm = MIND.cognition > 85 ? 0.72 : 1;
+        s.m = cl(s.m - hit * calm);
+        s.today.rejects += 1;
+        const text = '这封简历没有回音。他把要求记下来，准备改一版。';
+        log(text);
+        memory('job_reject', text, {value:-hit});
+      }
+    }
+    if (id === 'work' && mins > 8) {
+      const wage = (s.session && s.session.wage) || 60;
+      const pay = Math.max(0, Math.round(wage * (mins / 60)));
+      if (pay > 0) {
+        s.money += pay;
+        s.today.earned += pay;
+        s.today.workMin += mins;
+        s.m = cl(s.m + 3);
+        const text = '远程工作告一段落，进账 ¥' + pay + '。';
+        log(text);
+        memory('work', text, {value:pay});
+      }
+    }
+    if (id === 'market' && mins > 10) {
+      s.studies = (s.studies || 0) + 1;
+      s.research = cl(s.research + 14 + MIND.cognition / 20, 0, 100);
+      s.today.market += 1;
+      driftPrices(1);
+      const delta = markMood();
+      const gate = tradeGate();
+      let line = '';
+      if (!gate.canBuy) {
+        if ((s.studies || 0) < 2) line = '这是第 ' + s.studies + ' 次认真看，只记笔记，不动仓。';
+        else if (s.research < gate.need) line = '研究深度 ' + Math.round(s.research) + '，还不到出手的时候。';
+        else if (s.riskOffDays > 0) line = '最近亏过，这回只研究，不买。';
+        else line = '现金要留作吃饭，先不建仓。';
+        memory('market_research', line);
+      } else if (rand() < 0.42) {
+        line = '资料看完了，他选择继续观望。';
+        memory('market_research', line);
+      } else {
+        const riskFrac = 0.042 + (100 - MIND.cognition) * 0.0004;
+        const amount = Math.round(Math.min(s.money - gate.floor, s.money * riskFrac, 36 + s.research * 0.9));
+        const asset = pickAsset();
+        if (!(amount >= 30 && buy(asset, amount))) line = '算了算仓位，还是先不动。';
+      }
+      if (line) log(line);
+      const holding = marketValue();
+      const bought = s.memory[0] && s.memory[0].kind === 'market_trade';
+      if (!bought && holding > 240 && s.research > 62 && s.riskOffDays <= 0 && rand() < 0.18) {
+        const a = positionValue('btc') >= positionValue('spy') ? 'btc' : 'spy';
+        sell(a, 0.3, false);
+      }
+      if (Math.abs(delta) >= 12) {
+        const t = delta > 0
+          ? '持仓浮盈大约 ¥' + Math.round(delta) + '。他没因此加大仓位。'
+          : '持仓回撤大约 ¥' + Math.abs(Math.round(delta)) + '。这是事先接受的波动。';
+        memory('market_pnl', t, {value:delta});
+        s.lastPnl = Math.round(delta);
+      }
+    }
+    if (id === 'workout' && mins > 8) {
+      if (!s.today.workout) s.streak.workout = (s.streak.workout || 0) + 1;
+      s.today.workout += 1;
+      s.m = cl(s.m + 6);
+      s.h = cl(s.h + 4);
+      s.e = cl(s.e - 4);
+      log('力量训练做完了。');
+      memory('workout', '完成一次力量训练，连续 ' + s.streak.workout + ' 天。');
+    }
+    if (id === 'walk') {
+      s.today.walk += 1;
+      s.m = cl(s.m + 2);
+    }
+    if (id === 'relax') s.today.relax += 1;
+    if (id === 'sleep') s.awakeMin = 0;
+    s.money = Math.max(0, s.money);
+  }
+  function finishAndDecide() {
+    if (deciding) return;
+    deciding = true;
+    try {
+      resolve(s.action);
+      spoilCheck();
+      const c = choose();
+      s.decision = {action:c.id, reason:c.reason, scores:c.scores};
+      startAction(c.id);
+      persist();
+    } finally {
+      deciding = false;
+    }
+  }
+  function baseDrift(mins) {
+    const sess = s.session || {hunger:0, energy:0, mood:0};
+    if (s.action === 'sleep') {
+      s.e = cl(s.e + mins * (0.135 + (sess.energy || 0)));
+      s.h = cl(s.h + mins * (0.02 + (sess.hunger || 0)));
+      s.m = cl(s.m + mins * (0.006 + (sess.mood || 0)));
+      return;
+    }
+    let e = -0.028 + (sess.energy || 0);
+    let h = 0.05 + (sess.hunger || 0);
+    let m = -0.008 + (sess.mood || 0);
+    if (s.h > 82) m -= 0.055;
+    if (s.e < 14) m -= 0.04;
+    if (s.money < 70 && marketValue() < 40) m -= 0.015;
+    s.e = cl(s.e + mins * e);
+    s.h = cl(s.h + mins * h);
+    s.m = cl(s.m + mins * m);
+  }
+  function move(dt) {
+    s.anim += dt;
+    if (!s.path || !s.path.length) {
+      s.moving = false;
+      if (s.action === 'walk') {
+        const looks = ['down', 'right', 'up', 'left'];
+        s.face = looks[Math.floor(s.anim * 0.08) % 4];
+      } else if (s.faceGoal) s.face = s.faceGoal;
+      const rm = roomAt(s.x, s.y);
+      if (rm) s.room = rm;
+      return;
+    }
+    s.moving = true;
+    let budget = 2.7 * dt;
+    let guard = 0;
+    while (budget > 0 && s.path.length && guard++ < 6) {
+      const node = s.path[0];
+      const tx = (node[0] + 0.5) * TILE;
+      const ty = (node[1] + 0.5) * TILE;
+      const dx = tx - s.x, dy = ty - s.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist <= 0.35) {
+        s.x = tx;
+        s.y = ty;
+        s.path.shift();
+        continue;
+      }
+      const hop = Math.min(budget, dist);
+      s.x += dx / dist * hop;
+      s.y += dy / dist * hop;
+      if (Math.abs(dx) >= Math.abs(dy)) s.face = dx > 0 ? 'right' : 'left';
+      else s.face = dy > 0 ? 'down' : 'up';
+      budget -= hop;
+      if (hop >= dist - 0.01) {
+        s.x = tx;
+        s.y = ty;
+        s.path.shift();
+      } else break;
+    }
+    if (!s.path.length) {
+      s.moving = false;
+      if (s.faceGoal) s.face = s.faceGoal;
+    }
+    const rm = roomAt(s.x, s.y);
+    if (rm) s.room = rm;
+  }
+  function summarize(day) {
+    const td = s.today || freshToday();
+    const pnl = Math.round(td.pnl || 0);
+    const pnlText = Math.abs(pnl) < 1 ? '市场几乎没动' : (pnl > 0 ? '市场约盈 ¥' + pnl : '市场约亏 ¥' + Math.abs(pnl));
+    const jobText = s.job ? (td.workMin > 0 ? '工作 ' + Math.round(td.workMin) + ' 分钟' : '没开工') : ('投了 ' + (td.search || 0) + ' 份简历');
+    const text = '第' + day + '天：吃了 ' + (td.meals || 0) + ' 顿，' + (td.workout ? '练过' : '没练') + '，' + jobText + '，' + pnlText + '，存款 ¥' + Math.round(s.money) + '。';
+    s.yesterday = {
+      day:day, text:text,
+      workout:td.workout > 0,
+      meals:td.meals || 0,
+      pnl:pnl,
+      rejections:td.rejects || 0,
+      skippedMeal:(td.meals || 0) < 2,
+      worked:(td.workMin || 0) >= 30,
+      searches:td.search || 0
+    };
+    memory('day_summary', text, {value:pnl});
+    if ((td.meals || 0) < 1) s.m = cl(s.m - 6);
+    if (!td.workout) s.streak.workout = 0;
+    s.today = freshToday();
+    s.meals = {breakfast:false, lunch:false, dinner:false};
+    s.research = cl(s.research - 8, 0, 100);
+    if (s.riskOffDays > 0) s.riskOffDays -= 1;
+    driftPrices(1.15);
+    const overnight = markMood();
+    if (Math.abs(overnight) >= 18 && ((s.cost.btc || 0) + (s.cost.spy || 0)) > 30) {
+      const t = overnight > 0 ? '过夜持仓多了约 ¥' + Math.round(overnight) + '。' : '过夜持仓少了约 ¥' + Math.abs(Math.round(overnight)) + '。';
+      memory('market_pnl', t, {value:overnight});
+      s.lastPnl = Math.round(overnight);
+    }
+  }
+  function tick(dt) {
+    if (!isFinite(dt) || dt <= 0) return;
+    dt = Math.min(dt, 2);
+    const mins = dt / 4;
+    s.t += mins;
+    let guard = 0;
+    while (s.t >= 1440 && guard++ < 4) {
+      s.t -= 1440;
+      summarize(s.day);
+      s.day += 1;
+      s.whim = rollWhim();
+      s.plan = morningPlan();
+      log('新的一天开始了。天气是' + weatherOf(s.day).short + '。');
+    }
+    if (s.action === 'sleep') s.awakeMin = 0;
+    else s.awakeMin += mins;
+    s.sinceEatMin += mins;
+    s.acted += mins;
+    baseDrift(mins);
+    move(dt);
+    if (s.e > 30) s.restLock = false;
+    if (s.e <= 8 && (s.action === 'workout' || s.action === 'work' || s.action === 'search')) {
+      s.restLock = true;
+      if (s.left > 0) log('精力撑不住，他提前停下了。');
+      s.left = 0;
+    }
+    s.left -= dt;
+    if (s.left <= 0) finishAndDecide();
+  }
+
+  function persist() {
+    if (window.__SUSPEND_SAVE__) return;
+    try {
+      const savedAt = Date.now();
+      s.savedAt = savedAt;
+      const state = JSON.parse(JSON.stringify(s));
+      localStorage.setItem(KEY, JSON.stringify({v:1, savedAt:savedAt, state:state}));
+    } catch (err) {}
+  }
+  function applyIncoming(incoming) {
+    const base = blank();
+    if (incoming && typeof incoming === 'object') {
+      for (const k of Object.keys(base)) {
+        if (incoming[k] !== undefined) base[k] = incoming[k];
+      }
+    }
+    for (const k of Object.keys(s)) delete s[k];
+    Object.assign(s, base);
+    s.meals = Object.assign({breakfast:false, lunch:false, dinner:false}, incoming && incoming.meals || {});
+    s.today = Object.assign(freshToday(), incoming && incoming.today || {});
+    s.shares = Object.assign({btc:0, spy:0}, incoming && incoming.shares || {});
+    s.cost = Object.assign({btc:0, spy:0}, incoming && incoming.cost || {});
+    s.prices = Object.assign({btc:100, spy:100}, incoming && incoming.prices || {});
+    s.streak = Object.assign({workout:0}, incoming && incoming.streak || {});
+    s.session = Object.assign({hunger:0, energy:0, mood:0, cost:0, wage:0}, incoming && incoming.session || {});
+    s.lastMove = Object.assign({btc:0, spy:0}, incoming && incoming.lastMove || {});
+    s.logs = Array.isArray(incoming && incoming.logs) ? incoming.logs : [];
+    s.memory = Array.isArray(incoming && incoming.memory) ? incoming.memory : [];
+    s.trace = Array.isArray(incoming && incoming.trace) ? incoming.trace : [];
+    s.decision = incoming && incoming.decision ? incoming.decision : {action:s.action || 'wake', reason:'', scores:{}};
+    if (!isFinite(s.money)) s.money = 0;
+    if (!isFinite(s.e)) s.e = 50;
+    if (!isFinite(s.h)) s.h = 40;
+    if (!isFinite(s.m)) s.m = 50;
+    s.e = cl(s.e); s.h = cl(s.h); s.m = cl(s.m);
+    if (!isFinite(s.t) || s.t < 0) s.t = 462;
+    let spins = 0;
+    while (s.t >= 1440 && spins++ < 10) { s.t -= 1440; s.day += 1; }
+    if (!s.seed) s.seed = (Date.now() ^ 0x51f00d) >>> 0;
+    if (!s.today) s.today = freshToday();
+    if (!s.face) s.face = 'down';
+    if (!s.faceGoal) s.faceGoal = s.face;
+    if (!Array.isArray(s.path)) s.path = [];
+    if (!isFinite(s.anim)) s.anim = 0;
+    const legacy = !(incoming && incoming.map === 'topdown');
+    if (legacy || !walkableAt(s.x, s.y)) {
+      const place = (ACT[s.action] && ACT[s.action].place) || 'bed';
+      const spot = SPOTS[place] || SPOTS.bed;
+      s.x = (spot.c + 0.5) * TILE;
+      s.y = (spot.r + 0.5) * TILE;
+      s.face = spot.face;
+      s.faceGoal = spot.face;
+      s.path = [];
+      s.moving = false;
+    }
+    s.map = 'topdown';
+    if (ACT[s.action] && ACT[s.action].place) goToPlace(ACT[s.action].place);
+    else {
+      const rm = roomAt(s.x, s.y);
+      if (rm) s.room = rm;
+    }
+  }
+  function load() {
+    try {
+      const raw = localStorage.getItem(KEY);
+      if (!raw) return false;
+      const data = JSON.parse(raw);
+      if (!data || data.v !== 1 || !data.state) return false;
+      const savedAt = data.savedAt || Date.now();
+      applyIncoming(data.state);
+      const elapsed = Math.max(0, Date.now() - savedAt);
+      const simMin = Math.min(elapsed / 1000 * SIM_MIN_PER_SEC, 36 * 60);
+      if (simMin >= 1) {
+        quiet = true;
+        const steps = Math.round(simMin / 0.2);
+        for (let i = 0; i < steps; i++) tick(0.8);
+        quiet = false;
+        renderLog();
+        if (simMin >= 20) {
+          const hours = Math.max(1, Math.round(simMin / 60));
+          memory('catchup', '有一段时间没被看到。按他自己的节奏，大约过了 ' + hours + ' 小时。');
+          log('你离开后，他又过了约 ' + hours + ' 小时。');
+        }
+      }
+      persist();
+      return true;
+    } catch (err) {
+      return false;
+    }
+  }
+
+  function ui() {
+    const a = ACT[s.action] || ACT.relax;
+    const w = weatherOf(s.day || 1);
+    const dayEl = $('day'); if (dayEl) dayEl.textContent = String(s.day).padStart(2, '0');
+    const clock = $('clock'); if (clock) clock.textContent = time();
+    const action = $('action'); if (action) action.textContent = a.label;
+    const thought = $('thought'); if (thought) thought.textContent = s.thought || '';
+    const role = $('role'); if (role) role.textContent = !s.job ? '自由职业者 · 在找工作' : (s.day < s.workFromDay ? '远程设计师 · 明天开工' : '远程设计师 · 在工作');
+    const meters = [['energy', s.e], ['hunger', s.h], ['mood', s.m]];
+    meters.forEach(([k, v]) => {
+      const lab = $(k + '-v'); if (lab) lab.textContent = Math.round(v) + '%';
+      const bar = $(k); if (bar) bar.style.width = cl(v) + '%';
+    });
+    const money = $('money-v'); if (money) money.textContent = '¥ ' + Math.round(s.money);
+    const moneyBar = $('money'); if (moneyBar) moneyBar.style.width = cl(s.money / 40) + '%';
+    const awake = $('awake'); if (awake) awake.textContent = s.action === 'sleep' ? '睡眠中' : fmtDur(s.awakeMin);
+    const plan = $('plan'); if (plan) plan.textContent = s.plan || morningPlan();
+    const weather = $('weather'); if (weather) weather.textContent = w.full;
+    const weatherShort = $('weather-short'); if (weatherShort) weatherShort.textContent = w.short;
+    const mind = $('mind-line'); if (mind) mind.textContent = s.mind || '';
+    const cog = $('cog'); if (cog) cog.textContent = '高 · ' + MIND.cognition + ' / 100';
+    const risk = $('riskpref'); if (risk) risk.textContent = '研究后决策';
+    const likeLong = $('like-long'); if (likeLong) likeLong.textContent = '加密货币';
+    const likeMkt = $('like-mkt'); if (likeMkt) likeMkt.textContent = '美股';
+    renderLog();
+  }
+
+  function currentPose() {
+    if (s.moving) return 'walk';
+    if (s.action === 'sleep') return 'sleep';
+    if (s.action === 'wake' || s.action === 'relax') return 'sit';
+    if (s.action === 'breakfast' || s.action === 'cook') return 'cook';
+    if (s.action === 'eat' || s.action === 'lunch' || s.action === 'dinner') return 'eat';
+    if (s.action === 'search' || s.action === 'work' || s.action === 'market') return 'type';
+    if (s.action === 'workout') return 'lift';
+    return 'idle';
+  }
+  function poseFrame(pose) {
+    const a = s.anim || 0;
+    if (pose === 'walk') return Math.floor(a * 0.45) % 4;
+    if (pose === 'sleep') return Math.floor(a * 0.18) % 2;
+    if (pose === 'idle' || pose === 'sit') return Math.floor(a * 0.22) % 2;
+    return Math.floor(a * 0.4) % 4;
+  }
+  function tileHash(col, row) {
+    let x = Math.imul((col + 1) ^ ((row + 3) * 131), 2246822519);
+    x = Math.imul(x ^ (x >>> 13), 3266489917);
+    return (x ^ (x >>> 16)) >>> 0;
+  }
+
+  const TREES = [
+    {c:2, r:14, kind:0},
+    {c:3, r:13, kind:1},
+    {c:18, r:13, kind:2},
+    {c:19, r:14, kind:0}
+  ];
+  const PROPS = [
+    {kind:'bed', c:1, r:1, w:3, h:2},
+    {kind:'wardrobe', c:8, r:1, w:2, h:2},
+    {kind:'nightstand', c:5, r:1, w:1, h:1},
+    {kind:'fridge', c:11, r:1, w:2, h:2},
+    {kind:'stove', c:14, r:1, w:2, h:1},
+    {kind:'counter', c:17, r:1, w:4, h:1},
+    {kind:'counterEnd', c:20, r:2, w:1, h:1},
+    {kind:'table', c:15, r:3, w:2, h:2},
+    {kind:'sofa', c:1, r:8, w:4, h:1},
+    {kind:'shelf', c:1, r:7, w:2, h:1},
+    {kind:'barbell', c:7, r:8, w:2, h:1},
+    {kind:'desk', c:14, r:8, w:3, h:1},
+    {kind:'bookcase', c:11, r:7, w:2, h:2},
+    {kind:'plant', c:19, r:10, w:1, h:1},
+    {kind:'plant2', c:19, r:4, w:1, h:1},
+    {kind:'mailbox', c:7, r:13, w:1, h:1},
+    {kind:'bench', c:12, r:14, w:2, h:1},
+    {kind:'garden', c:8, r:13, w:3, h:2},
+    {kind:'rugBed', c:1, r:3, w:5, h:2, flat:true},
+    {kind:'rugLive', c:2, r:9, w:4, h:2, flat:true},
+    {kind:'rugStudy', c:13, r:9, w:4, h:2, flat:true},
+    {kind:'rugKit', c:11, r:5, w:4, h:1, flat:true},
+    {kind:'mat', c:6, r:9, w:3, h:2, flat:true},
+    {kind:'doormat', c:5, r:13, w:1, h:1, flat:true},
+    {kind:'chairDesk', c:15, r:9, w:1, h:1, flat:true},
+    {kind:'chairEat', c:17, r:4, w:1, h:1, flat:true}
+  ];
+  const LAMPS = [
+    {x:5.5 * TILE * SCALE, y:1.15 * TILE * SCALE, rad:128},
+    {x:16.4 * TILE * SCALE, y:2.35 * TILE * SCALE, rad:156},
+    {x:4.5 * TILE * SCALE, y:8.7 * TILE * SCALE, rad:150},
+    {x:15.5 * TILE * SCALE, y:8.05 * TILE * SCALE, rad:146},
+    {x:5.5 * TILE * SCALE, y:12.7 * TILE * SCALE, rad:132}
+  ];
+
+  const SK = {
+    hair:'#4a3328', hairL:'#7a5340', skin:'#f6c8a4', skinD:'#e3aa84',
+    blush:'#ee9b8c', eye:'#2b241e', mouth:'#c47068',
+    shirt:'#c85b3c', shirtD:'#8f3d2c', shirtL:'#e28768', cream:'#f6e3cc',
+    pant:'#3d4c74', pantD:'#2a3554', shoe:'#2c241c', shoeL:'#5a4a3c',
+    spoon:'#d5dbe2', wood:'#8a5a34', bar:'#b7c0c8', barD:'#5a626a', food:'#e6b15a'
+  };
+
+  function strideOf(pose, frame) {
+    if (pose !== 'walk') return {l:0, r:0, al:0, ar:0};
+    if (frame === 1) return {l:-1, r:1, al:1, ar:-1};
+    if (frame === 3) return {l:1, r:-1, al:-1, ar:1};
+    return {l:0, r:0, al:0, ar:0};
+  }
+  function bobOf(pose, frame) {
+    if (pose === 'walk' && frame === 2) return -1;
+    if ((pose === 'idle' || pose === 'sit') && frame === 1) return -1;
+    if (pose === 'lift' && (frame === 1 || frame === 2)) return 1;
+    return 0;
+  }
+  function makeBuf(w, h) {
+    const data = new Uint32Array(w * h);
+    const colors = [];
+    const index = new Map();
+    function id(col) {
+      let n = index.get(col);
+      if (!n) { colors.push(col); n = colors.length; index.set(col, n); }
+      return n;
+    }
+    function set(x, y, col) {
+      if (!col || x < 0 || y < 0 || x >= w || y >= h) return;
+      data[y * w + x] = id(col);
+    }
+    function rect(x, y, rw, rh, col) {
+      if (!col || rw <= 0 || rh <= 0) return;
+      const n = id(col);
+      for (let yy = 0; yy < rh; yy++) {
+        const py = y + yy;
+        if (py < 0 || py >= h) continue;
+        for (let xx = 0; xx < rw; xx++) {
+          const px = x + xx;
+          if (px < 0 || px >= w) continue;
+          data[py * w + px] = n;
+        }
+      }
+    }
+    function flush(ctx, ox, oy) {
+      ctx.fillStyle = '#2a1c16';
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        if (!data[y * w + x]) continue;
+        if (x === 0 || !data[y * w + x - 1]) ctx.fillRect(ox + x - 1, oy + y, 1, 1);
+        if (x === w - 1 || !data[y * w + x + 1]) ctx.fillRect(ox + x + 1, oy + y, 1, 1);
+        if (y === 0 || !data[(y - 1) * w + x]) ctx.fillRect(ox + x, oy + y - 1, 1, 1);
+        if (y === h - 1 || !data[(y + 1) * w + x]) ctx.fillRect(ox + x, oy + y + 1, 1, 1);
+      }
+      for (let y = 0; y < h; y++) for (let x = 0; x < w; x++) {
+        const n = data[y * w + x];
+        if (!n) continue;
+        ctx.fillStyle = colors[n - 1];
+        ctx.fillRect(ox + x, oy + y, 1, 1);
+      }
+    }
+    return {set:set, rect:rect, flush:flush, w:w, h:h};
+  }
+  function paintLegs(p, y, st, sit) {
+    if (sit) {
+      p.rect(3, y + 18, 10, 3, SK.pant);
+      p.rect(3, y + 20, 4, 1, SK.pantD);
+      p.rect(9, y + 20, 4, 1, SK.pantD);
+      p.rect(3, y + 21, 3, 2, SK.shoe);
+      p.rect(10, y + 21, 3, 2, SK.shoe);
+      return;
+    }
+    p.rect(4, y + 18 + st.l, 3, 6, SK.pant);
+    p.rect(9, y + 18 + st.r, 3, 6, SK.pant);
+    p.rect(4, y + 22 + st.l, 3, 1, SK.pantD);
+    p.rect(9, y + 22 + st.r, 3, 1, SK.pantD);
+    p.rect(4, y + 24 + st.l, 3, 2, SK.shoe);
+    p.rect(9, y + 24 + st.r, 3, 2, SK.shoe);
+    p.set(4, y + 24 + st.l, SK.shoeL);
+    p.set(9, y + 24 + st.r, SK.shoeL);
+  }
+  function paintFront(p, pose, frame) {
+    const st = strideOf(pose, frame);
+    const sit = pose === 'sit';
+    const y = 2 + bobOf(pose, frame) + (sit ? 3 : 0);
+    p.rect(4, y, 8, 3, SK.hair);
+    p.rect(5, y, 5, 1, SK.hairL);
+    p.rect(6, y - 1, 2, 1, SK.hair);
+    p.rect(3, y + 2, 10, 2, SK.hair);
+    p.rect(4, y + 4, 8, 6, SK.skin);
+    p.rect(3, y + 4, 2, 4, SK.hair);
+    p.rect(11, y + 4, 2, 4, SK.hair);
+    p.rect(4, y + 4, 8, 1, SK.hair);
+    p.set(6, y + 6, SK.eye);
+    p.set(9, y + 6, SK.eye);
+    p.set(5, y + 8, SK.blush);
+    p.set(10, y + 8, SK.blush);
+    p.rect(7, y + 8, 2, 1, SK.mouth);
+    p.set(3, y + 6, SK.skinD);
+    p.set(12, y + 6, SK.skinD);
+    p.rect(6, y + 10, 4, 1, SK.skinD);
+    p.rect(4, y + 11, 8, 7, SK.shirt);
+    p.rect(5, y + 11, 6, 1, SK.cream);
+    p.rect(4, y + 16, 8, 2, SK.shirtD);
+    p.set(7, y + 13, SK.shirtD);
+    if (pose === 'lift') {
+      p.rect(3, y + 3, 2, 7, SK.shirt);
+      p.rect(11, y + 3, 2, 7, SK.shirt);
+      p.set(3, y + 3, SK.skin);
+      p.set(12, y + 3, SK.skin);
+      p.rect(2, y + 2, 12, 2, SK.bar);
+      p.rect(1, y + 1, 2, 4, SK.barD);
+      p.rect(13, y + 1, 2, 4, SK.barD);
+    } else if (pose === 'cook') {
+      p.rect(2, y + 12, 2, 6, SK.shirt);
+      p.set(2, y + 17, SK.skin);
+      p.rect(12, y + 6, 2, 6, SK.shirt);
+      p.set(12, y + 6, SK.skin);
+      p.rect(13, y + 4, 1, 3, SK.spoon);
+      p.set(13, y + 3, SK.wood);
+    } else if (pose === 'eat') {
+      p.rect(2, y + 12, 2, 6, SK.shirt);
+      p.set(2, y + 17, SK.skin);
+      p.rect(11, y + 8, 2, 4, SK.shirt);
+      p.set(11, y + 7, SK.skin);
+      p.set(12, y + 7, SK.food);
+    } else if (pose === 'type') {
+      p.rect(3, y + 15, 4, 2, SK.shirtD);
+      p.rect(9, y + 15, 4, 2, SK.shirtD);
+      p.rect(4, y + 16, 3, 1, SK.skin);
+      p.rect(9, y + 16, 3, 1, SK.skin);
+    } else {
+      p.rect(2, y + 12 + st.al, 2, 6, SK.shirt);
+      p.rect(12, y + 12 + st.ar, 2, 6, SK.shirt);
+      p.set(2, y + 17 + st.al, SK.skin);
+      p.set(13, y + 17 + st.ar, SK.skin);
+      p.rect(2, y + 12 + st.al, 1, 3, SK.shirtL);
+    }
+    paintLegs(p, y, st, sit);
+  }
+  function paintBack(p, pose, frame) {
+    const st = strideOf(pose, frame);
+    const sit = pose === 'sit';
+    const y = 2 + bobOf(pose, frame) + (sit ? 3 : 0);
+    p.rect(3, y, 10, 9, SK.hair);
+    p.rect(5, y, 6, 2, SK.hairL);
+    p.rect(6, y - 1, 3, 1, SK.hairL);
+    p.set(3, y + 7, SK.skin);
+    p.set(12, y + 7, SK.skin);
+    p.rect(4, y + 9, 8, 8, SK.shirt);
+    p.rect(5, y + 9, 6, 1, SK.shirtL);
+    p.rect(4, y + 15, 8, 2, SK.shirtD);
+    if (pose === 'lift') {
+      p.rect(2, y + 2, 2, 7, SK.shirt);
+      p.rect(12, y + 2, 2, 7, SK.shirt);
+      p.rect(1, y + 1, 14, 2, SK.bar);
+      p.rect(0, y + 1, 2, 3, SK.barD);
+      p.rect(14, y + 1, 2, 3, SK.barD);
+    } else if (pose === 'cook') {
+      p.rect(1, y + 11, 2, 6, SK.shirt);
+      p.set(1, y + 16, SK.skin);
+      p.rect(13, y + 4, 2, 7, SK.shirt);
+      p.set(14, y + 4, SK.skin);
+      p.rect(14, y + 2, 1, 3, SK.spoon);
+    } else if (pose === 'type') {
+      p.rect(3, y + 7, 2, 4, SK.shirt);
+      p.rect(11, y + 7, 2, 4, SK.shirt);
+      p.set(3, y + 7, SK.skin);
+      p.set(12, y + 7, SK.skin);
+    } else if (pose === 'eat') {
+      p.rect(1, y + 11, 2, 6, SK.shirt);
+      p.rect(12, y + 9, 2, 5, SK.shirt);
+      p.set(13, y + 9, SK.skin);
+    } else {
+      p.rect(1, y + 10 + st.al, 2, 6, SK.shirt);
+      p.rect(13, y + 10 + st.ar, 2, 6, SK.shirt);
+      p.set(1, y + 15 + st.al, SK.skin);
+      p.set(14, y + 15 + st.ar, SK.skin);
+    }
+    paintLegs(p, y, st, sit);
+  }
+  function paintSide(p, pose, frame) {
+    const st = strideOf(pose, frame);
+    const sit = pose === 'sit';
+    const y = 2 + bobOf(pose, frame) + (sit ? 3 : 0);
+    p.rect(3, y, 7, 4, SK.hair);
+    p.rect(4, y, 4, 1, SK.hairL);
+    p.rect(6, y - 1, 2, 1, SK.hair);
+    p.rect(6, y + 3, 6, 6, SK.skin);
+    p.rect(3, y + 3, 5, 5, SK.hair);
+    p.rect(4, y + 7, 2, 2, SK.skinD);
+    p.set(10, y + 5, SK.eye);
+    p.set(11, y + 6, SK.skinD);
+    p.set(9, y + 7, SK.blush);
+    p.set(10, y + 8, SK.mouth);
+    p.rect(4, y + 10, 7, 8, SK.shirt);
+    p.rect(4, y + 10, 6, 1, SK.shirtL);
+    p.rect(4, y + 16, 7, 2, SK.shirtD);
+    if (pose === 'lift') {
+      p.rect(8, y + 2, 2, 8, SK.shirt);
+      p.set(9, y + 2, SK.skin);
+      p.rect(3, y + 1, 10, 2, SK.bar);
+      p.rect(2, y, 2, 4, SK.barD);
+      p.rect(12, y, 2, 4, SK.barD);
+    } else if (pose === 'cook') {
+      p.rect(10, y + 9, 4, 2, SK.shirt);
+      p.set(13, y + 9, SK.skin);
+      p.rect(14, y + 7, 1, 3, SK.spoon);
+      p.set(14, y + 6, SK.wood);
+    } else if (pose === 'eat') {
+      p.rect(9, y + 7, 3, 2, SK.shirt);
+      p.set(11, y + 7, SK.skin);
+      p.set(12, y + 7, SK.food);
+    } else if (pose === 'type') {
+      p.rect(9, y + 13, 4, 2, SK.shirtD);
+      p.rect(12, y + 14, 2, 1, SK.skin);
+    } else {
+      p.rect(9, y + 11 + st.ar, 2, 6, SK.shirt);
+      p.set(10, y + 16 + st.ar, SK.skin);
+    }
+    if (sit) {
+      p.rect(4, y + 18, 8, 3, SK.pant);
+      p.rect(10, y + 20, 3, 2, SK.shoe);
+    } else {
+      p.rect(4, y + 18 + st.l, 3, 6, SK.pantD);
+      p.rect(7, y + 18 + st.r, 3, 6, SK.pant);
+      p.rect(4, y + 24 + st.l, 3, 2, SK.shoe);
+      p.rect(7, y + 24 + st.r, 3, 2, SK.shoe);
+      p.set(7, y + 24 + st.r, SK.shoeL);
+    }
+  }
+  function paintSleep(frame) {
+    const p = makeBuf(32, 16);
+    p.rect(1, 3, 9, 9, '#efe4d4');
+    p.rect(2, 4, 7, 7, '#fffaf3');
+    p.rect(3, 5, 6, 6, SK.skin);
+    p.rect(3, 4, 6, 3, SK.hair);
+    p.rect(3, 6, 2, 3, SK.hair);
+    p.rect(5, 7, 3, 1, SK.eye);
+    p.set(8, 8, SK.blush);
+    p.rect(9, 4, 21, 8, frame ? '#c45c48' : '#b6523e');
+    p.rect(9, 4, 21, 2, '#f0d2b4');
+    p.rect(14, 8, 5, 2, '#f0d2b4');
+    p.rect(22, 7, 4, 2, '#e7b89a');
+    return p;
+  }
+
+  const actorCache = new Map();
+  function spriteFromBuf(p, footX, footY) {
+    const cv = document.createElement('canvas');
+    cv.width = p.w + 2;
+    cv.height = p.h + 2;
+    const ctx = cv.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    p.flush(ctx, 1, 1);
+    cv.footX = footX;
+    cv.footY = footY;
+    return cv;
+  }
+  function mirrorSprite(src) {
+    const cv = document.createElement('canvas');
+    cv.width = src.width;
+    cv.height = src.height;
+    const ctx = cv.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    ctx.translate(src.width, 0);
+    ctx.scale(-1, 1);
+    ctx.drawImage(src, 0, 0);
+    cv.footX = src.width - 1 - src.footX;
+    cv.footY = src.footY;
+    return cv;
+  }
+  function actorSprite(pose, dir, frame) {
+    const face = dir === 'left' ? 'right' : (dir || 'down');
+    const key = pose + ':' + face + ':' + frame;
+    if (!actorCache.has(key)) {
+      let p;
+      if (pose === 'sleep') p = paintSleep(frame);
+      else {
+        p = makeBuf(16, 32);
+        if (face === 'up') paintBack(p, pose, frame);
+        else if (face === 'right') paintSide(p, pose, frame);
+        else paintFront(p, pose, frame);
+      }
+      const footX = pose === 'sleep' ? 17 : 9;
+      const footY = pose === 'sleep' ? 10 : 28;
+      actorCache.set(key, spriteFromBuf(p, footX, footY));
+    }
+    const spr = actorCache.get(key);
+    if (dir !== 'left' || pose === 'sleep') return spr;
+    const mk = key + ':L';
+    if (!actorCache.has(mk)) actorCache.set(mk, mirrorSprite(spr));
+    return actorCache.get(mk);
+  }
+
+  function sprite(w, h, fn) {
+    const cv = document.createElement('canvas');
+    cv.width = w;
+    cv.height = h;
+    const ctx = cv.getContext('2d');
+    ctx.imageSmoothingEnabled = false;
+    const box = function (x, y, bw, bh, col) { ctx.fillStyle = col; ctx.fillRect(x, y, bw, bh); };
+    fn(ctx, box);
+    return cv;
+  }
+  function paintBed(ctx, box) {
+    box(0, 6, 48, 8, '#7a4930');
+    box(2, 7, 44, 3, '#c48958');
+    box(0, 12, 4, 26, '#6b412c');
+    box(44, 12, 4, 26, '#6b412c');
+    box(4, 28, 40, 8, '#8a5640');
+    box(4, 16, 40, 16, '#c45c48');
+    box(4, 16, 40, 3, '#a34838');
+    box(8, 20, 8, 3, '#f0d2b4');
+    box(22, 24, 10, 3, '#f0d2b4');
+    box(34, 20, 6, 2, '#f0d2b4');
+    box(6, 12, 16, 8, '#fff7ee');
+    box(26, 12, 16, 8, '#f4e7d6');
+    box(8, 14, 5, 2, '#e7d3c2');
+    box(28, 14, 5, 2, '#e7d3c2');
+    box(4, 30, 40, 2, '#f2e0cc');
+  }
+  function paintWardrobe(ctx, box) {
+    box(1, 4, 30, 36, '#8a5a34');
+    box(2, 2, 28, 6, '#6b4128');
+    box(3, 8, 26, 28, '#a86b3c');
+    box(16, 8, 1, 28, '#6b4128');
+    box(5, 10, 9, 16, '#d8c4a4');
+    box(18, 10, 9, 16, '#c4b090');
+    box(6, 11, 7, 6, '#e7f2f4');
+    box(13, 18, 1, 3, '#f0d48a');
+    box(18, 18, 1, 3, '#f0d48a');
+    box(4, 32, 10, 3, '#c48958');
+    box(18, 32, 10, 3, '#c48958');
+  }
+  function paintNightstand(ctx, box) {
+    box(1, 10, 14, 12, '#a86b3c');
+    box(2, 12, 12, 4, '#c48958');
+    box(6, 13, 2, 2, '#f0d48a');
+    box(4, 8, 8, 3, '#6b4128');
+    box(5, 4, 6, 5, isNight() ? '#ffe7a2' : '#f3d48a');
+    box(6, 5, 4, 2, '#fff6d2');
+    box(7, 2, 2, 3, '#8a5a34');
+  }
+  function paintFridge(ctx, box) {
+    box(2, 4, 28, 34, '#f4f1ea');
+    box(2, 4, 28, 4, '#d9d3c8');
+    box(3, 10, 26, 1, '#c8c0b4');
+    box(24, 12, 2, 8, '#b7c4c8');
+    box(24, 24, 2, 8, '#b7c4c8');
+    box(6, 14, 6, 5, '#f2d56a');
+    box(8, 16, 3, 2, '#8a9a6a');
+    box(16, 22, 4, 4, '#d45a48');
+    box(4, 36, 24, 2, '#d0c8bc');
+  }
+  function paintStove(ctx, box) {
+    box(0, 6, 32, 16, '#3a3836');
+    box(2, 8, 12, 8, '#2a2826');
+    box(18, 8, 12, 8, '#2a2826');
+    box(4, 10, 8, 4, '#5a5856');
+    box(20, 10, 8, 4, '#5a5856');
+    box(6, 4, 8, 6, '#c45c48');
+    box(8, 2, 4, 3, '#8a4034');
+    box(9, 1, 2, 2, '#d7dbe0');
+    box(1, 16, 2, 2, '#c9a06a');
+    box(8, 16, 2, 2, '#c9a06a');
+    box(22, 16, 2, 2, '#c9a06a');
+    box(28, 16, 2, 2, '#c9a06a');
+  }
+  function paintCounter(ctx, box) {
+    box(0, 8, 64, 14, '#8a5a34');
+    box(1, 10, 62, 8, '#a86b3e');
+    box(0, 6, 64, 4, '#d7a36a');
+    box(0, 6, 64, 1, '#f0d2a4');
+    box(4, 12, 14, 5, '#6b4128');
+    box(22, 12, 16, 5, '#6b4128');
+    box(42, 12, 16, 5, '#6b4128');
+    box(6, 2, 10, 5, '#e6c48a');
+    box(7, 3, 8, 2, '#f3ddb0');
+    box(18, 3, 5, 4, '#6e8f4e');
+    box(19, 1, 3, 3, '#8fbf62');
+    box(28, 3, 8, 4, '#c45c48');
+    box(30, 4, 4, 2, '#e7d3a4');
+    box(40, 4, 6, 3, '#f4efe6');
+    box(50, 3, 8, 4, '#d7a36a');
+    box(52, 1, 4, 3, '#e8e0d4');
+  }
+  function paintCounterEnd(ctx, box) {
+    box(0, 4, 16, 16, '#8a5a34');
+    box(1, 6, 14, 10, '#a86b3e');
+    box(0, 2, 16, 4, '#d7a36a');
+    box(0, 2, 16, 1, '#f0d2a4');
+    box(4, 4, 8, 3, '#6e8f4e');
+  }
+  function paintTable(ctx, box) {
+    box(2, 6, 28, 20, '#a86b3c');
+    box(4, 8, 24, 14, '#f6edd8');
+    box(4, 8, 24, 2, '#e7c9a0');
+    box(6, 12, 8, 6, '#f7f4ee');
+    box(7, 13, 6, 4, '#e7b98a');
+    box(18, 12, 6, 5, '#c45c48');
+    box(19, 11, 4, 2, '#f4efe6');
+    box(20, 8, 2, 3, '#6e8f4e');
+    box(1, 22, 3, 6, '#6b4128');
+    box(28, 22, 3, 6, '#6b4128');
+  }
+  function paintSofa(ctx, box) {
+    box(0, 2, 64, 8, '#4f6a3c');
+    box(2, 4, 60, 4, '#6d8b50');
+    box(0, 10, 6, 14, '#5e7a46');
+    box(58, 10, 6, 14, '#5e7a46');
+    box(6, 10, 52, 12, '#7ea062');
+    box(8, 12, 14, 8, '#d8c4a0');
+    box(26, 12, 14, 8, '#c45c48');
+    box(44, 12, 12, 8, '#f0e2c4');
+    box(2, 22, 3, 4, '#6b4128');
+    box(59, 22, 3, 4, '#6b4128');
+  }
+  function paintShelf(ctx, box) {
+    box(0, 4, 32, 22, '#6b4128');
+    box(2, 6, 28, 18, '#a86b3c');
+    const spines = ['#c45c48', '#e6c56a', '#6e8f4e', '#5e86a8', '#f4efe6', '#a85a8a', '#d9894a', '#3d4c74'];
+    for (let i = 0; i < 8; i++) box(3 + i * 3, 8, 2, 6, spines[i]);
+    for (let i = 0; i < 7; i++) box(4 + i * 3, 16, 2, 6, spines[(i + 3) % spines.length]);
+  }
+  function paintBarbell(ctx, box) {
+    box(2, 2, 4, 12, '#6b4128');
+    box(26, 2, 4, 12, '#6b4128');
+    box(4, 4, 24, 3, '#8a5a34');
+    box(6, 5, 6, 6, '#5a626a');
+    box(20, 5, 6, 6, '#5a626a');
+    box(8, 8, 16, 2, SK.bar);
+  }
+  function paintDesk(ctx, box) {
+    const night = isNight();
+    box(0, 12, 48, 14, '#8a5a34');
+    box(1, 14, 46, 8, '#a86b3e');
+    box(0, 10, 48, 4, '#d7a36a');
+    box(0, 10, 48, 1, '#f0d2a4');
+    box(6, 2, 16, 10, '#2c3438');
+    box(7, 3, 14, 8, night ? '#9ad4ff' : '#8fd0c4');
+    box(8, 4, 4, 2, night ? '#e7f6ff' : '#d7f4ee');
+    box(14, 8, 4, 2, '#2a4a44');
+    box(18, 14, 12, 2, '#4a4038');
+    box(20, 15, 8, 1, '#c9b8a4');
+    box(30, 4, 6, 6, night ? '#ffe7a2' : '#f3d48a');
+    box(31, 5, 4, 3, '#fff6d2');
+    box(32, 2, 2, 3, '#6b4128');
+    box(38, 12, 6, 4, '#f4efe6');
+    box(39, 11, 4, 2, '#c45c48');
+  }
+  function paintBookcase(ctx, box) {
+    box(0, 2, 32, 38, '#6b4128');
+    box(2, 4, 28, 34, '#a86b3c');
+    const spines = ['#c45c48', '#e6c56a', '#6e8f4e', '#5e86a8', '#f4efe6', '#a85a8a', '#d9894a', '#3d4c74', '#e7d3a4'];
+    for (let row = 0; row < 4; row++) {
+      for (let i = 0; i < 8; i++) box(3 + i * 3, 6 + row * 8, 2, 6, spines[(i + row * 2) % spines.length]);
+    }
+  }
+  function paintPlant(ctx, box) {
+    box(4, 16, 8, 8, '#c46a3c');
+    box(3, 15, 10, 2, '#a85630');
+    box(5, 18, 6, 4, '#e7b08a');
+    box(6, 8, 4, 8, '#3e7a32');
+    box(3, 6, 5, 5, '#4e9440');
+    box(8, 4, 5, 6, '#6eb854');
+    box(5, 3, 4, 4, '#8fd06a');
+    box(7, 2, 2, 2, '#d7f0b0');
+  }
+  function paintPlant2(ctx, box) {
+    box(4, 14, 8, 8, '#f4efe6');
+    box(5, 16, 6, 4, '#e7d8c4');
+    box(2, 8, 12, 6, '#5aa24a');
+    box(4, 4, 8, 6, '#7bc062');
+    box(6, 2, 4, 3, '#c6e88a');
+    box(3, 6, 2, 2, '#e86d8c');
+    box(11, 5, 2, 2, '#f0d15e');
+  }
+  function paintMailbox(ctx, box) {
+    box(7, 10, 3, 14, '#6b4128');
+    box(2, 6, 12, 8, '#c45c48');
+    box(2, 6, 12, 2, '#e7d3a4');
+    box(11, 8, 4, 2, '#f2d56a');
+    box(4, 9, 5, 3, '#f4efe6');
+  }
+  function paintBench(ctx, box) {
+    box(1, 6, 30, 5, '#c48958');
+    box(1, 6, 30, 1, '#f0d2a4');
+    box(2, 8, 28, 1, '#8a5a34');
+    box(2, 12, 3, 6, '#6b4128');
+    box(27, 12, 3, 6, '#6b4128');
+    box(14, 12, 3, 5, '#6b4128');
+  }
+  function paintGarden(ctx, box) {
+    box(1, 8, 46, 24, '#6b442c');
+    box(3, 10, 42, 20, '#8a5a38');
+    box(4, 12, 40, 4, '#6b442c');
+    box(4, 20, 40, 3, '#6b442c');
+    for (let i = 0; i < 6; i++) {
+      box(6 + i * 6, 14, 2, 4, '#4e9440');
+      box(5 + i * 6, 12, 4, 3, '#6eb854');
+    }
+    box(8, 22, 3, 3, '#d45a48');
+    box(20, 24, 3, 3, '#e6b15a');
+    box(32, 22, 4, 3, '#6e8f4e');
+    box(36, 16, 3, 3, '#f0d15e');
+  }
+  function paintRug(ctx, box, w, h, a, b, edge) {
+    box(0, 0, w, h, a);
+    box(0, 0, w, 2, edge);
+    box(0, h - 2, w, 2, edge);
+    box(0, 0, 2, h, edge);
+    box(w - 2, 0, 2, h, edge);
+    box(3, 3, w - 6, h - 6, b);
+    for (let y = 6; y < h - 4; y += 5) box(5, y, w - 10, 1, edge);
+  }
+  function paintMat(ctx, box) {
+    box(0, 0, 48, 32, '#6e8f55');
+    box(2, 2, 44, 28, '#87a86a');
+    box(0, 0, 48, 2, '#c9a06a');
+    box(0, 30, 48, 2, '#c9a06a');
+    box(0, 0, 2, 32, '#c9a06a');
+    box(46, 0, 2, 32, '#c9a06a');
+    box(8, 8, 10, 16, '#5e7a46');
+    box(30, 8, 10, 16, '#5e7a46');
+  }
+  function paintDoormat(ctx, box) {
+    box(2, 4, 12, 8, '#8a4a3a');
+    box(3, 5, 10, 6, '#c46a4a');
+    box(4, 7, 8, 1, '#f0d2b4');
+  }
+  function paintChair(ctx, box) {
+    box(3, 2, 10, 3, '#6b4128');
+    box(4, 5, 8, 7, '#c48958');
+    box(2, 12, 2, 3, '#6b4128');
+    box(12, 12, 2, 3, '#6b4128');
+  }
+  let ART = null;
+  function buildProps() {
+    return {
+      bed: sprite(48, 40, paintBed),
+      wardrobe: sprite(32, 42, paintWardrobe),
+      nightstand: sprite(16, 24, paintNightstand),
+      fridge: sprite(32, 40, paintFridge),
+      stove: sprite(32, 24, paintStove),
+      counter: sprite(64, 24, paintCounter),
+      counterEnd: sprite(16, 22, paintCounterEnd),
+      table: sprite(32, 30, paintTable),
+      sofa: sprite(64, 28, paintSofa),
+      shelf: sprite(32, 28, paintShelf),
+      barbell: sprite(32, 16, paintBarbell),
+      desk: sprite(48, 30, paintDesk),
+      bookcase: sprite(32, 42, paintBookcase),
+      plant: sprite(16, 30, paintPlant),
+      plant2: sprite(16, 26, paintPlant2),
+      mailbox: sprite(16, 26, paintMailbox),
+      bench: sprite(32, 20, paintBench),
+      garden: sprite(48, 34, paintGarden),
+      rugBed: sprite(80, 32, function (ctx, box) { paintRug(ctx, box, 80, 32, '#a85a48', '#c46a58', '#f0d2b4'); }),
+      rugLive: sprite(64, 32, function (ctx, box) { paintRug(ctx, box, 64, 32, '#6e8a48', '#87a45e', '#e7d3a4'); }),
+      rugStudy: sprite(64, 32, function (ctx, box) { paintRug(ctx, box, 64, 32, '#8d6244', '#a87852', '#f0d8b0'); }),
+      rugKit: sprite(64, 16, function (ctx, box) { paintRug(ctx, box, 64, 16, '#8a4034', '#b85242', '#f0d2b4'); }),
+      mat: sprite(48, 32, paintMat),
+      doormat: sprite(16, 16, paintDoormat),
+      chairDesk: sprite(16, 16, paintChair),
+      chairEat: sprite(16, 16, paintChair)
+    };
+  }
+  function paintTree(ctx, box, kind) {
+    box(8, 31, 10, 3, 'rgba(40,30,20,0.28)');
+    box(11, 22, 4, 12, '#6b442c');
+    box(12, 22, 1, 12, '#a86b44');
+    const g0 = kind === 2 ? '#6a8a48' : '#2f6a32';
+    const g1 = kind === 2 ? '#7aa45a' : '#3f8a3c';
+    const g2 = kind === 2 ? '#9bc46e' : '#63b050';
+    const g3 = kind === 2 ? '#d7e8a8' : '#c6e88a';
+    box(4, 16, 18, 10, g0);
+    box(2, 12, 22, 8, g1);
+    box(5, 7, 16, 8, g2);
+    box(8, 4, 10, 5, g2);
+    box(6, 8, 3, 2, g3);
+    box(14, 11, 3, 2, g3);
+    if (kind === 1) {
+      box(6, 12, 2, 2, '#e06a6a');
+      box(16, 9, 2, 2, '#e06a6a');
+      box(10, 14, 2, 2, '#f0d15e');
+    }
+    if (kind === 2) {
+      box(5, 10, 2, 2, '#f4a0b8');
+      box(15, 8, 2, 2, '#f7c2d2');
+      box(11, 13, 2, 2, '#f4a0b8');
+    }
+  }
+  function buildTrees() {
+    const out = [];
+    for (let i = 0; i < 3; i++) out.push(sprite(26, 36, function (ctx, box) { paintTree(ctx, box, i); }));
+    return out;
+  }
+  function ensureArt() {
+    const night = isNight() ? 1 : 0;
+    if (!ART) ART = {night:-1, props:null, trees:null};
+    if (ART.night !== night) {
+      ART.night = night;
+      ART.props = buildProps();
+      if (!ART.trees) ART.trees = buildTrees();
+    }
+  }
+
+  const cellCache = new Map();
+  function paintFlower(ctx, x, y, col) {
+    ctx.fillStyle = '#3e7a32';
+    ctx.fillRect(x + 1, y + 2, 1, 3);
+    ctx.fillStyle = col;
+    ctx.fillRect(x, y, 3, 2);
+    ctx.fillStyle = '#fff3c4';
+    ctx.fillRect(x + 1, y, 1, 1);
+  }
+  function paintGrass(ctx, col, row, flowers) {
+    const h = tileHash(col, row);
+    ctx.fillStyle = ['#63a246', '#57963c', '#70b250'][h % 3];
+    ctx.fillRect(0, 0, 16, 16);
+    ctx.fillStyle = '#4c8634';
+    for (let i = 0; i < 5; i++) ctx.fillRect((h >> (i * 3)) & 13, (h >> (i + 2)) & 13, 1, 2);
+    ctx.fillStyle = '#9ad46e';
+    ctx.fillRect(h % 13, (h >> 5) % 13, 1, 1);
+    if (!flowers) return;
+    const cols = ['#e86d8c', '#f0d15e', '#f7f3ea', '#d7a0e4', '#ef8a4a'];
+    if (h % 4 === 0) paintFlower(ctx, 3 + (h % 7), 4 + ((h >> 3) % 6), cols[h % 5]);
+    if (h % 9 === 0) paintFlower(ctx, 9, 9, cols[(h >> 4) % 5]);
+  }
+  function paintPath(ctx, col, row) {
+    paintGrass(ctx, col, row, false);
+    const h = tileHash(col, row);
+    ctx.fillStyle = '#d9c29a';
+    ctx.fillRect(1, 2, 6, 5);
+    ctx.fillRect(8, 8, 7, 5);
+    if (h % 2 === 0) ctx.fillRect(3, 9, 4, 3);
+    ctx.fillStyle = '#b89a72';
+    ctx.fillRect(1, 6, 6, 1);
+    ctx.fillRect(8, 12, 7, 1);
+    ctx.fillStyle = '#f2e4c8';
+    ctx.fillRect(2, 3, 2, 1);
+    ctx.fillRect(10, 9, 2, 1);
+  }
+  function paintWood(ctx, col, row, kind) {
+    const bases = {
+      bed:['#e6c08a', '#d7ae78', '#efd0a0'],
+      live:['#e0b56e', '#d4a45c', '#c99555']
+    };
+    const lines = {bed:'#b4834e', live:'#a87440'};
+    const h = tileHash(col, row);
+    ctx.fillStyle = bases[kind][h % 3];
+    ctx.fillRect(0, 0, 16, 16);
+    ctx.fillStyle = lines[kind];
+    const shift = (col * 3 + row) % 5;
+    for (let y = shift; y < 16; y += 5) ctx.fillRect(0, y, 16, 1);
+    const cut = (h % 14) + 1;
+    ctx.fillRect(cut, 0, 1, 16);
+    if (h % 6 === 0) {
+      ctx.fillStyle = 'rgba(120,72,32,0.35)';
+      ctx.fillRect(3 + (h % 8), 7, 2, 2);
+    }
+  }
+  function paintKitchen(ctx, col, row) {
+    for (let y = 0; y < 16; y += 4) {
+      for (let x = 0; x < 16; x += 4) {
+        const alt = ((x + y) / 4 + col + row) % 2 === 0;
+        ctx.fillStyle = alt ? '#f7ecd4' : '#e7d3ae';
+        ctx.fillRect(x, y, 4, 4);
+        ctx.fillStyle = '#d2bc96';
+        ctx.fillRect(x, y, 4, 1);
+        ctx.fillRect(x, y, 1, 4);
+      }
+    }
+  }
+  function paintCarpet(ctx, col, row) {
+    const h = tileHash(col, row);
+    ctx.fillStyle = ['#7f8f5e', '#738454', '#8b9a68'][h % 3];
+    ctx.fillRect(0, 0, 16, 16);
+    ctx.fillStyle = 'rgba(255,248,230,0.16)';
+    for (let i = (h % 3); i < 16; i += 4) ctx.fillRect(i, 0, 1, 16);
+    ctx.fillStyle = 'rgba(50,40,20,0.18)';
+    for (let y = 3; y < 16; y += 5) ctx.fillRect(0, y, 16, 1);
+  }
+  function paintWindow(ctx) {
+    ctx.fillStyle = '#5c3a28';
+    ctx.fillRect(2, 3, 12, 10);
+    ctx.fillStyle = isNight() ? '#1b2b4a' : '#b7e4ee';
+    ctx.fillRect(3, 4, 10, 8);
+    if (!isNight()) {
+      ctx.fillStyle = '#f4fcff';
+      ctx.fillRect(4, 5, 2, 2);
+    } else {
+      ctx.fillStyle = '#f4e6b0';
+      ctx.fillRect(10, 5, 1, 1);
+    }
+    ctx.fillStyle = '#f3e6cf';
+    ctx.fillRect(7, 4, 1, 8);
+    ctx.fillRect(3, 8, 10, 1);
+    ctx.fillStyle = '#c45448';
+    ctx.fillRect(3, 4, 2, 8);
+    ctx.fillRect(11, 4, 2, 8);
+  }
+  function paintPicture(ctx, col) {
+    ctx.fillStyle = '#6b4228';
+    ctx.fillRect(3, 5, 10, 8);
+    ctx.fillStyle = col % 2 ? '#7eb0c8' : '#f0d78a';
+    ctx.fillRect(4, 6, 8, 6);
+    ctx.fillStyle = col % 2 ? '#3f7a48' : '#c45c3c';
+    ctx.fillRect(4, 9, 8, 3);
+    ctx.fillStyle = '#fff8ee';
+    ctx.fillRect(6, 7, 2, 2);
+  }
+  function paintClock(ctx) {
+    ctx.fillStyle = '#6b4228';
+    ctx.fillRect(4, 4, 8, 8);
+    ctx.fillStyle = '#f7f1e4';
+    ctx.fillRect(5, 5, 6, 6);
+    ctx.fillStyle = '#2a211c';
+    ctx.fillRect(8, 6, 1, 3);
+    ctx.fillRect(8, 8, 2, 1);
+  }
+  function paintSconce(ctx) {
+    ctx.fillStyle = '#8a5a32';
+    ctx.fillRect(7, 9, 2, 3);
+    ctx.fillStyle = isNight() ? '#ffe7a8' : '#f3d48a';
+    ctx.fillRect(4, 6, 8, 4);
+    ctx.fillStyle = '#fff6d4';
+    ctx.fillRect(6, 7, 4, 2);
+  }
+  function paintWall(ctx, col, row) {
+    const key = col + ',' + row;
+    if (row === 12) {
+      ctx.fillStyle = '#e7c89a';
+      ctx.fillRect(0, 0, 16, 16);
+      ctx.fillStyle = '#c9a06a';
+      for (let y = 2; y < 14; y += 4) ctx.fillRect(0, y, 16, 1);
+      ctx.fillStyle = '#8d5a34';
+      ctx.fillRect(0, 0, 16, 2);
+      ctx.fillStyle = '#6b4128';
+      ctx.fillRect(0, 14, 16, 2);
+      ctx.fillStyle = '#f6e6cc';
+      ctx.fillRect(0, 2, 16, 1);
+    } else if (row === 0 || col === 0 || col === 21) {
+      ctx.fillStyle = '#ecd4b4';
+      ctx.fillRect(0, 0, 16, 16);
+      ctx.fillStyle = '#6e4330';
+      ctx.fillRect(0, 0, 16, 3);
+      ctx.fillStyle = '#c48a56';
+      ctx.fillRect(0, 3, 16, 1);
+      ctx.fillStyle = '#c9a278';
+      ctx.fillRect(0, 13, 16, 3);
+      if (col === 0) { ctx.fillStyle = '#6e4330'; ctx.fillRect(0, 0, 3, 16); }
+      if (col === 21) { ctx.fillStyle = '#6e4330'; ctx.fillRect(13, 0, 3, 16); }
+    } else {
+      ctx.fillStyle = '#f6e6ce';
+      ctx.fillRect(0, 0, 16, 16);
+      ctx.fillStyle = '#7a4e32';
+      ctx.fillRect(0, 0, 16, 3);
+      ctx.fillStyle = '#e0b072';
+      ctx.fillRect(0, 3, 16, 1);
+      ctx.fillStyle = '#e4c8a4';
+      ctx.fillRect(0, 13, 16, 3);
+      ctx.fillStyle = '#b48458';
+      ctx.fillRect(0, 15, 16, 1);
+      if ((col + row) % 4 === 0) {
+        ctx.fillStyle = '#c4956a';
+        ctx.fillRect(0, 4, 2, 9);
+      }
+    }
+    if (['3,0','7,0','13,0','17,0','2,12','8,12','15,12','18,12'].indexOf(key) >= 0) paintWindow(ctx);
+    if (['3,6','14,6'].indexOf(key) >= 0) paintPicture(ctx, col);
+    if (key === '8,6') paintClock(ctx);
+    if (['5,6','16,0','4,12','18,6'].indexOf(key) >= 0) paintSconce(ctx);
+  }
+  function paintFence(ctx, col) {
+    const vertical = col === 0 || col === 21;
+    ctx.fillStyle = '#c4894e';
+    ctx.fillStyle = '#b67a42';
+    if (vertical) {
+      ctx.fillRect(3, 0, 3, 16);
+      ctx.fillRect(9, 0, 3, 16);
+      ctx.fillStyle = '#8a542c';
+      ctx.fillRect(5, 0, 1, 16);
+      ctx.fillRect(11, 0, 1, 16);
+      ctx.fillStyle = '#6b4128';
+      ctx.fillRect(6, 1, 3, 4);
+      ctx.fillRect(6, 9, 3, 5);
+      ctx.fillStyle = '#e2b56a';
+      ctx.fillRect(6, 2, 1, 3);
+    } else {
+      ctx.fillStyle = '#c48a4e';
+      ctx.fillRect(0, 3, 16, 3);
+      ctx.fillRect(0, 9, 16, 3);
+      ctx.fillStyle = '#8a542c';
+      ctx.fillRect(0, 5, 16, 1);
+      ctx.fillRect(0, 11, 16, 1);
+      ctx.fillStyle = '#6b4128';
+      ctx.fillRect(1, 0, 3, 16);
+      ctx.fillStyle = '#e2b56a';
+      ctx.fillRect(2, 1, 1, 14);
+    }
+  }
+  function paintDoor(ctx, col, row) {
+    const ns = cell(col, row - 1) !== '#' && cell(col, row + 1) !== '#';
+    const near = [cell(col - 1, row), cell(col + 1, row), cell(col, row - 1), cell(col, row + 1)];
+    if (near.indexOf('B') >= 0 && near.indexOf('A') < 0 && near.indexOf('S') < 0) paintKitchen(ctx, col, row);
+    else if (near.indexOf('S') >= 0 && near.indexOf('C') < 0 && near.indexOf('B') < 0) paintCarpet(ctx, col, row);
+    else if (near.indexOf('G') >= 0 || near.indexOf('P') >= 0) paintWood(ctx, col, row, 'live');
+    else if (near.indexOf('A') >= 0) paintWood(ctx, col, row, 'bed');
+    else paintWood(ctx, col, row, 'live');
+    ctx.fillStyle = '#5c3a28';
+    if (ns) {
+      ctx.fillRect(0, 0, 2, 16);
+      ctx.fillRect(14, 0, 2, 16);
+      ctx.fillStyle = '#a86b3c';
+      ctx.fillRect(11, 1, 3, 14);
+      ctx.fillStyle = '#c48958';
+      ctx.fillRect(11, 2, 3, 1);
+      ctx.fillStyle = '#f0d48a';
+      ctx.fillRect(12, 8, 1, 1);
+      ctx.fillStyle = '#8a6240';
+      ctx.fillRect(2, 14, 9, 2);
+    } else {
+      ctx.fillRect(0, 0, 16, 2);
+      ctx.fillRect(0, 14, 16, 2);
+      ctx.fillStyle = '#a86b3c';
+      ctx.fillRect(1, 2, 5, 12);
+      ctx.fillStyle = '#c48958';
+      ctx.fillRect(1, 3, 5, 1);
+      ctx.fillStyle = '#f0d48a';
+      ctx.fillRect(4, 8, 1, 1);
+    }
+  }
+  function paintCell(ctx, col, row) {
+    const ch = cell(col, row);
+    if (ch === '#') paintWall(ctx, col, row);
+    else if (ch === 'F') { paintGrass(ctx, col, row, false); paintFence(ctx, col); }
+    else if (ch === 'G' || ch === '*') paintGrass(ctx, col, row, true);
+    else if (ch === 'P') paintPath(ctx, col, row);
+    else if (ch === '+') paintDoor(ctx, col, row);
+    else if (ch === 'A') paintWood(ctx, col, row, 'bed');
+    else if (ch === 'B') paintKitchen(ctx, col, row);
+    else if (ch === 'C') paintWood(ctx, col, row, 'live');
+    else if (ch === 'S') paintCarpet(ctx, col, row);
+    else paintWall(ctx, col, row);
+    if ('ABCSGP*+'.indexOf(ch) >= 0 && cell(col, row - 1) === '#') {
+      ctx.fillStyle = 'rgba(72, 42, 24, 0.20)';
+      ctx.fillRect(0, 0, 16, 3);
+    }
+  }
+  function cellSprite(col, row) {
+    const key = (isNight() ? 'n' : 'd') + ':' + col + ':' + row;
+    let spr = cellCache.get(key);
+    if (spr) return spr;
+    spr = sprite(TILE, TILE, function (ctx) { paintCell(ctx, col, row); });
+    cellCache.set(key, spr);
+    return spr;
+  }
+
+  function actorAnchor() {
+    const pose = currentPose();
+    if (pose === 'sleep') return {x:2.5 * TILE, y:2.15 * TILE, pose:pose, dir:'down', sortY:3 * TILE + 2};
+    let x = s.x, y = s.y;
+    if (!s.moving) {
+      const n = (pose === 'sit' || pose === 'type' || pose === 'cook' || pose === 'lift') ? 4 : (pose === 'eat' ? 3 : 0);
+      const face = s.face || 'down';
+      if (face === 'up') y -= n;
+      else if (face === 'down') y += n;
+      else if (face === 'left') x -= n;
+      else x += n;
+    }
+    return {x:x, y:y, pose:pose, dir:s.face || 'down', sortY:y};
+  }
+  function drawProp(prop) {
+    const spr = ART.props[prop.kind];
+    if (!spr) return;
+    const dw = spr.width * SCALE;
+    const dh = spr.height * SCALE;
+    const dx = prop.c * TILE * SCALE + (prop.w * TILE * SCALE - dw) / 2;
+    const dy = (prop.r + prop.h) * TILE * SCALE - dh;
+    g.drawImage(spr, Math.round(dx), Math.round(dy), dw, dh);
+  }
+  function drawTree(tree) {
+    const spr = ART.trees[tree.kind % ART.trees.length];
+    const dx = Math.round((tree.c + 0.5) * TILE * SCALE - 13 * SCALE);
+    const dy = Math.round((tree.r + 1) * TILE * SCALE - spr.height * SCALE);
+    g.drawImage(spr, dx, dy, spr.width * SCALE, spr.height * SCALE);
+  }
+  function drawBits(anchor, dx, dy) {
+    const f = Math.floor((s.anim || 0) * 0.3) % 4;
+    if (anchor.pose === 'sleep') {
+      g.fillStyle = '#fffaf3';
+      const zx = dx + 20 * SCALE;
+      const zy = dy + (2 - f) * SCALE;
+      g.fillRect(zx, zy, 3 * SCALE, SCALE);
+      g.fillRect(zx + 2 * SCALE, zy + SCALE, SCALE, SCALE);
+      g.fillRect(zx, zy + 2 * SCALE, 3 * SCALE, SCALE);
+    } else if (anchor.pose === 'cook') {
+      g.fillStyle = 'rgba(255,255,255,0.7)';
+      g.fillRect(dx + 6 * SCALE, dy + (2 - f) * SCALE, SCALE, SCALE);
+      g.fillRect(dx + 10 * SCALE, dy - f * SCALE, SCALE, SCALE);
+    }
+  }
+  function drawActor(anchor) {
+    const spr = actorSprite(anchor.pose, anchor.dir, poseFrame(anchor.pose));
+    const dx = Math.round(anchor.x * SCALE - spr.footX * SCALE);
+    const dy = Math.round(anchor.y * SCALE - spr.footY * SCALE);
+    if (anchor.pose !== 'sleep') {
+      g.fillStyle = 'rgba(48, 32, 18, 0.30)';
+      g.fillRect(Math.round(anchor.x * SCALE - 4 * SCALE), Math.round(anchor.y * SCALE - SCALE), 8 * SCALE, 2 * SCALE);
+    }
+    g.drawImage(spr, dx, dy, spr.width * SCALE, spr.height * SCALE);
+    drawBits(anchor, dx, dy);
+  }
+  let lightCv = null;
+  function drawLighting() {
+    if (!isNight()) return;
+    if (!lightCv) {
+      lightCv = document.createElement('canvas');
+      lightCv.width = W;
+      lightCv.height = H;
+    }
+    const lg = lightCv.getContext('2d');
+    lg.setTransform(1, 0, 0, 1, 0, 0);
+    lg.globalCompositeOperation = 'source-over';
+    lg.clearRect(0, 0, W, H);
+    lg.fillStyle = 'rgba(16, 22, 48, 0.58)';
+    lg.fillRect(0, 0, W, H);
+    lg.globalCompositeOperation = 'destination-out';
+    function punch(x, y, rad, strength) {
+      const inner = Math.max(4, rad * 0.08);
+      const rg = lg.createRadialGradient(x, y, inner, x, y, rad);
+      rg.addColorStop(0, 'rgba(0,0,0,' + strength + ')');
+      rg.addColorStop(0.42, 'rgba(0,0,0,' + (strength * 0.72) + ')');
+      rg.addColorStop(0.75, 'rgba(0,0,0,' + (strength * 0.28) + ')');
+      rg.addColorStop(1, 'rgba(0,0,0,0)');
+      lg.fillStyle = rg;
+      lg.beginPath();
+      lg.arc(x, y, rad, 0, Math.PI * 2);
+      lg.fill();
+    }
+    for (let i = 0; i < LAMPS.length; i++) punch(LAMPS[i].x, LAMPS[i].y, LAMPS[i].rad, 1);
+    punch(11 * TILE * SCALE, 15 * TILE * SCALE, 230, 0.42);
+    lg.globalCompositeOperation = 'source-over';
+    g.drawImage(lightCv, 0, 0);
+    for (let i = 0; i < LAMPS.length; i++) {
+      const lamp = LAMPS[i];
+      const rad = lamp.rad * 0.72;
+      const rg = g.createRadialGradient(lamp.x, lamp.y, 6, lamp.x, lamp.y, rad);
+      rg.addColorStop(0, 'rgba(255, 196, 110, 0.26)');
+      rg.addColorStop(0.45, 'rgba(255, 160, 70, 0.10)');
+      rg.addColorStop(1, 'rgba(255, 140, 40, 0)');
+      g.fillStyle = rg;
+      g.beginPath();
+      g.arc(lamp.x, lamp.y, rad, 0, Math.PI * 2);
+      g.fill();
+    }
+  }
+  function drawRain() {
+    g.fillStyle = 'rgba(232, 240, 248, 0.55)';
+    const t = Math.floor((s.anim || 0) * 3);
+    for (let i = 0; i < 90; i++) {
+      const x = (i * 89 + t * 7) % W;
+      const y = (i * 47 + t * 13) % H;
+      g.fillRect(x, y, SCALE, 4 * SCALE);
+    }
+  }
+  function draw() {
+    ensureArt();
+    g.imageSmoothingEnabled = false;
+    for (let row = 0; row < ROWS; row++) {
+      for (let col = 0; col < COLS; col++) {
+        g.drawImage(cellSprite(col, row), col * TILE * SCALE, row * TILE * SCALE, TILE * SCALE, TILE * SCALE);
+      }
+    }
+    for (let i = 0; i < PROPS.length; i++) if (PROPS[i].flat) drawProp(PROPS[i]);
+    const ents = [];
+    for (let i = 0; i < PROPS.length; i++) if (!PROPS[i].flat) {
+      const prop = PROPS[i];
+      ents.push({y:(prop.r + prop.h) * TILE, draw:drawProp.bind(null, prop)});
+    }
+    for (let i = 0; i < TREES.length; i++) {
+      const tree = TREES[i];
+      ents.push({y:(tree.r + 1) * TILE - 2, draw:drawTree.bind(null, tree)});
+    }
+    const anchor = actorAnchor();
+    ents.push({y:anchor.sortY, draw:drawActor.bind(null, anchor)});
+    ents.sort(function (a, b) { return a.y - b.y; });
+    for (let i = 0; i < ents.length; i++) ents[i].draw();
+    drawLighting();
+    if (weatherOf(s.day).short === '小雨') drawRain();
+  }
+  function snapshotText() {
+    const scores = (s.decision && s.decision.scores) || {};
+    return JSON.stringify({
+      coordinate_system:'top-down 16px tiles; origin top-left; x right, y down; screen = world * 2',
+      day:s.day,
+      time:time(),
+      agent:(function () {
+        const t = tileOf(s.x, s.y);
+        return {
+          x:Math.round(s.x), y:Math.round(s.y),
+          tile:{c:t.c, r:t.r},
+          facing:s.face || 'down',
+          pose:currentPose(),
+          room:s.room,
+          action:(ACT[s.action] && ACT[s.action].label) || s.action,
+          thought:s.thought || ''
+        };
+      })(),
+      needs:{energy:Math.round(s.e), hunger:Math.round(s.h), mood:Math.round(s.m), money:Math.round(s.money)},
+      personality:{cognition:MIND.cognition, interests:MIND.interests.slice(), risk:MIND.risk},
+      employment:s.job ? 'remote designer' : 'job seeking',
+      autonomy:'observer only; no player controls',
+      recent_events:s.logs.slice(0, 3),
+      decision:{
+        action:s.decision ? s.decision.action : s.action,
+        reason:s.decision ? s.decision.reason : '',
+        scores:scores
+      },
+      memory:{
+        recent:s.memory.slice(0, 6).map(m => m.text),
+        yesterday:s.yesterday ? s.yesterday.text : null
+      },
+      awake:s.action === 'sleep' ? '睡眠中' : fmtDur(s.awakeMin),
+      plan:s.plan,
+      weather:weatherOf(s.day).full,
+      portfolio:{
+        cash:Math.round(s.money),
+        marketValue:Math.round(marketValue()),
+        research:Math.round(s.research),
+        studies:s.studies || 0,
+        lastPnl:Math.round(s.lastPnl || 0),
+        riskOffDays:s.riskOffDays || 0
+      }
+    });
+  }
+
+  function withState(over, fn) {
+    const backup = {};
+    const keys = Object.keys(over || {});
+    for (const k of keys) backup[k] = s[k];
+    Object.assign(s, over || {});
+    try { return fn(); }
+    finally { for (const k of keys) s[k] = backup[k]; }
+  }
+
+  window.render_game_to_text = snapshotText;
+  window.advanceTime = function(ms) {
+    const n = Math.max(1, Math.round((ms || 0) / 50));
+    for (let i = 0; i < n; i++) tick(0.8);
+    ui();
+    draw();
+  };
+  window.__debug = {
+    key:KEY,
+    get state() { return s; },
+    score(over) { return withState(over || {}, rawScores); },
+    preview(over) { return withState(over || {}, choose); },
+    hireChance:hireChance,
+    rollHire() { return rand() < hireChance(); },
+    tradeGate:tradeGate,
+    buy:buy,
+    sell:sell,
+    weatherOf:weatherOf,
+    persist:persist,
+    replace(snap) { applyIncoming(snap); },
+    start(id) { startAction(id); ui(); draw(); },
+    finish() { finishAndDecide(); ui(); draw(); },
+    tile() {
+      const t = tileOf(s.x, s.y);
+      return {c:t.c, r:t.r, ch:cell(t.c, t.r), walk:walkable(t.c, t.r), face:s.face, pose:currentPose(), moving:!!s.moving};
+    },
+    walkable:walkable,
+    pathTo(place) {
+      const spot = SPOTS[place] || SPOTS.bed;
+      const here = tileOf(s.x, s.y);
+      return findPath(here.c, here.r, spot.c, spot.r);
+    },
+    audit:auditMap
+  };
+
+  function boot() {
+    const resumed = load();
+    if (!resumed) {
+      s.whim = rollWhim();
+      s.plan = morningPlan();
+      s.decision = {action:'wake', reason:'刚醒，先在床边坐一会儿，再决定接下来做什么。', scores:rawScores()};
+      startAction('wake');
+      persist();
+    }
+    auditMap();
+    ui();
+    draw();
+  }
+  boot();
+  window.addEventListener('pagehide', () => persist());
+  let last = performance.now();
+  function loop(now) {
+    requestAnimationFrame(loop);
+    if (window.__PAUSE_LIFE__) { last = now; return; }
+    const dt = Math.min(40, now - last) / 50;
+    last = now;
+    tick(dt);
+    ui();
+    draw();
+  }
+  requestAnimationFrame(loop);
+})();
+
+</script>
+</body></html>
