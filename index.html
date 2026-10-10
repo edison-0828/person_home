@@ -1,7 +1,7 @@
 <!doctype html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>小屋里的他 · Pixel Life</title>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><link rel="icon" href="data:,"><title>小屋里的他 · Pixel Life</title>
 <style>
 :root{--ink:#262331;--cream:#f6e8c9;--paper:#fff5d7;--line:#5b4550;--orange:#d6784c;--blue:#6e9eb1;--green:#77a36d;--muted:#88715f}*{box-sizing:border-box}body{margin:0;background:#161b2a;color:var(--ink);font-family:"Courier New","Microsoft YaHei",monospace;image-rendering:pixelated}.shell{width:min(1280px,100%);margin:auto;padding:24px 22px 32px}header{display:flex;justify-content:space-between;align-items:flex-end;gap:18px;margin-bottom:18px;color:var(--cream)}.eyebrow{font-size:11px;letter-spacing:.14em;color:#e5a06d;font-weight:bold}h1{font-size:clamp(25px,4vw,42px);margin:7px 0 4px;letter-spacing:-.08em}.subtitle{font-size:13px;color:#b9b5b1}.signal{border:3px solid #435064;background:#20283a;padding:10px 12px;color:#a9d697;font-size:12px;white-space:nowrap;box-shadow:4px 4px #0c101b}.signal i{display:inline-block;width:9px;height:9px;margin-right:7px;background:#8fd37b;box-shadow:0 0 0 2px #33543b}.layout{display:grid;grid-template-columns:minmax(0,1.58fr) minmax(310px,.82fr);gap:18px}.card{border:3px solid var(--line);background:var(--paper);box-shadow:6px 6px #0b0e17}.scene-card{padding:10px;background:#c2b38b}.scene-card canvas{display:block;width:100%;aspect-ratio:1.48;background:#1d2940;image-rendering:pixelated;image-rendering:crisp-edges}.scene-caption{display:flex;justify-content:space-between;padding:9px 3px 0;color:#3b3140;font-size:12px;font-weight:bold}.scene-caption span:last-child{text-align:right}aside{display:flex;flex-direction:column;gap:13px}.panel{padding:15px 16px}.panel-title{display:flex;justify-content:space-between;align-items:center;margin-bottom:13px;font-size:14px;font-weight:bold}.panel-title small{color:#a26e4a;font-size:10px}.agent-row{display:flex;gap:11px;align-items:center}.avatar{display:grid;place-items:center;width:49px;height:49px;background:#d97951;color:#fff4cb;border:3px solid var(--line);font-size:20px;font-weight:bold;box-shadow:3px 3px #a75a45}.agent-name{font-size:17px;font-weight:bold}.agent-meta{color:var(--muted);font-size:11px;margin-top:4px}.now{margin-top:15px;padding:12px;border:3px solid #9c674b;background:#ffe7b7;box-shadow:3px 3px #d1a172}.now-label{color:#a05b3d;font-size:10px;font-weight:bold}.now-action{margin-top:5px;font-size:14px;font-weight:bold}.thought{color:#69584f;font-size:11px;line-height:1.45;margin-top:4px}.meter{margin:10px 0}.meter-top{display:flex;justify-content:space-between;font-size:11px;margin-bottom:5px}.meter-top b{font-size:10px;color:#806754}.track{height:10px;background:#d2c3a0;border:2px solid #8a705d}.fill{height:100%;transition:width .25s steps(4)}.energy{background:#e4ad43}.hunger{background:#d97851}.mood{background:#70a363}.money{background:#6095a8}.facts{display:grid;grid-template-columns:1fr 1fr;gap:7px}.fact{padding:9px;background:#f5e4bb;border:2px solid #c2a77c}.fact small{display:block;color:#97755a;font-size:9px;margin-bottom:3px}.fact strong{font-size:12px}.log{max-height:170px;overflow:hidden}.log-item{font-size:11px;color:#594945;line-height:1.45;padding:0 0 9px 14px;position:relative}.log-item:before{content:"";position:absolute;left:0;top:4px;width:6px;height:6px;background:#cb704c}.log-item time{color:#ae815e;margin-right:6px}.footer-note{margin-top:17px;text-align:center;color:#78839b;font-size:11px}@media(max-width:820px){.shell{padding:17px 12px 25px}header{align-items:flex-start;flex-direction:column}.signal{align-self:flex-start}.layout{grid-template-columns:1fr}}
 </style>
@@ -314,7 +314,10 @@
 
     if (id === 'sleep') {
       add('这个钟点容易困', circadian(h) * 46);
-      add('精力不够了', Math.max(0, 100 - s.e) * 0.42);
+      const tired = Math.max(0, 100 - s.e) * 0.42;
+      if (s.e < 42) add('精力不够了', tired);
+      else if (s.e < 75) add('精神还没回满', tired);
+      else add('还剩一点困意', tired);
       add('醒得太久', Math.max(0, s.awakeMin / 60 - 14) * 5);
       if (h >= 22.5 || h < 5.5) add('到了夜里', 18);
       if (h > 8 && h < 21 && s.e > 38) add('大白天还不该睡', -42);
@@ -342,8 +345,8 @@
       if (s.restLock) add('先补充一点', 8);
     } else if (id === 'lunch') {
       if (s.meals.lunch || !canPay(10)) return bad;
-      add('有点饿', s.h * 0.7);
-      add('接近午饭时间', peak(h, 11.2, 14.3) * 36);
+      add('有点饿', s.h * 0.85);
+      add('接近午饭时间', peak(h, 11.2, 14.3) * 18);
       if (h < 10.5 || h > 15.5) add('不是午饭时间', -28);
       if (s.sinceEatMin < 50) add('刚吃过', -18);
       if (s.h > 80) add('饿得发慌', 20);
@@ -393,7 +396,9 @@
       if (s.restLock && s.e < 20) return bad;
       add('想把加密和美股看懂', 18 + (MIND.cognition - 70) * 0.22);
       add('适合看资料的时间', Math.max(peak(h, 8, 11.6) * 16, peak(h, 20, 23) * 14));
-      if (s.research < researchNeed()) add('还没研究到敢动手的程度', 10);
+      if (s.research < researchNeed()) add('还没研究到敢动手的程度', 8);
+      if ((s.today.market || 0) >= 2) add('今天已经看过一阵子盘', -16);
+      if ((s.today.market || 0) >= 4) add('同一批数字再看下去意义不大', -18);
       if (s.e < 18) add('太累，看不进去', -24);
       if (s.h > 76) add('饿得看不进去', -18);
       if (s.money < 180 && !s.job) add('该先解决收入', -14);
@@ -405,7 +410,8 @@
       add('早晨或傍晚适合练', Math.max(peak(h, 6.3, 9.3) * 22, peak(h, 17, 20.6) * 20));
       if (s.e < 34) add('力气不太够', -16);
       if (s.h > 70) add('空肚子练不动', -16);
-      if (s.today.workout >= 1) add('今天练过了', -24);
+      if (s.today.workout >= 1) add('今天练过了', -30);
+      if (s.today.workout >= 2) add('再练就过量了', -18);
       if (s.e > 55) add('精力够用', 6);
       add('这个点不适合练', -tax);
     } else if (id === 'walk') {
@@ -414,7 +420,7 @@
       if (w.walk >= 0) add('天气还行，想到院子里', w.walk * 16);
       else add('下雨，院子里没那么舒服', w.walk * 22);
       if (h > 7 && h < 19) add('白天适合出门', 8);
-      if (s.today.walk >= 2) add('已经出去过了', -14);
+      if (s.today.walk >= 2) add('已经出去过了', -12 * s.today.walk);
       if (s.e < 14) add('太累', -18);
       if (h >= 22 || h < 6) add('外面黑了', -16);
     } else if (id === 'relax') {
@@ -756,8 +762,8 @@
       }
     }
     if (id === 'workout' && mins > 8) {
+      if (!s.today.workout) s.streak.workout = (s.streak.workout || 0) + 1;
       s.today.workout += 1;
-      s.streak.workout = (s.streak.workout || 0) + 1;
       s.m = cl(s.m + 6);
       s.h = cl(s.h + 4);
       s.e = cl(s.e - 4);
