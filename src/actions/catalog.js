@@ -1,4 +1,6 @@
-import { MIND, SKILL_META } from '../constants.js';
+import { cognitionNow } from '../calendar.js';
+import { payMetro } from '../expenses.js';
+import { SKILL_META } from '../constants.js';
 import { morningPlan } from '../decision.js';
 import { registerAction } from './define.js';
 import { writeDiary } from '../diary.js';
@@ -87,7 +89,7 @@ registerAction({
     const poor = s.money < 170 && marketValue() < 50;
     const id = 'breakfast';
     spec.hunger = poor ? -1.05 : -1.4; spec.mood = 0.12; spec.energy = 0.03;
-    mealCost(15, 8, spec);
+    mealCost(18, 10, spec);
 
   },
   resolve(mins, id) {
@@ -145,7 +147,7 @@ registerAction({
     const poor = s.money < 170 && marketValue() < 50;
     const id = 'eat';
     spec.hunger = poor ? -0.95 : -1.25; spec.mood = 0.08;
-    mealCost(12, 6, spec);
+    mealCost(16, 8, spec);
 
   },
   resolve(mins, id) {
@@ -206,7 +208,7 @@ registerAction({
     const poor = s.money < 170 && marketValue() < 50;
     const id = 'lunch';
     spec.hunger = poor ? -1.05 : -1.35; spec.mood = 0.1; spec.energy = 0.02;
-    mealCost(20, 10, spec);
+    mealCost(35, 16, spec);
 
   },
   resolve(mins, id) {
@@ -266,7 +268,7 @@ registerAction({
     const poor = s.money < 170 && marketValue() < 50;
     const id = 'cook';
     spec.hunger = -0.1; spec.mood = 0.1;
-    mealCost(16, 10, spec);
+    mealCost(26, 14, spec);
 
   },
   resolve(mins, id) {
@@ -331,7 +333,7 @@ registerAction({
       spec.cost = 0; spec.mood = 0.16 + skillRank('cooking') * 0.015;
     } else {
       spec.mood = 0.05;
-      mealCost(28, 16, spec);
+      mealCost(42, 20, spec);
       if ((s.feel && s.feel.loneliness > 62) && lessonStrength('spend') < 18 && skillRank('cooking') < 2) {
         spec.cost += 12;
         spec.comfort = true;
@@ -399,7 +401,7 @@ registerAction({
     else if (s.money < 700) add('存款在变少', 26);
     else if (s.money < 1600) add('得多一份收入', 14);
     else add('工作可以慢慢找', 6);
-    add('写得清简历', (MIND.cognition - 70) * 0.18);
+    add('写得清简历', (cognitionNow() - 70) * 0.18);
     if (s.e < 24) add('太累，投不动', -26);
     if (s.h > 72) add('饿得没法集中', -20);
     if (s.today.search >= 2) add('今天已经投过几封', -14);
@@ -425,7 +427,7 @@ registerAction({
           s.job = true;
           if (hopping) {
             promoteOrRaise(true);
-            s.hopCooldown = 5;
+            s.hopCooldown = 90;
           } else {
             s.career = s.career && RANK[s.career] ? s.career : 'junior';
             s.workFromDay = s.day + 1;
@@ -442,7 +444,7 @@ registerAction({
           s.plan = morningPlan();
         } else {
           const hit = 3 + Math.round(rand() * 4);
-          const calm = MIND.cognition > 85 ? 0.72 : 1;
+          const calm = cognitionNow() > 85 ? 0.72 : 1;
           s.m = cl(s.m - hit * calm);
           feelTo('anxiety', 10); feelTo('hope', -8);
           s.today.rejects += 1;
@@ -550,7 +552,7 @@ registerAction({
     const poorEnergy = ctx.poorEnergy;
     const id = 'market';
     if (s.restLock && s.e < 20) return false;
-    add('想把加密和美股看懂', 18 + (MIND.cognition - 70) * 0.22);
+    add('想把加密和美股看懂', 18 + (cognitionNow() - 70) * 0.22);
     add('适合看资料的时间', Math.max(peak(h, 8, 11.6) * 16, peak(h, 20, 23) * 14));
     if (s.research < researchNeed()) add('还没研究到敢动手的程度', 8);
     if ((s.today.market || 0) >= 2) add('今天已经看过一阵子盘', -16);
@@ -572,7 +574,7 @@ registerAction({
     if (id === 'market' && mins > 10) {
 
         s.studies = (s.studies || 0) + 1;
-        s.research = cl(s.research + 14 + MIND.cognition / 20, 0, 100);
+        s.research = cl(s.research + 14 + cognitionNow() / 20, 0, 100);
         s.today.market += 1;
         driftPrices(1);
         const delta = markMood();
@@ -609,7 +611,7 @@ registerAction({
             line = '资料看完了，他选择继续观望。';
             memory('market_research', line);
           } else {
-            const riskFrac = 0.042 + (100 - MIND.cognition) * 0.0004;
+            const riskFrac = 0.042 + (100 - cognitionNow()) * 0.0004;
             const amount = Math.round(Math.min(s.money - gate.floor, s.money * riskFrac, 36 + s.research * 0.9));
             const asset = pickAsset();
             if (!(amount >= 30 && buy(asset, amount))) line = '算了算仓位，还是先不动。';
@@ -953,10 +955,11 @@ registerAction({
         s.h = cl(s.h + 6);
         s.away = false;
         tx('income', gig.name || '散工', pay);
+        const fare = payMetro();
         feelTo('anxiety', -8);
         feelTo('pride', 5);
         feelTo('joy', 3);
-        const text = '从院子门口回来了。' + (gig.name || '散工') + '进账 ¥' + pay + '，人是累的。';
+        const text = '从深圳街上回来了。' + (gig.name || '散工') + '进账 ¥' + pay + (fare ? ('，地铁 ¥' + fare) : '') + '，人是累的。';
         log(text);
         memory('gig', text, {value:pay});
 

@@ -1,5 +1,20 @@
+import { ageStage } from './calendar.js';
 import { SCALE, TILE } from './constants.js';
 import { isNight } from './util.js';
+
+let AGE = 0;
+
+function paintAge(p, y) {
+  if (AGE >= 1) {
+    p.set(7, y + 5, '#e0b090');
+    p.set(8, y + 5, '#e0b090');
+  }
+  if (AGE >= 2) {
+    p.set(5, y, '#8d8680');
+    p.set(10, y, '#8d8680');
+  }
+  if (AGE >= 3) p.rect(6, y, 4, 1, '#b7b1a8');
+}
 
 export const TREES = [
   {c:2, r:14, kind:0},
@@ -145,6 +160,7 @@ export function paintFront(p, pose, frame) {
   p.rect(4, y + 4, 8, 1, SK.hair);
   p.set(6, y + 6, SK.eye);
   p.set(9, y + 6, SK.eye);
+  paintAge(p, y);
   p.set(5, y + 8, SK.blush);
   p.set(10, y + 8, SK.blush);
   p.rect(7, y + 8, 2, 1, SK.mouth);
@@ -200,6 +216,7 @@ export function paintBack(p, pose, frame) {
   p.rect(6, y - 1, 3, 1, SK.hairL);
   p.set(3, y + 7, SK.skin);
   p.set(12, y + 7, SK.skin);
+  paintAge(p, y);
   p.rect(4, y + 9, 8, 8, SK.shirt);
   p.rect(5, y + 9, 6, 1, SK.shirtL);
   p.rect(4, y + 15, 8, 2, SK.shirtD);
@@ -244,6 +261,7 @@ export function paintSide(p, pose, frame) {
   p.rect(3, y + 3, 5, 5, SK.hair);
   p.rect(4, y + 7, 2, 2, SK.skinD);
   p.set(10, y + 5, SK.eye);
+  paintAge(p, y);
   p.set(11, y + 6, SK.skinD);
   p.set(9, y + 7, SK.blush);
   p.set(10, y + 8, SK.mouth);
@@ -290,6 +308,8 @@ export function paintSleep(frame) {
   p.rect(2, 4, 7, 7, '#fffaf3');
   p.rect(3, 5, 6, 6, SK.skin);
   p.rect(3, 4, 6, 3, SK.hair);
+  if (AGE >= 2) p.set(5, 4, '#8d8680');
+  if (AGE >= 3) p.set(6, 4, '#b7b1a8');
   p.rect(3, 6, 2, 3, SK.hair);
   p.rect(5, 7, 3, 1, SK.eye);
   p.set(8, 8, SK.blush);
@@ -329,8 +349,9 @@ export function mirrorSprite(src) {
 }
 
 export function actorSprite(pose, dir, frame) {
+  AGE = ageStage();
   const face = dir === 'left' ? 'right' : (dir || 'down');
-  const key = pose + ':' + face + ':' + frame;
+  const key = AGE + ':' + pose + ':' + face + ':' + frame;
   if (!actorCache.has(key)) {
     let p;
     if (pose === 'sleep') p = paintSleep(frame);

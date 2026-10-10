@@ -32,6 +32,8 @@ export function writeDiary(day) {
   const top = (s.lessons || [])[0];
   if (top && top.strength > 14) body += '想记住：' + top.text;
   else if (s.focus && SKILL_META[s.focus]) body += '明天还想碰一碰' + SKILL_META[s.focus].name + '。';
+  if (td.birthday) body += '今天过生日，人在深圳又大了一岁。';
+  if (td.metro) body += '出门坐了地铁。';
   if (td.sickOnset) body += '夜里不舒服，像是' + (td.sickLabel || '感冒') + '，去看了看。';
   else if (td.recovered) body += '病差不多过去了，人轻一点。';
   else if (td.sick) body += '还在养' + (td.sickLabel || '病') + '，事情放轻了些。';

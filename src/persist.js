@@ -2,9 +2,9 @@ import { KEY, SIM_MIN_PER_SEC, SKILL_META, TILE } from './constants.js';
 import { getAction } from './actions/define.js';
 import { freshFeel, freshValues } from './emotions.js';
 import { tick } from './loop.js';
-import { SPOTS, goToPlace, roomAt, walkableAt } from './map.js';
+import { SPOTS, roomAt, walkableAt } from './map.js';
 import { log, memory, renderLog } from './memory.js';
-import { freshSkills, practicePlace, skillLevelOf } from './skills.js';
+import { freshSkills, skillLevelOf } from './skills.js';
 import { freshLifeNote, freshUsage } from './expenses.js';
 import { blank, flags, freshToday, s } from './state.js';
 import { cl } from './util.js';
@@ -84,15 +84,19 @@ export function applyIncoming(incoming) {
   s.e = cl(s.e); s.h = cl(s.h); s.m = cl(s.m);
   if (!isFinite(s.t) || s.t < 0) s.t = 462;
   let spins = 0;
-  while (s.t >= 1440 && spins++ < 10) { s.t -= 1440; s.day += 1; }
+  while (s.t >= 1440 && spins++ < 3) { s.t -= 1440; s.day += 1; }
   if (!s.seed) s.seed = (Date.now() ^ 0x51f00d) >>> 0;
   if (!s.today) s.today = freshToday();
   if (!s.face) s.face = 'down';
   if (!s.faceGoal) s.faceGoal = s.face;
   if (!Array.isArray(s.path)) s.path = [];
+  s.path = s.path.filter(function (node) {
+    return Array.isArray(node) && isFinite(node[0]) && isFinite(node[1]);
+  });
   if (!isFinite(s.anim)) s.anim = 0;
   const legacy = !(incoming && incoming.map === 'topdown');
-  if (legacy || !walkableAt(s.x, s.y)) {
+  const keepPlace = !legacy && walkableAt(s.x, s.y);
+  if (!keepPlace) {
     const place = ((getAction(s.action) && getAction(s.action).place)) || 'bed';
     const spot = SPOTS[place] || SPOTS.bed;
     s.x = (spot.c + 0.5) * TILE;
@@ -101,15 +105,10 @@ export function applyIncoming(incoming) {
     s.faceGoal = spot.face;
     s.path = [];
     s.moving = false;
-  }
+  } else if (!Array.isArray(s.path)) s.path = [];
   s.map = 'topdown';
-  if (s.action === 'practice') goToPlace(practicePlace());
-  else if (s.action === 'gig') goToPlace('gate');
-  else if ((getAction(s.action) && getAction(s.action).place)) goToPlace(getAction(s.action).place);
-  else {
-    const rm = roomAt(s.x, s.y);
-    if (rm) s.room = rm;
-  }
+  const rm = roomAt(s.x, s.y);
+  if (rm) s.room = rm;
 }
 
 export function load() {
@@ -122,7 +121,7 @@ export function load() {
     applyIncoming(data.state);
     const elapsed = Math.max(0, Date.now() - savedAt);
     const simMin = Math.min(elapsed / 1000 * SIM_MIN_PER_SEC, 36 * 60);
-    if (simMin >= 1) {
+    if (elapsed >= 12000 && simMin >= 1) {
       flags.quiet = true;
       const steps = Math.round(simMin / 0.2);
       for (let i = 0; i < steps; i++) tick(0.8);

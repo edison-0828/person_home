@@ -1,11 +1,13 @@
+import { domOf, isNewMonth } from './calendar.js';
 import { feelTo, mistake } from './emotions.js';
 import { log, memory } from './memory.js';
 import { owns, tx } from './money.js';
 import { freshToday, s } from './state.js';
 import { cl, rand, weatherOf } from './util.js';
 
-export const MONTH = 30;
-export const RENT_AMOUNT = 660;
+export { domOf, isNewMonth };
+
+export const RENT_AMOUNT = 2180;
 
 export function freshUsage() {
   return {home:0, hot:0, ac:0};
@@ -15,12 +17,13 @@ export function freshLifeNote() {
   return {day:0, haircut:0, clothes:0, regret:0, sick:0, rentTight:0, billWorry:0, utilities:0, supplies:0, phone:0, internet:0};
 }
 
-export function domOf(day) {
-  return ((Math.max(1, day) - 1) % MONTH) + 1;
-}
-
-export function isNewMonth(day) {
-  return day > 1 && ((day - 1) % MONTH) === 0;
+export function payMetro() {
+  const fare = 4 + Math.round(rand() * 5);
+  if ((s.money || 0) < fare + 8) return 0;
+  s.money -= fare;
+  tx('expense', '地铁', -fare);
+  if (s.today) s.today.metro = (s.today.metro || 0) + 1;
+  return fare;
 }
 
 export function noteUsage(mins) {
@@ -88,8 +91,8 @@ function utilityAmount() {
   const homeDays = (u.home || 0) / 1440;
   const acDays = (u.ac || 0) / 1440;
   const showers = (u.hot || 0) / 40;
-  const bill = 34 + homeDays * 3.1 + acDays * 6.5 + showers * 2.2;
-  return Math.round(Math.max(36, Math.min(176, bill)));
+  const bill = 80 + homeDays * 6 + acDays * 22 + showers * 4;
+  return Math.round(Math.max(90, Math.min(460, bill)));
 }
 
 function settleHealth(day) {
@@ -123,7 +126,7 @@ function settleHealth(day) {
   const roll = rand();
   const name = roll < 0.62 ? '感冒' : (roll < 0.84 ? '发烧' : '肠胃不舒服');
   const days = 2 + Math.floor(rand() * 3);
-  const cost = 60 + Math.round(rand() * 100);
+  const cost = 120 + Math.round(rand() * 180);
   s.sickDays = days;
   s.sickName = name;
   s.today.sick = 1;
@@ -133,7 +136,8 @@ function settleHealth(day) {
   s.m = cl((s.m || 50) - (6 + Math.round(rand() * 5)));
   feelTo('hope', -4);
   feelTo('anxiety', 6);
-  const bill = charge('看病', cost, {obligatory:true, keep:8});
+  const bill = charge('看病', cost, {obligatory:true, keep:20});
+  payMetro();
   if (bill.short > 0) {
     s.today.billWorry = 1;
     feelTo('anxiety', 4);
@@ -153,7 +157,7 @@ function settleSupplies(day) {
   }
   s.supplies = Math.max(0, s.supplies - (0.75 + rand() * 0.35));
   if (s.supplies > 1.6) return;
-  const cost = 28 + Math.round(rand() * 14);
+  const cost = 46 + Math.round(rand() * 32);
   if (s.money < cost) {
     s.supplyWait = 2;
     s.today.billWorry = 1;
@@ -168,13 +172,14 @@ function settleSupplies(day) {
   s.supplies = 10 + Math.round(rand() * 4);
   s.today.supplyBuy = 1;
   log('补了日用品，花了 ¥' + bill.paid + '。牙膏和洗衣液又能撑一阵。');
+  payMetro();
 }
 
 function settleHair(day) {
   if (!s.today) s.today = freshToday();
   if (!isFinite(s.nextHairDay) || s.nextHairDay < 1) s.nextHairDay = day + 23;
   if (day < s.nextHairDay) return;
-  const cost = 42 + Math.round(rand() * 16);
+  const cost = 58 + Math.round(rand() * 30);
   if (s.money < cost) {
     s.nextHairDay = day + 4;
     s.today.billWorry = 1;
@@ -188,7 +193,8 @@ function settleHair(day) {
   s.m = cl(s.m + 5);
   feelTo('pride', 4);
   feelTo('joy', 3);
-  log('去剪了头发，花了 ¥' + bill.paid + '。镜子里清爽了一点。');
+  log('去楼下剪了头发，花了 ¥' + bill.paid + '。镜子里清爽了一点。');
+  payMetro();
   memory('haircut', '第' + day + '天剪了头发。');
 }
 
@@ -215,7 +221,7 @@ function settleClothes(day) {
   const low = gap >= 10 && (s.m || 50) < 38 && rand() < 0.28;
   if (!scheduled && !shifted && !want && !low) return;
   const impulse = low && !scheduled;
-  const cost = impulse ? (78 + Math.round(rand() * 42)) : (40 + Math.round(rand() * 36));
+  const cost = impulse ? (168 + Math.round(rand() * 160)) : (96 + Math.round(rand() * 140));
   if (s.money < cost) {
     postponeClothes(day);
     return;
@@ -236,8 +242,9 @@ function settleClothes(day) {
     s.m = cl(s.m + 6);
     feelTo('joy', 6);
     feelTo('pride', 3);
-    log('添了件衣服，花了 ¥' + bill.paid + '。人看着齐整一点。');
+    log('在深圳添了件衣服，花了 ¥' + bill.paid + '。人看着齐整一点。');
   }
+  payMetro();
 }
 
 function settleFixed(day) {
@@ -257,22 +264,22 @@ function settleFixed(day) {
       s.m = cl(s.m - 5);
       s.today.billWorry = 1;
       mistake('rent', '第' + day + '天房租没付齐，又欠下 ¥' + bill.short + '。');
-    } else if (s.money < 480) {
+    } else if (s.money < 2600) {
       s.today.rentTight = 1;
-      log('房租付完，剩下的钱一下子少了很多。');
+      log('深圳这间合租的房租付完，剩下的钱一下子少了很多。');
       memory('rent', '第' + day + '天付了房租 ¥' + RENT_AMOUNT + '，口袋空了一截。');
-    } else log('付了这个月的房租 ¥' + RENT_AMOUNT + '。');
+    } else log('付了深圳合租的房租 ¥' + RENT_AMOUNT + '。');
   }
   if (dom === 8) {
-    const bill = charge('网费', 52, {obligatory:true, keep:8});
+    const bill = charge('网费', 129, {obligatory:true, keep:20});
     s.today.internet = 1;
     paidBill = true;
     if (bill.short > 0) { shortfall = true; worry('网费'); }
-    else log('网费 ¥52 扣掉了。');
+    else log('深圳宽带 ¥129 扣掉了。');
   }
   if (dom === 16) {
-    let amount = 38 + Math.round((rand() - 0.5) * 12);
-    if (owns('phone')) amount += 8 + Math.round(rand() * 6);
+    let amount = 69 + Math.round((rand() - 0.5) * 16);
+    if (owns('phone')) amount += 18 + Math.round(rand() * 12);
     const bill = charge('电话费', amount, {obligatory:true, keep:8});
     s.today.phone = 1;
     paidBill = true;
@@ -281,8 +288,8 @@ function settleFixed(day) {
   }
   if (dom === 21) {
     let subs = 0;
-    if (owns('computer')) subs += 78;
-    if (owns('gym')) subs += 42;
+    if (owns('computer')) subs += 68;
+    if (owns('gym')) subs += 199;
     if (subs > 0) {
       const bill = charge('订阅和会员', subs, {obligatory:true, keep:8});
       paidBill = true;
