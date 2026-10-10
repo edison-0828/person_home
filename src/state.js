@@ -2,7 +2,7 @@ import { TILE } from './constants.js';
 import { memory, trace } from './memory.js';
 
 export function freshToday() {
-  return {meals:0, workout:0, market:0, workMin:0, search:0, rejects:0, pnl:0, spent:0, earned:0, walk:0, relax:0, trades:0, practice:0, gigs:0, gigPay:0, shop:0, junkMeals:0, itch:0, moneyNoted:0, mistakeIds:[], comfort:0, rainNoted:0, breakthrough:0, haircut:0, clothes:0, clothesRegret:0, sick:0, sickOnset:0, recovered:0, sickLabel:'', rentHit:0, rentTight:0, utilities:0, supplyBuy:0, billWorry:0, internet:0, phone:0};
+  return {meals:0, workout:0, market:0, workMin:0, search:0, rejects:0, pnl:0, spent:0, earned:0, walk:0, relax:0, trades:0, practice:0, gigs:0, gigPay:0, shop:0, junkMeals:0, itch:0, moneyNoted:0, mistakeIds:[], comfort:0, rainNoted:0, breakthrough:0, haircut:0, clothes:0, clothesRegret:0, sick:0, sickOnset:0, recovered:0, sickLabel:'', rentHit:0, rentTight:0, utilities:0, supplyBuy:0, billWorry:0, internet:0, phone:0, overtime:0, otSet:0, otDay:0, stampDay:0, festivalDay:0, holiday:0, holidayName:'', weekend:0, season:'', seasonNoted:0, redPacket:0, festivalSpend:0};
 }
 
 export function blank() {
@@ -30,7 +30,7 @@ export function blank() {
     debt:0, rentBehind:0, career:'', raise:0, performance:42, daysInRank:0, absent:0, hopCooldown:0,
     owned:[], ledger:[], monthIn:0, monthOut:0, monthDay:1, billHistory:[],
     supplies:12, lastClothesDay:1, nextHairDay:24, clothesGap:19, supplyWait:0,
-    sickDays:0, sickName:'', usage:{home:0, hot:0, ac:0}, weatherSeen:'',
+    sickDays:0, sickName:'', usage:{home:0, hot:0, ac:0, heat:0}, weatherSeen:'', redYear:0,
     lifeNote:{day:0, haircut:0, clothes:0, regret:0, sick:0, rentTight:0, billWorry:0, utilities:0, supplies:0, phone:0, internet:0},
     trajectory:6, track:[], turning:'', recovery:0, complacent:0, wakeupDay:0, softDay:0, away:false,
     decision:{action:'wake', reason:'', scores:{}},

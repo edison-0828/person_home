@@ -1,4 +1,5 @@
-import { domOf, isNewMonth } from './calendar.js';
+import { domOf, isNewMonth, seasonOf } from './calendar.js';
+import { holidayOf } from './holidays.js';
 import { feelTo, mistake } from './emotions.js';
 import { log, memory } from './memory.js';
 import { owns, tx } from './money.js';
@@ -10,7 +11,7 @@ export { domOf, isNewMonth };
 export const RENT_AMOUNT = 2180;
 
 export function freshUsage() {
-  return {home:0, hot:0, ac:0};
+  return {home:0, hot:0, ac:0, heat:0};
 }
 
 export function freshLifeNote() {
@@ -32,8 +33,12 @@ export function noteUsage(mins) {
   if (s.action === 'gig' || s.away) return;
   s.usage.home += mins;
   const w = weatherOf(s.day).short;
+  const sea = seasonOf().id;
   const h = (s.t || 0) / 60;
-  if (w === '晴热' && h >= 11 && h <= 21) s.usage.ac += mins;
+  const hotHour = h >= 11 && h <= 21;
+  if (sea === 'summer' && hotHour) s.usage.ac += mins * (w === '晴热' ? 1 : (w === '晴朗' ? 0.7 : 0.4));
+  else if (w === '晴热' && hotHour) s.usage.ac += mins * 0.45;
+  if (sea === 'winter' && (h < 9 || h > 18)) s.usage.heat += mins * (w === '小雨' || w === '阴天' ? 0.7 : 0.35);
   if ((w === '阴天' || w === '小雨') && (s.action === 'wake' || s.action === 'relax' || s.action === 'workout')) {
     s.usage.hot += mins * 0.45;
   }
@@ -86,13 +91,16 @@ function worry(name) {
   log(name + '没付齐，差额记进了欠款。');
 }
 
-function utilityAmount() {
+function utilityAmount(day) {
   const u = s.usage || freshUsage();
   const homeDays = (u.home || 0) / 1440;
   const acDays = (u.ac || 0) / 1440;
+  const heatDays = (u.heat || 0) / 1440;
   const showers = (u.hot || 0) / 40;
-  const bill = 80 + homeDays * 6 + acDays * 22 + showers * 4;
-  return Math.round(Math.max(90, Math.min(460, bill)));
+  const sea = seasonOf(day).id;
+  const seasonBase = sea === 'summer' ? 28 : (sea === 'winter' ? 14 : 6);
+  const bill = 80 + seasonBase + homeDays * 6 + acDays * 26 + heatDays * 18 + showers * 4;
+  return Math.round(Math.max(90, Math.min(520, bill)));
 }
 
 function settleHealth(day) {
@@ -215,11 +223,17 @@ function settleClothes(day) {
   if (!isFinite(s.lastClothesDay)) s.lastClothesDay = 1;
   if (!isFinite(s.clothesGap) || s.clothesGap < 8) s.clothesGap = 19;
   const gap = day - s.lastClothesDay;
-  const scheduled = gap >= s.clothesGap;
+  const sea = seasonOf(day).id;
+  const prevSea = day > 1 ? seasonOf(day - 1).id : sea;
+  let need = s.clothesGap;
+  if (sea === 'winter') need = Math.max(8, need - 7);
+  else if (sea === 'summer') need += 4;
+  const scheduled = gap >= need;
+  const turned = prevSea !== sea && gap >= 8;
   const shifted = weatherShift(day) && gap >= 9;
   const want = gap >= 12 && (s.m || 50) > 62 && rand() < 0.35;
   const low = gap >= 10 && (s.m || 50) < 38 && rand() < 0.28;
-  if (!scheduled && !shifted && !want && !low) return;
+  if (!scheduled && !shifted && !want && !low && !turned) return;
   const impulse = low && !scheduled;
   const cost = impulse ? (168 + Math.round(rand() * 160)) : (96 + Math.round(rand() * 140));
   if (s.money < cost) {
@@ -298,7 +312,7 @@ function settleFixed(day) {
     }
   }
   if (dom === 28) {
-    const amount = utilityAmount();
+    const amount = utilityAmount(day);
     const bill = charge('水电费', amount, {obligatory:true, keep:8});
     s.today.utilities = 1;
     paidBill = true;
@@ -332,4 +346,28 @@ export function settleLiving(day) {
     internet:s.today.internet || 0
   };
   s.money = Math.max(0, s.money);
+}
+
+export function settleFestival() {
+  const hol = holidayOf();
+  if (!hol || hol.id !== 'cny' || (hol.phase !== 'eve' && hol.phase !== 'day1')) return;
+  if ((s.redYear || 0) === hol.year) return;
+  if (!s.today) s.today = freshToday();
+  const gift = 380 + (hol.year % 6) * 40;
+  s.money += gift;
+  tx('income', '红包', gift);
+  s.redYear = hol.year;
+  s.today.redPacket = gift;
+  feelTo('joy', 8);
+  feelTo('hope', 5);
+  log('家里的红包到了，¥' + gift + '。');
+  memory('redenvelope', '春节红包 ¥' + gift + '。', {value:gift});
+  const spend = 150 + (hol.year % 5) * 18;
+  if (s.money > spend + 200) {
+    s.money -= spend;
+    tx('expense', '年货', -spend);
+    s.today.festivalSpend = spend;
+    s.m = cl(s.m + 2);
+    log('置办年货花了 ¥' + spend + '。');
+  }
 }

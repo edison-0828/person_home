@@ -1,4 +1,5 @@
-import { CITY, GRAD_YEAR, ageOf, cognitionNow, formatDate } from './calendar.js';
+import { CITY, GRAD_YEAR, ageOf, cognitionNow, formatDate, seasonOf, weekdayName } from './calendar.js';
+import { scheduleLabel } from './schedule.js';
 import { FEEL_NAME, SKILL_META } from './constants.js';
 import { actionLabel, morningPlan } from './decision.js';
 import { dominantFeel } from './emotions.js';
@@ -143,7 +144,7 @@ export function renderLivelihood() {
 
 export function ui() {
   const w = weatherOf(s.day || 1);
-  const dayEl = $('day'); if (dayEl) dayEl.textContent = formatDate(s.day);
+  const dayEl = $('day'); if (dayEl) dayEl.textContent = formatDate(s.day) + ' ' + weekdayName();
   const clock = $('clock'); if (clock) clock.textContent = time();
   const action = $('action'); if (action) action.textContent = actionLabel(s.action);
   const thought = $('thought'); if (thought) thought.textContent = s.thought || '';
@@ -155,7 +156,8 @@ export function ui() {
     else role.textContent = who + ' · ' + info.title + ' · 时薪 ¥' + hourlyWage();
   }
   const ageLabel = $('age-label'); if (ageLabel) ageLabel.textContent = ageOf() + ' 岁';
-  const dateLabel = $('date-label'); if (dateLabel) dateLabel.textContent = formatDate(s.day);
+  const dateLabel = $('date-label'); if (dateLabel) dateLabel.textContent = formatDate(s.day) + ' ' + weekdayName();
+  const schedule = $('schedule-label'); if (schedule) schedule.textContent = scheduleLabel();
   const meters = [['energy', s.e], ['hunger', s.h], ['mood', s.m]];
   meters.forEach(([k, v]) => {
     const lab = $(k + '-v'); if (lab) lab.textContent = Math.round(v) + '%';
@@ -165,8 +167,9 @@ export function ui() {
   const moneyBar = $('money'); if (moneyBar) moneyBar.style.width = cl(s.money / 160) + '%';
   const awake = $('awake'); if (awake) awake.textContent = s.action === 'sleep' ? '睡眠中' : fmtDur(s.awakeMin);
   const plan = $('plan'); if (plan) plan.textContent = s.plan || morningPlan();
-  const weather = $('weather'); if (weather) weather.textContent = CITY + ' · ' + w.full;
-  const weatherShort = $('weather-short'); if (weatherShort) weatherShort.textContent = CITY + ' · ' + w.short;
+  const sea = seasonOf();
+  const weather = $('weather'); if (weather) weather.textContent = CITY + ' · ' + sea.name + ' · ' + w.full;
+  const weatherShort = $('weather-short'); if (weatherShort) weatherShort.textContent = CITY + ' · ' + sea.name + ' · ' + w.short;
   const mind = $('mind-line'); if (mind) mind.textContent = s.mind || '';
   const cogNow = cognitionNow();
   const cog = $('cog'); if (cog) cog.textContent = (cogNow >= 90 ? '高' : '在长') + ' · ' + cogNow + ' / 100';

@@ -45,6 +45,30 @@ export function formatDate(day) {
   return dt.y + '年' + dt.m + '月' + dt.d + '日';
 }
 
+const WEEKDAY = ['日', '一', '二', '三', '四', '五', '六'];
+
+export function weekdayOf(day) {
+  const dt = dateOf(day == null ? s.day : day);
+  return new Date(Date.UTC(dt.y, dt.m - 1, dt.d)).getUTCDay();
+}
+
+export function weekdayName(day) {
+  return '周' + WEEKDAY[weekdayOf(day)];
+}
+
+export function isWeekend(day) {
+  const w = weekdayOf(day);
+  return w === 0 || w === 6;
+}
+
+export function seasonOf(day) {
+  const m = dateOf(day == null ? s.day : day).m;
+  if (m >= 3 && m <= 5) return {id:'spring', name:'春', long:'深圳的春天'};
+  if (m >= 6 && m <= 9) return {id:'summer', name:'夏', long:'深圳的夏天'};
+  if (m >= 10 && m <= 11) return {id:'autumn', name:'秋', long:'深圳的秋天'};
+  return {id:'winter', name:'冬', long:'深圳的冬天'};
+}
+
 export function domOf(day) {
   return dateOf(day == null ? s.day : day).d;
 }

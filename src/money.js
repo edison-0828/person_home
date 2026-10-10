@@ -1,4 +1,5 @@
 import { ageOf, cognitionNow, monthEnded } from './calendar.js';
+import { isOffDay } from './holidays.js';
 import { feelTo, freshValues, mistake } from './emotions.js';
 import { marketValue } from './market.js';
 import { log, memory } from './memory.js';
@@ -160,11 +161,12 @@ export function careerDay(td) {
   if ((s.hopCooldown || 0) > 0) s.hopCooldown -= 1;
   if (!s.job || s.day < (s.workFromDay || 0)) return;
   s.daysInRank = (s.daysInRank || 0) + 1;
+  const resting = isOffDay(s.day) && !(td && td.overtime);
   if ((td && td.sick && !td.sickOnset) || ((s.sickDays || 0) > 0 && !(td && td.sickOnset))) return;
   if ((td.workMin || 0) >= 40) {
     s.performance = cl((s.performance || 40) + 7, 0, 100);
     s.absent = 0;
-  } else if ((td.workMin || 0) < 15) {
+  } else if (!resting && (td.workMin || 0) < 15) {
     s.performance = cl((s.performance || 40) - 8, 0, 100);
     s.absent = (s.absent || 0) + 1;
   }
@@ -194,7 +196,12 @@ export function shiftTrajectory(day, td) {
   if ((td.meals || 0) >= 2 && !td.junkMeals) d += 1.2;
   if (td.junkMeals) d -= 2.2;
   if ((td.workMin || 0) >= 40) d += 2;
-  if (s.job && s.day >= (s.workFromDay || 0) && (td.workMin || 0) < 15 && !(td.sick > 0 && !td.sickOnset)) d -= 2.6;
+  const off = isOffDay(day);
+  if (s.job && s.day >= (s.workFromDay || 0) && (td.workMin || 0) < 15 && !off && !(td.sick > 0 && !td.sickOnset)) d -= 2.6;
+  if (td.overtime && (td.workMin || 0) >= 30) {
+    d -= 1.5;
+    if ((s.money || 0) < 1600 || (s.debt || 0) > 0) d += 0.5;
+  }
   if ((td.gigs || 0) > 0) d += 1.2;
   if (td.practice) d += 1.1;
   let skillSum = 0;
